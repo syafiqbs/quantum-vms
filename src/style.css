@@ -1,0 +1,513 @@
+:root {
+  --dl-color-gray-500: #595959;
+  --dl-color-gray-700: #999999;
+  --dl-color-gray-900: #D9D9D9;
+  --dl-color-black-100: rgba(28, 28, 30, 1);
+  --dl-color-neutral-1: rgba(51, 51, 51, 1);
+  --dl-color-neutral-2: rgba(79, 79, 79, 1);
+  --dl-color-neutral-4: rgba(189, 189, 189, 1);
+  --dl-color-neutral-6: rgba(250, 250, 250, 1);
+  --dl-size-size-large: 144px;
+  --dl-size-size-small: 48px;
+  --dl-color-danger-300: #A22020;
+  --dl-color-danger-500: #BF2626;
+  --dl-color-danger-700: #E14747;
+  --dl-color-gray-black: #000000;
+  --dl-color-gray-white: #FFFFFF;
+  --dl-size-size-medium: 96px;
+  --dl-size-size-xlarge: 192px;
+  --dl-size-size-xsmall: 16px;
+  --dl-space-space-unit: 16px;
+  --dl-color-primary-100: #003EB3;
+  --dl-color-primary-300: #0074F0;
+  --dl-color-primary-500: #14A9FF;
+  --dl-color-primary-700: #85DCFF;
+  --dl-color-success-300: #199033;
+  --dl-color-success-500: #32A94C;
+  --dl-color-success-700: #4CC366;
+  --dl-size-size-xxlarge: 288px;
+  --dl-size-size-maxwidth: 1400px;
+  --dl-color-default-black: rgba(17, 17, 17, 1);
+  --dl-color-default-green: rgba(41, 229, 49, 1);
+  --dl-color-default-white: rgba(255, 255, 255, 1);
+  --dl-radius-radius-round: 50%;
+  --dl-color-default-black1: rgba(17, 17, 17, 1);
+  --dl-color-default-black2: rgba(17, 17, 17, 1);
+  --dl-color-default-black3: rgba(17, 17, 17, 1);
+  --dl-color-default-black4: rgba(17, 17, 17, 1);
+  --dl-color-default-green1: rgba(41, 229, 49, 1);
+  --dl-color-default-green2: rgba(41, 229, 49, 1);
+  --dl-color-default-linear: rgba(47, 153, 200, 1);
+  --dl-color-default-white1: rgba(255, 255, 255, 1);
+  --dl-color-default-white2: rgba(255, 255, 255, 1);
+  --dl-color-default-white3: rgba(255, 255, 255, 1);
+  --dl-color-default-white4: rgba(255, 255, 255, 1);
+  --dl-color-default-white5: rgba(255, 255, 255, 1);
+  --dl-color-default-white6: rgba(255, 255, 255, 1);
+  --dl-color-default-white7: rgba(255, 255, 255, 1);
+  --dl-color-default-white8: rgba(255, 255, 255, 1);
+  --dl-color-default-white9: rgba(255, 255, 255, 1);
+  --dl-space-space-halfunit: 8px;
+  --dl-space-space-sixunits: 96px;
+  --dl-space-space-twounits: 32px;
+  --dl-color-default-primary: rgba(0, 121, 179, 1);
+  --dl-color-default-white10: rgba(255, 255, 255, 1);
+  --dl-radius-radius-radius2: 2px;
+  --dl-radius-radius-radius4: 4px;
+  --dl-radius-radius-radius8: 8px;
+  --dl-space-space-fiveunits: 80px;
+  --dl-space-space-fourunits: 64px;
+  --dl-color-default-tertiary: rgba(47, 153, 200, 1);
+  --dl-space-space-threeunits: 48px;
+  --dl-color-dark_text-primary: rgba(255, 255, 255, 1);
+  --dl-color-default-secondary: rgba(140, 142, 144, 1);
+  --dl-color-default-secondary1: rgba(140, 142, 144, 1);
+  --dl-color-default-secondary2: rgba(140, 142, 144, 1);
+  --dl-color-default-secondary3: rgba(140, 142, 144, 1);
+  --dl-color-default-secondary4: rgba(140, 142, 144, 1);
+  --dl-color-light_text-primary: rgba(28, 28, 30, 1);
+  --dl-space-space-oneandhalfunits: 24px;
+  --dl-color-light_background-paper: rgba(255, 255, 255, 1);
+  --dl-color-light_background-default: rgba(250, 250, 250, 1);
+  --dl-color-light_background-transparent: rgba(255, 255, 255, 0);
+}
+.button {
+  color: var(--dl-color-gray-black);
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-color: var(--dl-color-gray-black);
+  border-width: 1px;
+  border-radius: 4px;
+  background-color: var(--dl-color-gray-white);
+}
+.input {
+  color: var(--dl-color-gray-black);
+  cursor: auto;
+  padding: 0.5rem 1rem;
+  border-color: var(--dl-color-gray-black);
+  border-width: 1px;
+  border-radius: 4px;
+  background-color: var(--dl-color-gray-white);
+}
+.textarea {
+  color: var(--dl-color-gray-black);
+  cursor: auto;
+  padding: 0.5rem;
+  border-color: var(--dl-color-gray-black);
+  border-width: 1px;
+  border-radius: 4px;
+  background-color: var(--dl-color-gray-white);
+}
+.list {
+  width: 100%;
+  margin: 1em 0px 1em 0px;
+  display: block;
+  padding: 0px 0px 0px 1.5rem;
+  list-style-type: none;
+  list-style-position: outside;
+}
+.list-item {
+  display: list-item;
+}
+.teleport-show {
+  display: flex !important;
+  transform: none !important;
+}
+.company-form {
+  top: 13.333332061767578px;
+  left: 15.999999046325684px;
+  color: var(--dl-color-neutral-4);
+  height: auto;
+  position: absolute;
+  align-self: auto;
+  text-align: left;
+  line-height: 24px;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+.form-1-company-info {
+  top: 13333332061767584.;
+  left: 15999999046325688.;
+  color: var(--dl-color-neutral-4);
+  height: auto;
+  position: absolute;
+  align-self: auto;
+  text-align: left;
+  line-height: 24px;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+.form-1-gst {
+  top: 5.3333330154418945px;
+  left: 0px;
+  width: 21px;
+  height: 21.333332061767578px;
+  display: flex;
+  position: absolute;
+  align-items: flex-start;
+  flex-shrink: 0;
+  border-color: transparent;
+}
+.form-1-business-type {
+  top: 5.3333330154418945px;
+  left: 0px;
+  width: 21px;
+  height: 21.333332061767578px;
+  display: flex;
+  position: absolute;
+  align-items: flex-start;
+  flex-shrink: 0;
+  border-color: transparent;
+}
+.form-1-nature {
+  left: 37.33333206176758px;
+  color: var(--dl-color-neutral-1);
+  height: auto;
+  position: absolute;
+  align-self: auto;
+  text-align: left;
+  line-height: 24px;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+.form-1-products-services {
+  top: -31.999998092651367px;
+  color: var(--dl-color-neutral-1);
+  height: auto;
+  position: absolute;
+  align-self: auto;
+  text-align: left;
+  line-height: 20px;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+.form-1-contact-1 {
+  top: -31.999998092651367px;
+  color: var(--dl-color-neutral-1);
+  height: auto;
+  position: absolute;
+  align-self: auto;
+  text-align: left;
+  line-height: 20px;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+.form-1-contact-2 {
+  top: -31.999998092651367px;
+  color: var(--dl-color-neutral-1);
+  height: auto;
+  position: absolute;
+  align-self: auto;
+  text-align: left;
+  line-height: 20px;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+.form-1-evaluation {
+  top: 5.3333330154418945px;
+  left: 0px;
+  width: 21px;
+  height: 21.333332061767578px;
+  display: flex;
+  position: absolute;
+  align-items: flex-start;
+  flex-shrink: 0;
+  border-color: transparent;
+}
+.form-1-site-eval {
+  top: 5.3333330154418945px;
+  left: 0px;
+  width: 21px;
+  height: 21.333332061767578px;
+  display: flex;
+  position: absolute;
+  align-items: flex-start;
+  flex-shrink: 0;
+  border-color: transparent;
+}
+.form-1-sample {
+  top: 5.3333330154418945px;
+  left: 0px;
+  width: 21px;
+  height: 21.333332061767578px;
+  display: flex;
+  position: absolute;
+  align-items: flex-start;
+  flex-shrink: 0;
+  border-color: transparent;
+}
+.form-1-firstdeal {
+  left: 37.33333206176758px;
+  color: var(--dl-color-neutral-1);
+  height: auto;
+  position: absolute;
+  align-self: auto;
+  text-align: left;
+  line-height: 24px;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+.form-1-trackrecord {
+  top: 5.3333330154418945px;
+  left: 0px;
+  width: 21px;
+  height: 21.333332061767578px;
+  display: flex;
+  position: absolute;
+  align-items: flex-start;
+  flex-shrink: 0;
+  border-color: transparent;
+}
+.form2-info {
+  top: 260px;
+  left: 272px;
+  width: 552px;
+  height: 181.328125px;
+  display: flex;
+  position: absolute;
+  align-items: flex-start;
+}
+.form2-steps {
+  top: 489.32293701171875px;
+  left: 271.9965515136719px;
+  width: 503.64586639404297px;
+  height: 58.6631965637207px;
+  display: flex;
+  position: absolute;
+  align-items: flex-start;
+}
+.form1-radio {
+  top: 88.00347900390625px;
+  left: 1.319427490234375px;
+  width: 245.64236450195312px;
+  height: 31.99652862548828px;
+  display: flex;
+  position: absolute;
+  align-items: flex-start;
+}
+.form2-radio-safetytraining {
+  top: 88.0035400390625px;
+  left: 1.30206298828125px;
+  width: 245.65975952148438px;
+  height: 31.99652862548828px;
+  display: flex;
+  position: absolute;
+  align-items: flex-start;
+}
+.form2-radio-rac {
+  top: 87.986083984375px;
+  left: 1.319427490234375px;
+  width: 245.65972900390625px;
+  height: 31.99652862548828px;
+  display: flex;
+  position: absolute;
+  align-items: flex-start;
+}
+.form2-radio-inspecteqp {
+  top: 110px;
+  left: 1.319427490234375px;
+  width: 245.64236450195312px;
+  height: 31.99652862548828px;
+  display: flex;
+  position: absolute;
+  align-items: flex-start;
+}
+.form2-radio-resper {
+  top: 188.00341796875px;
+  left: 2.673614501953125px;
+  width: 245.65972900390625px;
+  height: 31.99652862548828px;
+  display: flex;
+  position: absolute;
+  align-items: flex-start;
+}
+.form1-inpuit-vendorEvaluation {
+  top: 0px;
+  right: 0px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-width: 2px;
+}
+.form2-radio {
+  top: 45.34722900390625px;
+  left: 2.65625px;
+  width: 388.3160095214844px;
+  height: 31.99652862548828px;
+  display: flex;
+  position: absolute;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.form1-radio-businessNature {
+  left: 0px;
+  bottom: 0px;
+  display: flex;
+  position: absolute;
+  align-self: flex-end;
+  align-items: center;
+  justify-content: center;
+}
+.form1-evaluation {
+  top: 0px;
+  left: 0px;
+  width: 771.6493530273438px;
+  height: 369.3401985168457px;
+  display: flex;
+  position: absolute;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.form1-eva {
+  left: 0px;
+  width: 390.9896240234375px;
+  bottom: 426.68392181396484px;
+  height: 77.32636260986328px;
+  display: flex;
+  position: absolute;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.form3-contractorInfo {
+  width: 100%;
+  height: 100%;
+  border-width: 3px;
+}
+.Content {
+  font-size: 16px;
+  font-family: Inter;
+  font-weight: 400;
+  line-height: 1.15;
+  text-transform: none;
+  text-decoration: none;
+}
+.ParagraphSmallBold1 {
+  font-size: 14px;
+  font-style: normal;
+  font-family: Inter;
+  font-weight: 700px;
+  font-stretch: normal;
+}
+.ParagraphSmallBold {
+  font-size: 14px;
+  font-style: normal;
+  font-family: Inter;
+  font-weight: 700px;
+  font-stretch: normal;
+}
+.HeadingH4Bold {
+  font-size: 28px;
+  font-style: normal;
+  font-family: Inter;
+  font-weight: 700px;
+  font-stretch: normal;
+}
+.HeadingH2Regular1 {
+  font-size: 36px;
+  font-style: normal;
+  font-family: Inter;
+  font-weight: 400px;
+  font-stretch: normal;
+}
+.H2bold {
+  font-size: 40px;
+  font-style: normal;
+  font-family: Outfit;
+  font-weight: 700px;
+  font-stretch: normal;
+}
+.PBodyMregular {
+  font-size: 16px;
+  font-style: normal;
+  font-family: Outfit;
+  font-weight: 400px;
+  font-stretch: normal;
+}
+.ParagraphNormalRegular1 {
+  font-size: 16px;
+  font-style: normal;
+  font-family: Inter;
+  font-weight: 400px;
+  font-stretch: normal;
+}
+.ParagraphSmallRegular1 {
+  font-size: 14px;
+  font-style: normal;
+  font-family: Inter;
+  font-weight: 400px;
+  font-stretch: normal;
+}
+.Heading {
+  font-size: 32px;
+  font-family: Inter;
+  font-weight: 700;
+  line-height: 1.15;
+  text-transform: none;
+  text-decoration: none;
+}
+.HeadingH2Regular {
+  font-size: 36px;
+  font-style: normal;
+  font-family: Inter;
+  font-weight: 400px;
+  font-stretch: normal;
+}
+.ParagraphSmallRegular {
+  font-size: 14px;
+  font-style: normal;
+  font-family: Inter;
+  font-weight: 400px;
+  font-stretch: normal;
+}
+.HeadingH4Bold1 {
+  font-size: 28px;
+  font-style: normal;
+  font-family: Inter;
+  font-weight: 700px;
+  font-stretch: normal;
+}
+.ParagraphNormalRegular {
+  font-size: 16px;
+  font-style: normal;
+  font-family: Inter;
+  font-weight: 400px;
+  font-stretch: normal;
+}
+.BTNLSemi-Bold {
+  font-size: 18px;
+  font-style: normal;
+  font-family: Outfit;
+  font-weight: 600px;
+  font-stretch: normal;
+}
+
+@media(max-width: 1200px) {
+  .form-1-contact-2 {
+    left: 200px;
+    right: 0px;
+    margin: auto;
+  }
+  .form2-steps {
+    margin-left: -100px;
+  }
+}
+@media(max-width: 991px) {
+  .form-1-company-info {
+    left: 75px;
+  }
+  .form2-steps {
+    margin-left: -140px;
+  }
+}
+
+@media(max-width: 479px) {
+  .form2-steps {
+    height: 61px;
+    margin-top: 10px;
+    margin-left: -250px;
+    margin-right: -250px;
+  }
+  .form1-radio {
+    top: 150px;
+  }
+}
