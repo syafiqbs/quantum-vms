@@ -7,6 +7,8 @@ import Form1 from './views/form-1'
 import Form2 from './views/form-2'
 import Form3 from './views/form-3'
 import AccountManager from './views/account-manager'
+import AccManager from './views/acc-manager'
+import SideBarVendor from './views/side-bar'
 import Login from './views/login'
 import './style.css'
 
@@ -19,6 +21,16 @@ export default new Router({
       name: 'Workflow',
       path: '/workflow',
       component: Workflow,
+    },
+    {
+      name: 'SideBarVendor',
+      path: '/side-bar',
+      component: SideBarVendor,
+    },    
+    {
+      name: 'Acc-Manager',
+      path: '/acc-manager',
+      component: AccManager,
     },
     {
       name: 'Form-1',
