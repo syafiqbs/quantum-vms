@@ -16,9 +16,12 @@
                     <div class="row">
                         <p class="col">Overview of vendor accounts</p> 
                         <div class="col">
-       
+                            <b-button type="button" class="btn btn-dark float-end">{{token}}</b-button>
                             <b-button type="button" class="btn btn-dark float-end" v-b-modal.modal-prevent-closing1>Create</b-button>
                         </div>
+                    </div>
+                    <div class="row">
+                        <h1>{{vendorToken}}</h1>
                     </div>
                     
                     <!-- Modal Create-->
@@ -70,6 +73,20 @@
                             required
                           ></b-form-input>
                         </b-form-group>
+
+                        <b-form-group
+                          label="Password"
+                          label-for="password"
+                          invalid-feedback="Password is required"
+                        >
+                          <b-form-input
+                            id="password"
+                            v-model="password"
+                            placeholder="Enter your password"
+                            required
+                          ></b-form-input>
+                        </b-form-group>
+
                       </form>
                     </b-modal>
     
@@ -161,7 +178,8 @@
     </template>
     
     <script>
-    import SideBarVendor from './side-bar'
+    import SideBarVendor from './side-bar';
+    import axios from "axios";
     
     
     
@@ -185,7 +203,10 @@
             name: '',
             email: '',
             contact: '',
+            password: '',
             vendors: [],
+            token: '',
+            vendorToken: '',
             modal: {
               id: 'modal-prevent-closing2',
               name: '',
@@ -198,6 +219,16 @@
             
           }
       },
+      created() {
+        // Simple POST request with a JSON body using axios
+        const user = {
+            "email" : "admin@admin.com",
+            "password" : "123"
+        };
+        axios.post("http://localhost:8080/api/v1/auth/user/authenticate", user)
+          .then(response => this.token = response.data.token);
+      },
+      
       methods: {
           deleteRow(index, vendor) {
             var idx = this.vendors.indexOf(vendor);
@@ -210,6 +241,7 @@
             this.name = ''
             this.email = ''
             this.contact = ''
+            this.password = ''
           },
           handleOk(bvModalEvent) {
             // Prevent modal from closing
@@ -219,11 +251,23 @@
           },
           handleSubmit() {
             // Push the name to submitted names
-            this.vendors.push(
-              {name : this.name,
-              email : this.email,
-              contact : this.contact}
-            )
+            const user = {
+    "name" : "companyABC",
+    "email" : "user@user5.com",
+    "contactNumber" : "123456789",
+    "password" : "123"
+};
+            this.token = `Bearer ` + this.token
+            console.log(this.token);
+            console.log(user)
+            axios.post("http://localhost:8080/api/v1/auth/admin/register", user, {headers: {
+              Authorization : this.token
+            }})
+            .then(response => console.log(response))
+            .catch ((error) => {
+              console.log(error)
+            })
+            
     
             this.$nextTick(() => {
               this.$bvModal.hide('modal-prevent-closing1')
