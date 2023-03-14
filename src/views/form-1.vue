@@ -66,18 +66,22 @@
         </div>
         <div class="form1-tab1">
           <div class="form1-frame112">
-            <div class="form1-frame102">
-              <span class="form1-text022 ParagraphSmallRegular">Step 2</span>
-            </div>
+            <a href="#form1-radio-gst">
+              <div class="form1-frame102">
+                <span class="form1-text022 ParagraphSmallRegular">Step 2</span>
+              </div>
+            </a>
           </div>
         </div>
         <div class="form1-tab2">
           <div class="form1-frame113">
+            <a href="#form1-input-person1-name">
             <div class="form1-frame103">
-              <span class="form1-text023 ParagraphSmallRegular">
-                <span>Step 3</span>
-              </span>
-            </div>
+                <span class="form1-text023 ParagraphSmallRegular">
+                  <span>Step 3</span>
+                </span>
+              </div>
+            </a>
           </div>
         </div>
         <div class="form1-tab3">
