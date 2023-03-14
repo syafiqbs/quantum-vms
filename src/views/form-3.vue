@@ -58,14 +58,16 @@
         </div>
         <div class="form3-tab1">
           <div class="form3-frame112">
-            <div class="form3-frame102">
-              <span class="form3-text024"><span>Step 2</span></span>
-            </div>
+            <a href="#container-part1">
+              <div class="form3-frame102">
+                <span class="form3-text024"><span>Step 2</span></span>
+              </div>
+            </a>
           </div>
         </div>
         <div class="form3-tab2">
           <div class="form3-frame113">
-            <a href="#form3-btn-totalScore" class="form3-link1">
+            <a href="#form3-radio-3a" class="form3-link1">
               <div class="form3-frame103">
                 <span class="form3-text026"><span>Step 3</span></span>
               </div>
@@ -74,9 +76,11 @@
         </div>
         <div class="form3-tab3">
           <div class="form3-frame114">
-            <div class="form3-frame104">
-              <span class="form3-text028"><span>Step 4</span></span>
-            </div>
+            <a href="#form3-radio-5a">
+              <div class="form3-frame104">
+                <span class="form3-text028"><span>Step 4</span></span>
+              </div>
+            </a>
           </div>
         </div>
         <div class="form3-tab4">
@@ -1802,6 +1806,7 @@ export default {
   left: 70px;
   position: absolute;
   align-self: center;
+  
 }
 .form3-container02 {
   top: 90px;
@@ -1900,6 +1905,7 @@ export default {
   margin-right: 0;
   margin-bottom: 0;
   text-decoration: none;
+  color: #000000;
 }
 .form3-line26 {
   width: 99px;
@@ -1950,6 +1956,7 @@ export default {
   margin-right: 0;
   margin-bottom: 0;
   text-decoration: none;
+  color: black;
 }
 .form3-tab2 {
   top: 0px;
@@ -1998,6 +2005,7 @@ export default {
   margin-right: 0;
   margin-bottom: 0;
   text-decoration: none;
+  color:black;
 }
 .form3-tab3 {
   top: 0px;
@@ -2042,6 +2050,7 @@ export default {
   margin-right: 0;
   margin-bottom: 0;
   text-decoration: none;
+  color: black;
 }
 .form3-tab4 {
   top: 0px;
@@ -2090,6 +2099,7 @@ export default {
   margin-right: 0;
   margin-bottom: 0;
   text-decoration: none;
+  color: black;
 }
 .form3-container-contractor-info {
   top: 560px;
@@ -2368,7 +2378,7 @@ export default {
   top: 0px;
   left: 2.65625px;
   width: 581.66015625px;
-  height: 211.97265625px;
+  height: 75.97px;
   display: flex;
   position: absolute;
   align-items: flex-start;
@@ -2391,6 +2401,7 @@ export default {
   text-decoration: none;
 }
 .form3-container-radio-1b {
+  top: 180px;
   left: 1.328125px;
   width: 100%;
   bottom: 0px;
@@ -5339,6 +5350,10 @@ export default {
   margin-bottom: 0;
 }
 @media(max-width: 1600px) {
+  .form3-header-horizontal {
+  width: 100%;
+}
+
   .form3-container-contractor-info {
     left: 125px;
   }
@@ -5575,6 +5590,7 @@ export default {
   .form3-text009 {
     position: static;
     margin-left: var(--dl-space-space-halfunit);
+    
   }
   .form3-container02 {
     position: static;
