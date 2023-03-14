@@ -161,8 +161,6 @@
               <input type="radio" name="form1-radio-gst" value="No" />
               <label class="form1-text038">
                 <span class="form1-text039">No</span>
-                <br class="form1-text040" />
-                <br class="form1-text041" />
               </label>
             </div>
           </div>
@@ -548,7 +546,7 @@
         <div class="form1-container-others">
           <div
             id="form1-others-evaluation"
-            class="form1-container24 form1-radio-businessNature"
+            class="form1-container24"
           >
             <input type="checkbox" id="form1-radio-others-evaluation" />
             <span class="form1-text109">
@@ -838,7 +836,7 @@ export default {
   text-decoration: none;
 }
 .form1-label-form-id {
-  top: 90px;
+  top: 85px;
   left: 94.01043701171875px;
   position: absolute;
 }
@@ -847,7 +845,7 @@ export default {
 }
 .form1-label-rev-no {
   left: 91.0069580078125px;
-  bottom: 33.993072509765625px;
+  bottom: 25.993072509765625px;
   position: absolute;
 }
 .form1-text015 {
@@ -855,7 +853,7 @@ export default {
 }
 .form1-label-effective-date {
   left: 154.01043701171875px;
-  bottom: 0px;
+  bottom: -6px;
   position: absolute;
 }
 .form1-text018 {
@@ -2171,11 +2169,9 @@ export default {
   margin-top: var(--dl-space-space-twounits);
 }
 .form1-textinput16 {
-  top: var(--dl-space-space-fiveunits);
+  top: 100px;
   width: 100%;
   height: var(--dl-size-size-small);
-  margin-top: var(--dl-space-space-threeunits);
-  margin-left: 0px;
   border-width: 2px;
 }
 .form1-container-vendor-evaluation {
@@ -2772,16 +2768,16 @@ export default {
     height: var(--dl-size-size-medium);
   }
   .form1-label-form-id {
-    top: 90px;
+    top: 85px;
     left: 90px;
   }
   .form1-label-rev-no {
-    top: 123px;
+    top: 117.5px;
     left: 90px;
   }
   .form1-label-effective-date {
     left: 155px;
-    bottom: 0px;
+    bottom: -5px;
   }
   .form1-container-steps {
     margin-top: mixed;
@@ -3133,13 +3129,13 @@ export default {
     text-decoration: none;
   }
   .form1-label-form-id {
-    top: 136px;
+    top: 130px;
     left: 78px;
     margin: auto;
     position: absolute;
   }
   .form1-label-rev-no {
-    top: 170px;
+    top: 162.5px;
     left: 78px;
     bottom: 15px;
     margin: auto;
@@ -3147,7 +3143,7 @@ export default {
   }
   .form1-label-effective-date {
     left: 130px;
-    bottom: -17px;
+    bottom: -20px;
   }
   .form1-container-steps {
     top: 525px;
