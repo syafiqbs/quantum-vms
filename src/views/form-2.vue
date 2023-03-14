@@ -56,7 +56,7 @@
         </div>
         <div class="form2-tab1">
           <div class="form2-frame112">
-            <a href="#form2-radio-polcandorg-a" class="form2-link1">
+            <a href="#container-safety-health-pol-org" class="form2-link1">
               <div class="form2-frame102">
                 <span class="form2-text021">Step 2</span>
               </div>
@@ -120,7 +120,7 @@
           />
         </div>
       </div>
-      <div class="form2-container-safety">
+      <div class="form2-container-safety" id="container-safety-health-pol-org">
         <span class="form2-text032">
           Safety &amp; Health Policy and Organisation
         </span>
@@ -137,8 +137,6 @@
               <input type="radio" name="form2-radio-polandorg-a" value="No" />
               <label class="form2-text035">
                 <span class="form2-text036">No</span>
-                <br class="form2-text037" />
-                <br class="form2-text038" />
               </label>
             </div>
           </div>
@@ -163,8 +161,6 @@
               <input type="radio" name="form2-radio-polandorg-b" value="No" />
               <label class="form2-text045">
                 <span class="form2-text046">No</span>
-                <br class="form2-text047" />
-                <br class="form2-text048" />
               </label>
             </div>
           </div>
@@ -180,11 +176,7 @@
             </div>
             <div class="form2-container-no02">
               <input type="radio" name="form2-radio-polandorg-c" value="No" />
-              <label class="form2-text051">
-                <span class="form2-text052">No</span>
-                <br class="form2-text053" />
-                <br class="form2-text054" />
-              </label>
+              <label class="form2-text051">No</label>
             </div>
           </div>
         </div>
@@ -206,8 +198,6 @@
               <input type="radio" name="form2-radio-toolbox" value="No" />
               <label class="form2-text060">
                 <span class="form2-text061">No</span>
-                <br class="form2-text062" />
-                <br class="form2-text063" />
               </label>
             </div>
           </div>
@@ -242,8 +232,6 @@
               />
               <label class="form2-text069">
                 <span class="form2-text070">No</span>
-                <br class="form2-text071" />
-                <br class="form2-text072" />
               </label>
             </div>
           </div>
@@ -274,8 +262,6 @@
               />
               <label class="form2-text076">
                 <span class="form2-text077">No</span>
-                <br class="form2-text078" />
-                <br class="form2-text079" />
               </label>
             </div>
           </div>
@@ -304,8 +290,6 @@
               />
               <label class="form2-text083">
                 <span class="form2-text084">No</span>
-                <br class="form2-text085" />
-                <br class="form2-text086" />
               </label>
             </div>
           </div>
@@ -332,8 +316,6 @@
               <input type="radio" name="form2-radio-rac-a" value="No" />
               <label class="form2-text092">
                 <span class="form2-text093">No</span>
-                <br class="form2-text094" />
-                <br class="form2-text095" />
               </label>
             </div>
           </div>
@@ -357,8 +339,6 @@
               <input type="radio" name="form2-radio-rac-b" value="No" />
               <label class="form2-text101">
                 <span class="form2-text102">No</span>
-                <br class="form2-text103" />
-                <br class="form2-text104" />
               </label>
             </div>
           </div>
@@ -390,8 +370,6 @@
               <input type="radio" name="form2-radio-inspecteqp-a" value="No" />
               <label class="form2-text112">
                 <span class="form2-text113">No</span>
-                <br class="form2-text114" />
-                <br class="form2-text115" />
               </label>
             </div>
           </div>
@@ -419,8 +397,6 @@
               <input type="radio" name="form2-radio-inspecteqp-b" value="No" />
               <label class="form2-text122">
                 <span class="form2-text123">No</span>
-                <br class="form2-text124" />
-                <br class="form2-text125" />
               </label>
             </div>
           </div>
@@ -443,8 +419,6 @@
               <input type="radio" name="form2-radio-resper-a" value="No" />
               <label class="form2-text131">
                 <span class="form2-text132">No</span>
-                <br class="form2-text133" />
-                <br class="form2-text134" />
               </label>
             </div>
           </div>
@@ -455,15 +429,13 @@
         <div id="form2-radio-resper-b" class="form2-radio-resper">
           <div class="form2-container-yes-no12">
             <div class="form2-container-yes12">
-              <input type="radio" name="form2-radio-resper-a" value="Yes" />
+              <input type="radio" name="form2-radio-resper" value="Yes" />
               <label class="form2-text137">Yes</label>
             </div>
             <div class="form2-container-no12">
-              <input type="radio" name="form2-radio-resper-b" value="No" />
+              <input type="radio" name="form2-radio-resper" value="No" />
               <label class="form2-text138">
                 <span class="form2-text139">No</span>
-                <br class="form2-text140" />
-                <br class="form2-text141" />
               </label>
             </div>
           </div>
@@ -501,8 +473,6 @@
               <input type="radio" name="form2-radio-resper-c" value="No" />
               <label class="form2-text152">
                 <span class="form2-text153">No</span>
-                <br class="form2-text154" />
-                <br class="form2-text155" />
               </label>
             </div>
           </div>
@@ -2629,6 +2599,7 @@ export default {
   .form2-header-horizontal {
     position: static;
     align-self: flex-start;
+    width: 100%;
   }
   .form2-inputtext {
     width: 400px;
