@@ -3,11 +3,9 @@ import Router from 'vue-router'
 import Meta from 'vue-meta'
 
 import Workflow from './views/workflow'
-import WorkflowOld from './views/workflowold'
 import Form1 from './views/form-1'
 import Form2 from './views/form-2'
 import Form3 from './views/form-3'
-import AccountManager from './views/account-manager'
 import AccManager from './views/acc-manager'
 import SideBarVendor from './views/side-bar'
 import Login from './views/login'
@@ -22,11 +20,6 @@ export default new Router({
       name: 'Workflow',
       path: '/workflow',
       component: Workflow,
-    },
-    {
-      name: 'WorkflowOld',
-      path: '/workflowold',
-      component: WorkflowOld,
     },
     {
       name: 'SideBarVendor',
@@ -52,11 +45,6 @@ export default new Router({
       name: 'Form-3',
       path: '/form-3',
       component: Form3,
-    },
-    {
-      name: 'Account-Manager',
-      path: '/account-manager',
-      component: AccountManager,
     },
     {
       name: 'Login',

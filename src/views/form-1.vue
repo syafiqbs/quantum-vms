@@ -707,6 +707,9 @@ export default {
     ],
   },
 }
+
+console.log('test');
+
 </script>
 
 <style scoped>
