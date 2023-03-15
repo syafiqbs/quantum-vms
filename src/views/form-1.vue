@@ -181,6 +181,7 @@
               type="radio"
               name="form1-radio-bizType"
               class="form1-radiobutton02"
+              @change="checkBizTypeState"
             />
             <span class="form1-text043">Sole Proprietorship</span>
           </div>
@@ -194,6 +195,7 @@
               type="radio"
               name="form1-radio-bizType"
               class="form1-radiobutton03"
+              @change="checkBizTypeState"
             />
             <span class="form1-text044">
               <span>Limited Company</span>
@@ -210,6 +212,7 @@
               type="radio"
               name="form1-radio-bizType"
               class="form1-radiobutton04"
+              @change="checkBizTypeState"
             />
             <span class="form1-text047">
               <span>Partnership Agreement</span>
@@ -228,6 +231,7 @@
                 id="form1-radio-others-bizType"
                 name="form1-radio-bizType"
                 class="form1-radiobutton05"
+                @change="checkBizTypeState"
               />
               <span class="form1-text050">
                 <span>Others</span>
@@ -237,7 +241,7 @@
             <input
               type="text"
               id="form1-input-others-bizType"
-              disabled
+              :disabled="bizTypeInput==1"
               class="form1-textinput04 form1-inpuit-vendorEvaluation input"
             />
           </div>
@@ -252,6 +256,7 @@
               type="radio"
               name="form-radio-bizNature"
               class="form1-radiobutton06"
+              @change="checkBizNatureState"
             />
             <span class="form1-text054">Manufacturing</span>
           </div>
@@ -262,6 +267,7 @@
               type="radio"
               name="form-radio-bizNature"
               class="form1-radiobutton07"
+              @change="checkBizNatureState"
             />
             <span class="form1-text055">
               <span>Agent/dealer</span>
@@ -271,7 +277,12 @@
         </div>
         <div class="form1-container15">
           <div id="form1-radio-distributor" class="form1-radio-businessNature">
-            <input type="radio" name="radio" class="form1-radiobutton08" />
+            <input 
+              type="radio" 
+              name="form-radio-bizNature" 
+              class="form1-radiobutton08" 
+              @change="checkBizNatureState"
+            />
             <span class="form1-text058">
               <span>Distributor</span>
               <br />
@@ -289,6 +300,7 @@
                 id="form1-radio-others-bizNature"
                 name="form-radio-bizNature"
                 class="form1-radiobutton09"
+                @change="checkBizNatureState"
               />
               <span class="form1-text061">
                 <span>Others</span>
@@ -298,7 +310,7 @@
             <input
               type="text"
               id="form1-input-others-bizNature"
-              disabled
+              :disabled="bizNatureInput==1"
               class="form1-textinput05 form1-inpuit-vendorEvaluation input"
             />
           </div>
@@ -388,7 +400,11 @@
           <span class="form1-text081"><span>Evaluation</span></span>
           <div id="form1-isoCert" class="form1-container-iso-cert">
             <div id="form1-radio-isoCert" class="form1-container21">
-              <input type="checkbox" name="form1-checkbox-evaluation" />
+              <input 
+                type="checkbox" 
+                name="form1-checkbox-evaluation"
+                @change="controlIsoInput"
+              />
               <span class="form1-text083">
                 <span>ISO 9001 Certification</span>
                 <br />
@@ -398,14 +414,18 @@
             <input
               type="text"
               id="form1-input-isoCert"
-              disabled
+              :disabled="isoInput"
               placeholder="Certification Body"
               class="form1-textinput13 form1-inpuit-vendorEvaluation input"
             />
           </div>
           <div id="form1-labAccred" class="form1-container-lab-accred">
             <div id="form1-radio-labAccred" class="form1-container22">
-              <input type="checkbox" name="form1-checkbox-evaluation" />
+              <input 
+                type="checkbox" 
+                name="form1-checkbox-evaluation" 
+                @change="controlLabAccredInput"
+                />
               <span class="form1-text087">
                 <span>Accreditation of Laboratory</span>
                 <br />
@@ -414,14 +434,18 @@
             <input
               type="text"
               id="form1-input-labAccred"
-              disabled
+              :disabled="labAccredInput"
               placeholder="Accreditation Body"
               class="form1-textinput14 form1-inpuit-vendorEvaluation input"
             />
           </div>
           <div id="form1-projectCert" class="form1-container-project-cert">
             <div id="form1-radio-projectCert" class="form1-container23">
-              <input type="checkbox" name="form1-checkbox-evaluation" />
+              <input 
+                type="checkbox" 
+                name="form1-checkbox-evaluation"
+                @change="controlProjClarInput"
+                />
               <span class="form1-text090">
                 <span>Project Certification</span>
                 <br />
@@ -430,7 +454,7 @@
             <input
               type="text"
               id="form1-input-projectCert"
-              disabled
+              :disabled="projectClarInput"
               placeholder="Product Markings (e.g. PSB, UL, TUV)"
               class="form1-textinput15 form1-inpuit-vendorEvaluation input"
             />
@@ -552,7 +576,11 @@
             id="form1-others-evaluation"
             class="form1-container24"
           >
-            <input type="checkbox" id="form1-radio-others-evaluation" />
+            <input 
+              type="checkbox" 
+              id="form1-radio-others-evaluation" 
+              @change="controlEvalOthersInput"
+              />
             <span class="form1-text109">
               <span class="form1-text110">
                 Others
@@ -567,7 +595,7 @@
             <input
               type="text"
               id="form1-input-others-evaluation"
-              disabled
+              :disabled="evalOthersInput"
               class="form1-textinput16 form1-inpuit-vendorEvaluation input"
             />
           </div>
@@ -688,6 +716,8 @@
 </template>
 
 <script>
+
+
 export default {
   name: 'Form1',
   data() {
@@ -695,6 +725,12 @@ export default {
       rawqg09: ' ',
       rawfmrc: ' ',
       rawl2sy: ' ',
+      bizTypeInput: true,
+      bizNatureInput: true,
+      isoInput: true,
+      labAccredInput: true,
+      projectClarInput: true,
+      evalOthersInput: true
     }
   },
   metaInfo: {
@@ -706,9 +742,48 @@ export default {
       },
     ],
   },
+  methods: {
+    checkBizTypeState(event){
+      var radioElementBizType = event.target;
+      radioElementBizType.id ? this.bizTypeInput = false : this.bizTypeInput = true
+    },
+    checkBizNatureState(event){
+      var checkBizNatureState = event.target;
+      checkBizNatureState.id ? this.bizNatureInput = false : this.bizNatureInput = true
+    },
+    controlIsoInput(event){
+      var isoCheckboxEle = event.target;
+      isoCheckboxEle.checked ? this.isoInput = false : this.isoInput = true;
+    },
+    controlLabAccredInput(event){
+      var labAccredCheckboxEle = event.target;
+      labAccredCheckboxEle.checked ? this.labAccredInput = false : this.labAccredInput = true;
+    },
+    controlProjClarInput(event){
+      var projClarCheckboxEle = event.target;
+      projClarCheckboxEle.checked ? this.projectClarInput = false : this.projectClarInput = true;
+    },
+    controlEvalOthersInput(event){
+      var evalOthersCheckboxEle = event.target;
+      evalOthersCheckboxEle.checked ? this.evalOthersInput = false : this.evalOthersCheckboxEle = true;
+    }
+  }
 }
 
-console.log('test');
+import { forVendor } from '../services/handleForm1';
+
+forVendor();
+
+
+// validate token
+// fetch user
+// if vendor, enable everything accept evaluation, show save and submit
+// if admin, enable evaluated by, show reject and approve review, disable inputs
+// if approver, enable evaluation, buttons, disable inputs
+
+// fetch form from database and update to display
+
+// fetch all form input and update to database
 
 </script>
 
