@@ -185,6 +185,8 @@
 <script>
     import SideBarVendor from './side-bar'
 
+    console.log(localStorage);
+
     export default {
         name: 'Workflow',
         metaInfo: {

@@ -976,115 +976,168 @@
           </div>
         </div>
       </div>
-      <div class="login-loginpanel">
-        <span class="login-text4 H2bold"><span>Login</span></span>
-        <div class="login-option2">
-          <div class="login-loginform">
-            <div class="login-input">
-              <div class="login-input-text-field">
-                <div class="login-input-text-field-content">
-                  <div class="login-input-icons">
-                    <div class="login-iconemail">
-                      <div class="login-vuesaxoutlinesms">
-                        <div class="login-sms">
-                          <img
-                            alt="VectorI410"
-                            src="/playground_assets/vectori410-avo9.svg"
-                            class="login-vector"
-                          />
-                          <img
-                            alt="VectorI410"
-                            src="/playground_assets/vectori410-jing.svg"
-                            class="login-vector1"
+      <form name="form" @submit.prevent="handleLogin">
+        <div class="login-loginpanel">
+          <span class="login-text4 H2bold"><span>Login</span></span>
+          <div class="login-option2">
+            <div class="login-loginform">
+              <div class="login-input">
+                <div class="login-input-text-field">
+                  <div class="login-input-text-field-content">
+                    <div class="login-input-icons">
+                      <div class="login-iconemail">
+                        <div class="login-vuesaxoutlinesms">
+                          <div class="login-sms">
+                            <img
+                              alt="VectorI410"
+                              src="/playground_assets/vectori410-avo9.svg"
+                              class="login-vector"
+                            />
+                            <img
+                              alt="VectorI410"
+                              src="/playground_assets/vectori410-jing.svg"
+                              class="login-vector1"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="login-input1">
+                      <div class="login-input-text-field-base">
+                        <div class="login-w-prefix">
+                          <input
+                            type="text"
+                            id="inputEmail"
+                            required
+                            placeholder="email address"
+                            class="login-input-input-text"
+                            v-model="user.email"
+                            v-validate="'required'"
+                            name="email"
                           />
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="login-input1">
-                    <div class="login-input-text-field-base">
-                      <div class="login-w-prefix">
-                        <input
-                          type="text"
-                          id="inputEmail"
-                          required
-                          placeholder="email address"
-                          class="login-input-input-text"
-                        />
+                </div>
+                <div class="login-input-text-field1">
+                  <div class="login-input-text-field-content1">
+                    <div class="login-input-icons1">
+                      <div class="login-lock">
+                        <div class="login-vuesaxoutlinelock">
+                          <div class="login-lock1">
+                            <img
+                              alt="VectorI410"
+                              src="/playground_assets/vectori410-2bw.svg"
+                              class="login-vector2"
+                            />
+                            <img
+                              alt="VectorI410"
+                              src="/playground_assets/vectori410-208s.svg"
+                              class="login-vector3"
+                            />
+                            <img
+                              alt="VectorI410"
+                              src="/playground_assets/vectori410-omp.svg"
+                              class="login-vector4"
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div class="login-input-text-field1">
-                <div class="login-input-text-field-content1">
-                  <div class="login-input-icons1">
-                    <div class="login-lock">
-                      <div class="login-vuesaxoutlinelock">
-                        <div class="login-lock1">
-                          <img
-                            alt="VectorI410"
-                            src="/playground_assets/vectori410-2bw.svg"
-                            class="login-vector2"
-                          />
-                          <img
-                            alt="VectorI410"
-                            src="/playground_assets/vectori410-208s.svg"
-                            class="login-vector3"
-                          />
-                          <img
-                            alt="VectorI410"
-                            src="/playground_assets/vectori410-omp.svg"
-                            class="login-vector4"
+                    <div class="login-input2">
+                      <div class="login-input-text-field-base1">
+                        <div class="login-w-prefix1">
+                          <input
+                            type="password"
+                            id="inputPassword"
+                            required
+                            placeholder="password"
+                            class="login-input-input-text1"
+                            v-model="user.password"
+                            v-validate="'required'"
+                            name="password"
                           />
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="login-input2">
-                    <div class="login-input-text-field-base1">
-                      <div class="login-w-prefix1">
-                        <input
-                          type="password"
-                          id="inputPassword"
-                          required
-                          placeholder="password"
-                          class="login-input-input-text1"
-                        />
-                      </div>
-                    </div>
-                  </div>
                 </div>
-              </div>
-              <div class="login-forgetpass">
-                <div class="login-checkboxmain">
-                  <div class="login-padding"></div>
-                </div>
-                <button class="login-button"></button>
-              </div>
-            </div>
-            <button id="loginButton" type="submit" class="login-button1">
-              <button class="login-base-button">
-                <div class="login-content">
-                  <span class="login-text6 BTNLSemi-Bold">
-                    <span>Login</span>
+                <div class="login-error">
+                  <span
+                    v-if="submitted && errors"
+                    style="color:red;"
+                  >
+                  Invalid user. Please try again
                   </span>
+                  <!-- <button class="login-button"></button> -->
                 </div>
+              </div>
+              <button id="loginButton" type="submit" class="login-button1">
+                <button class="login-base-button">
+                  <div class="login-content">
+                    <span class="login-text6 BTNLSemi-Bold">
+                      <span>Login</span>
+                    </span>
+                  </div>
+                </button>
               </button>
-            </button>
+            </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
+import User from '../models/user';
+
 export default {
   name: 'Login',
   data() {
     return {
       raw98bm: ' ',
+      user: new User('', ''),
+      message: '',
+      submitted: false
+    }
+  },
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn
+    }
+  },
+  created() {
+    if (this.loggedIn) {
+      this.$router.push('/workflow')
+    }
+  },
+  methods: {
+    handleLogin() {
+      this.submitted=true;
+      // this.loading = true;
+      this.$validator.validateAll().then(isValid => {
+        if (!isValid) {
+          // this.loading = false;
+          return
+        }
+        if (this.user.email && this.user.password) {
+          this.$store.dispatch('auth/login', this.user).then(
+            () => {
+              this.$router.push('/workflow');
+            },
+            error => {
+              // this.loading = false;
+              console.log(error.response.data);
+              this.message = 
+                (error.response && error.response.data) ||
+                error.message || error.toString();
+
+            }
+          );
+        }
+      })
     }
   },
   metaInfo: {
@@ -3147,7 +3200,7 @@ export default {
   border-color: transparent;
   justify-content: center;
 }
-.login-checkboxmain {
+.login-error {
   display: flex;
   overflow: hidden;
   position: relative;
