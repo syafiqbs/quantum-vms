@@ -12,14 +12,16 @@ class AuthService {
       .then(response => {
         if (response.data.token) {
           localStorage.setItem('user', JSON.stringify(response.data));
+          localStorage.setItem('email', document.getElementById("inputEmail").value);
         }
 
         return response.data;
-      });
+      }); 
   }
 
   logout() {
-    localStorage.removeItem('user');
+    localStorage.clear();
+    
   }
 
 //   register(user) {

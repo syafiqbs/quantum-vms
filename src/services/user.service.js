@@ -1,11 +1,37 @@
 import axios from 'axios';
 import authHeader from './auth-header';
 
-const API_URL = 'http://localhost:8080/api/v1/admin/';
+const API_URL = 'http://localhost:8080/api/v1/';
 
 class UserService {
-  getAllUsers(){
-    return axios.get(API_URL + 'getAllUsers');
+
+  async getUser() {
+    return axios({
+      url: 'vendor/getUser',
+      method: 'post',
+      baseURL: API_URL,
+      headers: authHeader(),
+      data: {
+        email: localStorage.email
+      },
+      withCredentials: false
+
+
+    })
+  }
+  async getAdmin() {
+    return axios({
+      url: 'admin/getAdmin',
+      method: 'post',
+      baseURL: API_URL,
+      headers: authHeader(),
+      data: {
+        email: localStorage.email
+      },
+      withCredentials: false
+
+
+    })
   }
 }
 

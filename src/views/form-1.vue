@@ -770,11 +770,6 @@ export default {
   }
 }
 
-import { forVendor } from '../services/handleForm1';
-
-forVendor();
-
-
 // validate token
 // fetch user
 // if vendor, enable everything accept evaluation, show save and submit

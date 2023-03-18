@@ -183,7 +183,9 @@
 </template>
     
 <script>
-    import SideBarVendor from './side-bar'
+    import SideBarVendor from './side-bar';
+    import UserService from '../services/user.service';
+    import User from '../models/user';
 
     console.log(localStorage);
 
@@ -217,6 +219,28 @@
                     index: 0
                 }
             }
+        },
+        mounted() {
+            UserService.getUser().then(
+                response => {
+                    // is user
+                    localStorage.setItem('role', response.data["role"]);
+                },
+                error => {
+                    // do nothing
+                    // console.log(error);
+                }
+            )
+            UserService.getAdmin().then(
+                response => {
+                    // is admin/approver
+                    localStorage.setItem('role', response.data["role"]);
+                },
+                error => {
+                    // do nothing
+                    // console.log(error);
+                }
+            )
         },
         methods: {
             deleteRow(index, vendor) {

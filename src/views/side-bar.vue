@@ -6,9 +6,11 @@
         <a href="#logo"><img src="/playground_assets/qlogo.png" style="width:200px;height:170px;"/></a>
         <a href="#accountManager"><i class="fa fa-fw fa-user"></i> Account Manager</a>
         <a href="#workflow"><i class="fa fa-fw fa-sticky-note"></i> Workflows</a>
-        <a href="#vendor1"><i class="fa fa-fw fa-user-circle"></i> Vendor1</a>
-        <a href="#settings"><i class="fa fa-fw fa-gear"></i> Settings</a>
-        <a href="#logout"><i class="fa fa-fw fa-arrow-circle-o-right"></i> Logout</a>
+        <div style="position:absolute; bottom:0;">
+          <a href="#vendor1"><i class="fa fa-fw fa-user-circle"></i> Vendor1</a>
+          <a href="#settings"><i class="fa fa-fw fa-gear"></i> Settings</a>
+          <a href @click.prevent="logOut"><i class="fa fa-fw fa-arrow-circle-o-right"></i> Logout</a>
+        </div>
     </div>
 </template>
   
@@ -25,6 +27,12 @@ metaInfo: {
     },
     ],
 },
+methods: {
+  logOut() {
+    this.$store.dispatch('auth/logout');
+    this.$router.push('/');
+  }
+}
 }
 </script>
   
