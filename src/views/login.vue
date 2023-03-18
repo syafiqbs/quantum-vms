@@ -1065,7 +1065,7 @@
                 </div>
                 <div class="login-error">
                   <span
-                    v-if="submitted && errors"
+                    v-if="submitted && message"
                     style="color:red;"
                   >
                   Invalid user. Please try again
@@ -1116,20 +1116,15 @@ export default {
   methods: {
     handleLogin() {
       this.submitted=true;
-      // this.loading = true;
+      this.message='';
+
       this.$validator.validateAll().then(isValid => {
-        if (!isValid) {
-          // this.loading = false;
-          return
-        }
         if (this.user.email && this.user.password) {
           this.$store.dispatch('auth/login', this.user).then(
             () => {
               this.$router.push('/workflow');
             },
             error => {
-              // this.loading = false;
-              console.log(error.response.data);
               this.message = 
                 (error.response && error.response.data) ||
                 error.message || error.toString();
