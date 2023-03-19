@@ -29,6 +29,7 @@ metaInfo: {
 },
 methods: {
   logOut() {
+    alert("Click OK to logout");
     this.$store.dispatch('auth/logout');
     this.$router.push('/');
   }

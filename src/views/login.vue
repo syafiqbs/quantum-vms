@@ -1109,7 +1109,8 @@ export default {
     }
   },
   created() {
-    if (this.loggedIn) {
+    if (this.loggedIn && sessionStorage.getItem('user')) {
+      console.log('redirecting to workflow');
       this.$router.push('/workflow')
     }
   },
@@ -1122,6 +1123,7 @@ export default {
         if (this.user.email && this.user.password) {
           this.$store.dispatch('auth/login', this.user).then(
             () => {
+              alert("Login success");
               this.$router.push('/workflow');
             },
             error => {

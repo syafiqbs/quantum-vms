@@ -185,9 +185,6 @@
 <script>
     import SideBarVendor from './side-bar';
     import UserService from '../services/user.service';
-    import User from '../models/user';
-
-    console.log(localStorage);
 
     export default {
         name: 'Workflow',
@@ -224,21 +221,21 @@
             UserService.getUser().then(
                 response => {
                     // is user
-                    localStorage.setItem('role', response.data["role"]);
+                    sessionStorage.setItem('role', response.data["role"]);
                 },
                 error => {
                     // do nothing
-                    // console.log(error);
+                    console.log(error.message);
                 }
             )
             UserService.getAdmin().then(
                 response => {
                     // is admin/approver
-                    localStorage.setItem('role', response.data["role"]);
+                    sessionStorage.setItem('role', response.data["role"]);
                 },
                 error => {
                     // do nothing
-                    // console.log(error);
+                    console.log(error.message);
                 }
             )
         },

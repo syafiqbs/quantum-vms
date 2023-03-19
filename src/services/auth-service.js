@@ -11,8 +11,8 @@ class AuthService {
       })
       .then(response => {
         if (response.data.token) {
-          localStorage.setItem('user', JSON.stringify(response.data));
-          localStorage.setItem('email', document.getElementById("inputEmail").value);
+          sessionStorage.setItem('user', JSON.stringify(response.data));
+          sessionStorage.setItem('email', document.getElementById("inputEmail").value);
         }
 
         return response.data;
@@ -20,7 +20,7 @@ class AuthService {
   }
 
   logout() {
-    localStorage.clear();
+    sessionStorage.clear();
     
   }
 

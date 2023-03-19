@@ -12,7 +12,7 @@ class UserService {
       baseURL: API_URL,
       headers: authHeader(),
       data: {
-        email: localStorage.email
+        email: sessionStorage.email
       },
       withCredentials: false
 
@@ -26,7 +26,7 @@ class UserService {
       baseURL: API_URL,
       headers: authHeader(),
       data: {
-        email: localStorage.email
+        email: sessionStorage.email
       },
       withCredentials: false
 
