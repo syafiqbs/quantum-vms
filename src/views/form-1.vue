@@ -118,6 +118,7 @@
             required
             class="form1-textinput form1-inpuit-vendorEvaluation input"
             :disabled="!isVendor"
+            v-model="companyName"
           />
         </div>
         <div class="form1-inputtext01">
@@ -130,6 +131,7 @@
             required
             class="form1-textinput01 form1-inpuit-vendorEvaluation input"
             :disabled="!isVendor"
+            v-model="companyRegistrationNo"
           />
         </div>
         <div class="form1-inputtext02">
@@ -142,6 +144,7 @@
             required
             class="form1-textinput02 form1-inpuit-vendorEvaluation input"
             :disabled="!isVendor"
+            v-model="companyAddress"
           />
         </div>
         <div class="form1-inputtext03">
@@ -154,6 +157,7 @@
             required
             class="form1-textinput03 form1-inpuit-vendorEvaluation input"
             :disabled="!isVendor"
+            v-model="companyContactNo"
           />
         </div>
       </div>
@@ -162,11 +166,11 @@
         <div class="form1-container01 form1-radio">
           <div id="form1-radio-gst" class="form1-container-yes-no">
             <div class="form1-container-yes">
-              <input type="radio" name="form1-radio-gst" value="Yes" :disabled="!isVendor"/>
+              <input type="radio" name="form1-radio-gst" value="Yes" :disabled="!isVendor" v-model="gstRegistered"/>
               <label class="form1-text037">Yes</label>
             </div>
             <div class="form1-container-no">
-              <input type="radio" name="form1-radio-gst" value="No" :disabled="!isVendor"/>
+              <input type="radio" name="form1-radio-gst" value="No" :disabled="!isVendor" v-model="gstRegistered"/>
               <label class="form1-text038">
                 <span class="form1-text039">No</span>
               </label>
@@ -187,6 +191,8 @@
               class="form1-radiobutton02"
               @change="checkBizTypeState"
               :disabled="!isVendor"
+              v-model="businessType"
+              value="Sole Proprietorship"
             />
             <span class="form1-text043">Sole Proprietorship</span>
           </div>
@@ -202,6 +208,8 @@
               class="form1-radiobutton03"
               @change="checkBizTypeState"
               :disabled="!isVendor"
+              v-model="businessType"
+              value="Limited Company"
             />
             <span class="form1-text044">
               <span>Limited Company</span>
@@ -220,6 +228,8 @@
               class="form1-radiobutton04"
               @change="checkBizTypeState"
               :disabled="!isVendor"
+              v-model="businessType"
+              value="Partnership Agreement"
             />
             <span class="form1-text047">
               <span>Partnership Agreement</span>
@@ -240,6 +250,8 @@
                 class="form1-radiobutton05"
                 @change="checkBizTypeState"
                 :disabled="!isVendor"
+                v-model="businessType"
+                value="Others"
               />
               <span class="form1-text050">
                 <span>Others</span>
@@ -251,6 +263,7 @@
               id="form1-input-others-bizType"
               :disabled="bizTypeInput==1 || !isVendor"
               class="form1-textinput04 form1-inpuit-vendorEvaluation input"
+              v-model="businessTypeOthers"
             />
           </div>
         </div>
@@ -266,6 +279,8 @@
               class="form1-radiobutton06"
               @change="checkBizNatureState"
               :disabled="!isVendor"
+              v-model="businessNature"
+              value="Manufacturing"
             />
             <span class="form1-text054">Manufacturing</span>
           </div>
@@ -278,6 +293,8 @@
               class="form1-radiobutton07"
               @change="checkBizNatureState"
               :disabled="!isVendor"
+              v-model="businessNature"
+              value="Manufacturing"
             />
             <span class="form1-text055">
               <span>Agent/dealer</span>
@@ -293,6 +310,8 @@
               class="form1-radiobutton08" 
               @change="checkBizNatureState"
               :disabled="!isVendor"
+              v-model="businessNature"
+              value="Distributor"
             />
             <span class="form1-text058">
               <span>Distributor</span>
@@ -313,6 +332,8 @@
                 class="form1-radiobutton09"
                 @change="checkBizNatureState"
                 :disabled="!isVendor"
+                v-model="businessNature"
+                value="Others"
               />
               <span class="form1-text061">
                 <span>Others</span>
@@ -324,6 +345,7 @@
               id="form1-input-others-bizNature"
               :disabled="bizNatureInput==1 || !isVendor"
               class="form1-textinput05 form1-inpuit-vendorEvaluation input"
+              v-model="businessNatureOthers"
             />
           </div>
         </div>
@@ -340,6 +362,7 @@
             required
             class="form1-textinput06 form1-inpuit-vendorEvaluation input"
             :disabled="!isVendor"
+            v-model="productsAndServices"
           />
         </div>
       </div>
@@ -352,6 +375,7 @@
             required
             class="form1-textinput07 form1-inpuit-vendorEvaluation input"
             :disabled="!isVendor"
+            v-model="contactPersonName1"
           />
         </div>
         <div class="form1-inputtext06">
@@ -364,6 +388,7 @@
             required
             class="form1-textinput08 form1-inpuit-vendorEvaluation input"
             :disabled="!isVendor"
+            v-model="contactPersonContactNo1"
           />
         </div>
         <div class="form1-inputtext07">
@@ -376,6 +401,7 @@
             required
             class="form1-textinput09 form1-inpuit-vendorEvaluation input"
             :disabled="!isVendor"
+            v-model="contactPersonDesignation1"
           />
         </div>
         <div class="form1-inputtext08">
@@ -386,6 +412,7 @@
             required
             class="form1-textinput10 form1-inpuit-vendorEvaluation input"
             :disabled="!isVendor"
+            v-model="contactPersonName2"
           />
         </div>
         <div class="form1-inputtext09">
@@ -398,6 +425,7 @@
             required
             class="form1-textinput11 form1-inpuit-vendorEvaluation input"
             :disabled="!isVendor"
+            v-model="contactPersonContactNo2"
           />
         </div>
         <div class="form1-inputtext10">
@@ -410,6 +438,7 @@
             required
             class="form1-textinput12 form1-inpuit-vendorEvaluation input"
             :disabled="!isVendor"
+            v-model="contactPersonDesignation2"
           />
         </div>
         <span class="form1-text079"><span>Contact Person</span></span>
@@ -424,6 +453,7 @@
                 name="form1-checkbox-evaluation"
                 @change="controlIsoInput"
                 :disabled="!isVendor"
+                v-model="isoCheckbox"
               />
               <span class="form1-text083">
                 <span>ISO 9001 Certification</span>
@@ -437,6 +467,7 @@
               :disabled="isoInput || !isVendor"
               placeholder="Certification Body"
               class="form1-textinput13 form1-inpuit-vendorEvaluation input"
+              v-model="isoInputField"
             />
           </div>
           <div id="form1-labAccred" class="form1-container-lab-accred">
@@ -446,6 +477,7 @@
                 name="form1-checkbox-evaluation" 
                 @change="controlLabAccredInput"
                 :disabled="!isVendor"
+                v-model="accredLabCheckbox"
                 />
               <span class="form1-text087">
                 <span>Accreditation of Laboratory</span>
@@ -458,6 +490,7 @@
               :disabled="labAccredInput || !isVendor"
               placeholder="Accreditation Body"
               class="form1-textinput14 form1-inpuit-vendorEvaluation input"
+              v-model="accredLabInputField"
             />
           </div>
           <div id="form1-projectCert" class="form1-container-project-cert">
@@ -467,6 +500,7 @@
                 name="form1-checkbox-evaluation"
                 @change="controlProjClarInput"
                 :disabled="!isVendor"
+                v-model="projClarCheckbox"
                 />
               <span class="form1-text090">
                 <span>Project Certification</span>
@@ -479,6 +513,7 @@
               :disabled="projectClarInput || !isVendor"
               placeholder="Product Markings (e.g. PSB, UL, TUV)"
               class="form1-textinput15 form1-inpuit-vendorEvaluation input"
+              v-model="projClarInputField"
             />
           </div>
         </div>
@@ -495,6 +530,7 @@
                 value="Satisfactory"
                 class="form1-radiobutton10"
                 :disabled="!isVendor"
+                v-model="siteEvaluationResults"
               />
               <label class="form1-text095">Satisfactory</label>
             </div>
@@ -505,6 +541,7 @@
                 value="Unsatisfactory"
                 class="form1-radiobutton11"
                 :disabled="!isVendor"
+                v-model="siteEvaluationResults"
               />
               <label class="form1-text096">Unsatisfactory</label>
             </div>
@@ -525,6 +562,7 @@
                 value="Satisfactory"
                 class="form1-radiobutton12"
                 :disabled="!isVendor"
+                v-model="sampleProductEvaluation"
               />
               <label class="form1-text099">Satisfactory</label>
             </div>
@@ -535,6 +573,7 @@
                 value="Unsatisfactory"
                 class="form1-radiobutton13"
                 :disabled="!isVendor"
+                v-model="sampleProductEvaluation"
               />
               <label class="form1-text100">Unsatisfactory</label>
             </div>
@@ -556,6 +595,7 @@
                 value="Satisfactory"
                 class="form1-radiobutton14"
                 :disabled="!isVendor"
+                v-model="resultFirstDeal"
               />
               <label class="form1-text103">Satisfactory</label>
             </div>
@@ -566,6 +606,7 @@
                 value="Unsatisfactory"
                 class="form1-radiobutton15"
                 :disabled="!isVendor"
+                v-model="resultFirstDeal"
               />
               <label class="form1-text104">Unsatisfactory</label>
             </div>
@@ -586,6 +627,7 @@
                 value="Satisfactory"
                 class="form1-radiobutton16"
                 :disabled="!isVendor"
+                v-model="trackRecord"
               />
               <label class="form1-text107">Satisfactory</label>
             </div>
@@ -596,6 +638,7 @@
                 value="Unsatisfactory"
                 class="form1-radiobutton17"
                 :disabled="!isVendor"
+                v-model="trackRecord"
               />
               <label class="form1-text108">Unsatisfactory</label>
             </div>
@@ -611,6 +654,7 @@
               id="form1-radio-others-evaluation" 
               @change="controlEvalOthersInput"
               :disabled="!isVendor"
+              v-model="others"
               />
             <span class="form1-text109">
               <span class="form1-text110">
@@ -627,6 +671,7 @@
               type="text"
               id="form1-input-others-evaluation"
               :disabled="evalOthersInput || !isVendor"
+              v-model="evaluationOthersInputField"
               class="form1-textinput16 form1-inpuit-vendorEvaluation input"
             />
           </div>
@@ -639,9 +684,10 @@
             <input
               type="radio"
               name="form1-radio-evalResult"
-              value="Satisfactory"
+              value="Approved"
               class="form1-radiobutton18"
               :disabled="!isAdminOrApprover"
+              v-model="vendorAssessmentResults"
             />
             <label class="form1-text114">Approved</label>
           </div>
@@ -649,9 +695,10 @@
             <input
               type="radio"
               name="form1-radio-evalResult"
-              value="Unsatisfactory"
+              value="Not Approved"
               class="form1-radiobutton19"
               :disabled="!isAdminOrApprover"
+              v-model="vendorAssessmentResults"
             />
             <label class="form1-text115">Not Approved</label>
           </div>
@@ -668,6 +715,7 @@
             required
             class="form1-inpuit-vendorEvaluation input"
             :disabled="!isAdminOrApprover"
+            v-model="evaluatedBy"
           />
         </div>
         <div class="form1-inputtext12">
@@ -681,6 +729,7 @@
             required
             class="form1-inpuit-vendorEvaluation input"
             :disabled="!isApprover"
+            v-model="approvedBy"
           />
         </div>
         <div class="form1-inputtext13">
@@ -694,6 +743,7 @@
             required
             class="form1-inpuit-vendorEvaluation input"
             :disabled="!isApprover"
+            v-model="vendorEffectiveDate"
           />
         </div>
         <div class="form1-inputtext14">
@@ -708,6 +758,7 @@
             required
             class="form1-inpuit-vendorEvaluation input"
             :disabled="!isAdminOrApprover"
+            v-model="evaluatedBySig"
           />
         </div>
         <div class="form1-inputtext15">
@@ -722,11 +773,12 @@
             required
             class="form1-inpuit-vendorEvaluation input"
             :disabled="!isApprover"
+            v-model="approvedBySig"
           />
         </div>
       </div>
       <div class="form1-container25">
-        <button id="form1-btn-save" type="button" class="form1-button">
+        <button id="form1-btn-save" type="button" class="form1-button" @click.prevent="handleSave">
           <span class="form1-text134 ParagraphNormalRegular">Save</span>
         </button>
         <button id="form1-btn-submit" type="button" class="form1-button1" v-if="isVendor">
@@ -763,15 +815,52 @@ export default {
       rawqg09: ' ',
       rawfmrc: ' ',
       rawl2sy: ' ',
+
       bizTypeInput: true,
       bizNatureInput: true,
       isoInput: true,
       labAccredInput: true,
       projectClarInput: true,
       evalOthersInput: true,
+
       isVendor: false,
       isAdminOrApprover: false,
-      isApprover: false
+      isApprover: false,
+
+      companyName: null,
+      companyRegistrationNo: null,
+      companyAddress: null,
+      companyContactNo: null,
+      gstRegistered: null,
+      businessType: null,
+      businessNature: null,
+      productsAndServices: null,
+      contactPersonName1: null,
+      contactPersonContactNo1: null,
+      contactPersonDesignation1: null,
+      contactPersonName2: null,
+      contactPersonContactNo2: null,
+      contactPersonDesignation2: null,
+      evaluation: null,
+      siteEvaluationResults: null,
+      sampleProductEvaluation: null,
+      resultFirstDeal: null,
+      trackRecord: null,
+      others: null,
+      vendorAssessmentResults: "Draft",
+
+      businessTypeOthers: null,
+      businessNatureOthers: null,
+
+      isoCheckbox: null,
+      accredLabCheckbox: null,
+      projClarCheckbox: null,
+
+      isoInputField: null,
+      accredLabInputField: null,
+      projClarInputField: null,
+
+      evaluationOthersInputField: null,
     }
   },
   metaInfo: {
@@ -825,6 +914,10 @@ export default {
     controlEvalOthersInput(event){
       var evalOthersCheckboxEle = event.target;
       evalOthersCheckboxEle.checked ? this.evalOthersInput = false : this.evalOthersCheckboxEle = true;
+    },
+    handleSave(){
+      console.log('handleSave function --');
+      console.log(this.isoCheckbox);
     }
   }
 }
