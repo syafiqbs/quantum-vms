@@ -453,7 +453,7 @@
                 name="form1-checkbox-evaluation"
                 @change="controlIsoInput"
                 :disabled="!isVendor"
-                v-model="isoCheckbox"
+                v-model="iso9001"
               />
               <span class="form1-text083">
                 <span>ISO 9001 Certification</span>
@@ -477,7 +477,7 @@
                 name="form1-checkbox-evaluation" 
                 @change="controlLabAccredInput"
                 :disabled="!isVendor"
-                v-model="accredLabCheckbox"
+                v-model="accreditationLaboratory"
                 />
               <span class="form1-text087">
                 <span>Accreditation of Laboratory</span>
@@ -498,9 +498,9 @@
               <input 
                 type="checkbox" 
                 name="form1-checkbox-evaluation"
-                @change="controlProjClarInput"
+                @change="controlProjCertInput"
                 :disabled="!isVendor"
-                v-model="projClarCheckbox"
+                v-model="projectCertification"
                 />
               <span class="form1-text090">
                 <span>Project Certification</span>
@@ -510,10 +510,10 @@
             <input
               type="text"
               id="form1-input-projectCert"
-              :disabled="projectClarInput || !isVendor"
+              :disabled="projectCertInput || !isVendor"
               placeholder="Product Markings (e.g. PSB, UL, TUV)"
               class="form1-textinput15 form1-inpuit-vendorEvaluation input"
-              v-model="projClarInputField"
+              v-model="projCertInputField"
             />
           </div>
         </div>
@@ -687,7 +687,7 @@
               value="Approved"
               class="form1-radiobutton18"
               :disabled="!isAdminOrApprover"
-              v-model="vendorAssessmentResults"
+              v-model="evaluation"
             />
             <label class="form1-text114">Approved</label>
           </div>
@@ -698,7 +698,7 @@
               value="Not Approved"
               class="form1-radiobutton19"
               :disabled="!isAdminOrApprover"
-              v-model="vendorAssessmentResults"
+              v-model="evaluation"
             />
             <label class="form1-text115">Not Approved</label>
           </div>
@@ -743,7 +743,7 @@
             required
             class="form1-inpuit-vendorEvaluation input"
             :disabled="!isApprover"
-            v-model="vendorEffectiveDate"
+            v-model="effectiveDate"
           />
         </div>
         <div class="form1-inputtext14">
@@ -758,7 +758,7 @@
             required
             class="form1-inpuit-vendorEvaluation input"
             :disabled="!isAdminOrApprover"
-            v-model="evaluatedBySig"
+            v-model="evaluatorSignature"
           />
         </div>
         <div class="form1-inputtext15">
@@ -773,7 +773,7 @@
             required
             class="form1-inpuit-vendorEvaluation input"
             :disabled="!isApprover"
-            v-model="approvedBySig"
+            v-model="approverSignature"
           />
         </div>
       </div>
@@ -806,7 +806,10 @@
 </template>
 
 <script>
+import axios from 'axios';
+import authHeader from '../services/auth-header';
 
+const API_URL = "http://localhost:8080/api/v1/vendor/";
 
 export default {
   name: 'Form1',
@@ -816,51 +819,70 @@ export default {
       rawfmrc: ' ',
       rawl2sy: ' ',
 
+      // UI control
       bizTypeInput: true,
       bizNatureInput: true,
       isoInput: true,
       labAccredInput: true,
-      projectClarInput: true,
+      projectCertInput: true,
       evalOthersInput: true,
 
+      // RBAC
       isVendor: false,
       isAdminOrApprover: false,
       isApprover: false,
 
-      companyName: null,
-      companyRegistrationNo: null,
-      companyAddress: null,
-      companyContactNo: null,
+      // Form
+      id: 1,
+
+      companyName: '',
+      companyRegistrationNo: '',
+      companyAddress: '',
+      companyContactNo: '',
+
       gstRegistered: null,
+
       businessType: null,
+      businessTypeOthers: '',
+
       businessNature: null,
-      productsAndServices: null,
-      contactPersonName1: null,
-      contactPersonContactNo1: null,
-      contactPersonDesignation1: null,
-      contactPersonName2: null,
-      contactPersonContactNo2: null,
-      contactPersonDesignation2: null,
-      evaluation: null,
+      businessNatureOthers: '',
+
+      productsAndServices: '',
+
+      contactPersonName1: '',
+      contactPersonContactNo1: '',
+      contactPersonDesignation1: '',
+      contactPersonName2: '',
+      contactPersonContactNo2: '',
+      contactPersonDesignation2: '',
+
+      iso9001: null,
+      isoInputField: '',
+
+      accreditationLaboratory: null,
+      accredLabInputField: '',
+
+      projectCertification: null,
+      projCertInputField: '',
+
+      
       siteEvaluationResults: null,
       sampleProductEvaluation: null,
       resultFirstDeal: null,
       trackRecord: null,
       others: null,
-      vendorAssessmentResults: "Draft",
+      evaluationOthersInputField: '',
+      
+      evaluation: null,
 
-      businessTypeOthers: null,
-      businessNatureOthers: null,
+      evaluatedBy: '',
+      evaluatorSignature: '',
+      approvedBy: '',
+      approverSignature: '',
+      effectiveDate: '',
 
-      isoCheckbox: null,
-      accredLabCheckbox: null,
-      projClarCheckbox: null,
-
-      isoInputField: null,
-      accredLabInputField: null,
-      projClarInputField: null,
-
-      evaluationOthersInputField: null,
+      vendorAssessmentResults: "Draft",  
     }
   },
   metaInfo: {
@@ -873,22 +895,48 @@ export default {
     ],
   },
   mounted() {
-      let role = sessionStorage.getItem('role');
-      if (role == "USER"){
-        this.isVendor = true;
-        this.isAdminOrApprover = false;
-        this.isApprover = false;
-      }
-      else if (role == "APPROVER"){
-        this.isVendor = false;
-        this.isAdminOrApprover = true;
-        this.isApprover = true; 
-      }
-      else {
-        this.isVendor = false;
-        this.isAdminOrApprover = true;
-        this.isApprover = false; 
-      }    
+    // fetch and set role
+    let role = sessionStorage.getItem('role');
+    if (role == "USER"){
+      this.isVendor = true;
+      this.isAdminOrApprover = false;
+      this.isApprover = false;
+    }
+    else if (role == "APPROVER"){
+      this.isVendor = false;
+      this.isAdminOrApprover = true;
+      this.isApprover = true; 
+    }
+    else { // ADMIN
+      this.isVendor = false;
+      this.isAdminOrApprover = true;
+      this.isApprover = false; 
+    }
+      
+    // fetch and set form
+    let formId = 1;
+
+    axios({
+            url: 'getVendorAssessmentForm',
+            method: 'post',
+            baseURL: API_URL,
+            headers: authHeader(),
+            data: {
+                id: this.id,
+            },
+            withCredentials: false
+        })
+      .then(response => {
+        var result = response.data;
+        this.companyName = result.companyName;
+        this.companyRegistrationNo = result.companyRegistrationNo;
+        this.companyAddress = result.companyAddress;
+        this.companyContactNo = result.companyContactNo;
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      
   },
   methods: {
     checkBizTypeState(event){
@@ -907,17 +955,36 @@ export default {
       var labAccredCheckboxEle = event.target;
       labAccredCheckboxEle.checked ? this.labAccredInput = false : this.labAccredInput = true;
     },
-    controlProjClarInput(event){
-      var projClarCheckboxEle = event.target;
-      projClarCheckboxEle.checked ? this.projectClarInput = false : this.projectClarInput = true;
+    controlProjCertInput(event){
+      var projCertCheckboxele = event.target;
+      projCertCheckboxele.checked ? this.projectCertInput = false : this.projectCertInput = true;
     },
     controlEvalOthersInput(event){
       var evalOthersCheckboxEle = event.target;
       evalOthersCheckboxEle.checked ? this.evalOthersInput = false : this.evalOthersCheckboxEle = true;
     },
     handleSave(){
-      console.log('handleSave function --');
-      console.log(this.isoCheckbox);
+      console.log("handleSave function");
+      axios({
+            url: 'updateVendorAssessmentForm',
+            method: 'put',
+            baseURL: API_URL,
+            headers: authHeader(),
+            data: {
+                id: this.id,
+                companyName: this.companyName,
+                companyRegistrationNo: this.companyRegistrationNo,
+                companyAddress: this.companyAddress,
+                companyContactNo: this.companyContactNo
+            },
+            withCredentials: false
+        })
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => {
+        console.log(error);
+      })
     }
   }
 }
