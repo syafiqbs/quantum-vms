@@ -784,10 +784,10 @@
         <button id="form1-btn-submit" type="button" class="form1-button1" v-if="isVendor">
           <span class="form1-text135 ParagraphNormalRegular">Submit</span>
         </button>
-        <button id="form1-btn-rejectEval" class="form1-button2" v-if="isAdminOrApprover">
+        <button id="form1-btn-rejectEval" class="form1-button2" v-if="isAdminOrApprover" @click.prevent="handleRejectEvaluation">
           <span class="form1-text136 ParagraphNormalRegular">Reject Evaluation</span>
         </button>
-        <button id="form1-btn-approveEval" type="button" class="form1-button3" v-if="isAdminOrApprover">
+        <button id="form1-btn-approveEval" type="button" class="form1-button3" v-if="isAdminOrApprover" @click.prevent="handleApproveEvaluation">
           <span class="form1-text137 ParagraphNormalRegular">Approve Evaluation</span>
         </button>
         <button id="form1-disapproveWorkflow" type="button" class="form1-button4" v-if="isApprover">
@@ -1015,7 +1015,6 @@ export default {
       evalOthersCheckboxEle.checked ? this.evalOthersInput = false : this.evalOthersCheckboxEle = true;
     },
     handleSave(){
-      console.log("handleSave function");
       
       if (this.businessType == "Others") this.businessType = this.businessTypeOthers;
       if (this.businessNature == "Others") this.businessNature = this.businessNatureOthers;
@@ -1063,16 +1062,61 @@ export default {
             },
             withCredentials: false
         })
-      .then(response => {
-        console.log(response)
-      })
-      .catch(error => {
-        console.log(error);
-      })
+      .then(response => { alert("Form saved"); })
+      .catch(error => { console.log(error); })
        
       
       // save ADMIN/APPROVER inputs
 
+    },
+    handleRejectEvaluation(){
+      if (this.evaluation != "Not Approved") {
+        alert("Please reject evaluation first");
+        return
+      }
+      this.evaluatedBy = '';
+      this.evaluatorSignature = '';
+      axios({
+        url: 'updateVendorAssessmentForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+          id: this.id,
+          evaluation: this.evaluation,
+          evaluatedBy: this.evaluatedBy,
+          evaluatorSignature: this.evaluatorSignature,
+          vendorAssessmentResults: "Evaluation Rejected"
+        },
+        withCredentials: false
+      })
+      .then(response => { alert("Vendor application evaluation rejected"); })
+      .catch(error => { console.log(error); })
+    },
+    handleApproveEvaluation(){
+      if (this.evaluation != "Approved"){
+        alert("Please approve evaluation first");
+        return
+      }
+      if (!this.evaluatedBy || !this.evaluatorSignature){
+        alert("Invalid evaluator");
+        return
+      }
+      
+      axios({
+        url: 'updateVendorAssessmentForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+          id: this.id,
+          evaluation: this.evaluation,
+          vendorAssessmentResults: "Evaluation Approved"
+        },
+        withCredentials: false
+      })
+      .then(response => { alert("Vendor application evaluation approved"); })
+      .catch(error => { console.log(error); })
     }
   }
 }
