@@ -790,14 +790,14 @@
         <button id="form1-btn-approveEval" type="button" class="form1-button3" v-if="isAdminOrApprover" @click.prevent="handleApproveEvaluation">
           <span class="form1-text137 ParagraphNormalRegular">Approve Evaluation</span>
         </button>
-        <button id="form1-disapproveWorkflow" type="button" class="form1-button4" v-if="isApprover">
+        <button id="form1-disapproveForm" type="button" class="form1-button4" v-if="isApprover" @click.prevent="handleRejectForm">
           <span class="form1-text138 ParagraphNormalRegular">
-            Disapprove Workflow
+            Reject Form
           </span>
         </button>
-        <button id="form1-approveWorkflow" type="button" class="form1-button5" v-if="isApprover">
+        <button id="form1-approveForm" type="button" class="form1-button5" v-if="isApprover" @click.prevent="handleApproveForm">
           <span class="form1-text139 ParagraphNormalRegular">
-            Approve Workflow
+            Approve Form
           </span>
         </button>
       </div>
@@ -1090,7 +1090,7 @@ export default {
         },
         withCredentials: false
       })
-      .then(response => { alert("Vendor application evaluation rejected"); })
+      .then(response => { alert("Evaluation rejected"); })
       .catch(error => { console.log(error); })
     },
     handleApproveEvaluation(){
@@ -1115,7 +1115,57 @@ export default {
         },
         withCredentials: false
       })
-      .then(response => { alert("Vendor application evaluation approved"); })
+      .then(response => { alert("Evaluation approved"); })
+      .catch(error => { console.log(error); })
+    },
+    handleRejectForm(){
+      this.approvedBy = 'Form Rejected';
+      this.approverSignature = 'Form Rejected';
+      axios({
+        url: 'updateVendorAssessmentForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+          id: this.id,
+          approvedBy: this.approvedBy,
+          approverSignature: this.approverSignature,
+          vendorAssessmentResults: "Form Rejected"
+        },
+        withCredentials: false
+      })
+      .then(response => { alert("Form rejected"); })
+      .catch(error => { console.log(error); })
+    },
+    handleApproveForm(){
+      if (this.evaluation != "Approved"){
+        alert("Please approve evaluation first");
+        return
+      }
+      if (!this.approvedBy || !this.approverSignature){
+        alert("Invalid approver");
+        return
+      }
+      if (!this.effectiveDate) {
+        alert("Invalid date");
+        return
+      }
+      axios({
+        url: 'updateVendorAssessmentForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+          id: this.id,
+          evaluation: this.evaluation,
+          approvedBy: this.approvedBy,
+          approverSignature: this.approverSignature,
+          effectiveDate: this.effectiveDate,
+          vendorAssessmentResults: "Evaluation Approved"
+        },
+        withCredentials: false
+      })
+      .then(response => { alert("Vendor application approved"); })
       .catch(error => { console.log(error); })
     }
   }
