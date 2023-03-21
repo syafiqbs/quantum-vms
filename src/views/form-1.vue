@@ -784,11 +784,11 @@
         <button id="form1-btn-submit" type="button" class="form1-button1" v-if="isVendor">
           <span class="form1-text135 ParagraphNormalRegular">Submit</span>
         </button>
-        <button id="form1-btn-rejectReview" class="form1-button2" v-if="isAdminOrApprover">
-          <span class="form1-text136 ParagraphNormalRegular">Reject Review</span>
+        <button id="form1-btn-rejectEval" class="form1-button2" v-if="isAdminOrApprover">
+          <span class="form1-text136 ParagraphNormalRegular">Reject Evaluation</span>
         </button>
-        <button id="form1-btn-approveReview" type="button" class="form1-button3" v-if="isAdminOrApprover">
-          <span class="form1-text137 ParagraphNormalRegular">Approve Review</span>
+        <button id="form1-btn-approveEval" type="button" class="form1-button3" v-if="isAdminOrApprover">
+          <span class="form1-text137 ParagraphNormalRegular">Approve Evaluation</span>
         </button>
         <button id="form1-disapproveWorkflow" type="button" class="form1-button4" v-if="isApprover">
           <span class="form1-text138 ParagraphNormalRegular">
@@ -818,6 +818,8 @@ export default {
       rawqg09: ' ',
       rawfmrc: ' ',
       rawl2sy: ' ',
+      businessTypesArr: ['Sole Proprietorship', 'Limited Company', 'Partnership Agreement'],
+      businessNaturesArr: ['Manufacturing', 'Agent/dealer', 'Distributor'],
 
       // UI control
       bizTypeInput: true,
@@ -913,9 +915,9 @@ export default {
       this.isApprover = false; 
     }
       
-    // fetch and set form
-    let formId = 1;
+    // fetch id from url <-- TODO
 
+    // fetch form and set result to input
     axios({
             url: 'getVendorAssessmentForm',
             method: 'post',
@@ -932,6 +934,55 @@ export default {
         this.companyRegistrationNo = result.companyRegistrationNo;
         this.companyAddress = result.companyAddress;
         this.companyContactNo = result.companyContactNo;
+
+        if (result.gstRegistered) this.gstRegistered = result.gstRegistered;
+
+        if (!this.businessTypesArr.includes(result.businessType)) {
+          this.businessTypeOthers = result.businessType;
+          this.businessType = "Others"
+        }
+        else{
+          this.businessType = result.businessType
+        }
+
+        if (!this.businessNaturesArr.includes(result.businessNature)) {
+          this.businessNatureOthers = result.businessNature;
+          this.businessNature = "Others";
+        }
+        else {
+          this.businessNature = result.businessNature;
+        }
+
+        this.productsAndServices = result.productsAndServices;
+
+        this.contactPersonName1;
+        this.contactPersonContactNo1;
+        this.contactPersonDesignation1;
+        this.contactPersonName2;
+        this.contactPersonContactNo2;
+        this.contactPersonDesignation2;
+
+        if (result.iso9001) {
+          this.iso9001 = true;
+          this.isoInputField = result.iso9001;
+        }
+        if (result.accreditationLaboratory) {
+          this.accreditationLaboratory = true;
+          this.accredLabInputField = result.accreditationLaboratory;
+        }
+        if (result.projectCertification) {
+          this.projectCertification = true;
+          this.projectCertification = result.projectCertification;
+        }
+
+        if (result.evaluation) this.evaluation = result.evaluation;
+
+        this.evaluatedBy = result.evaluatedBy;
+        this.evaluatorSignature = result.evaluatorSignature;
+        this.approvedBy = result.approvedBy;
+        this.approverSignature = result.approverSignature;
+        this.effectiveDate = result.effectiveDate;
+
       })
       .catch(error => {
         console.log(error);
@@ -965,6 +1016,14 @@ export default {
     },
     handleSave(){
       console.log("handleSave function");
+      
+      if (this.businessType == "Others") this.businessType = this.businessTypeOthers;
+      if (this.businessNature == "Others") this.businessNature = this.businessNatureOthers;
+      if (this.iso9001) this.iso9001 = this.isoInputField;
+      if (this.accreditationLaboratory) this.accreditationLaboratory = this.accredLabInputField;
+      if (this.projectCertification) this.projectCertification = this.projCertInputField;
+      if (this.others) this.others = this.evaluationOthersInputField;
+      
       axios({
             url: 'updateVendorAssessmentForm',
             method: 'put',
@@ -975,7 +1034,32 @@ export default {
                 companyName: this.companyName,
                 companyRegistrationNo: this.companyRegistrationNo,
                 companyAddress: this.companyAddress,
-                companyContactNo: this.companyContactNo
+                companyContactNo: this.companyContactNo,
+                gstRegistered: this.gstRegistered,
+                businessType: this.businessType,
+                businessNature: this.businessNature,
+                productsAndServices: this.productsAndServices,
+                contactPersonName1: this.contactPersonName1,
+                contactPersonContactNo1: this.contactPersonContactNo1,
+                contactPersonDesignation1: this.contactPersonDesignation1,
+                contactPersonContactNo2: this.contactPersonContactNo2,
+                contactPersonContactNo2: this.contactPersonContactNo2,
+                contactPersonDesignation2: this.contactPersonDesignation2,
+                iso9001: this.iso9001,
+                accreditationLaboratory: this.accreditationLaboratory,
+                projectCertification: this.projectCertification,
+                siteEvaluationResults: this.siteEvaluationResults,
+                sampleProductEvaluation: this.sampleProductEvaluation,
+                resultFirstDeal: this.resultFirstDeal,
+                trackRecord: this.trackRecord,
+                others: this.others,
+
+                evaluation: this.evaluation,
+                evaluatedBy: this.evaluatedBy,
+                evaluatorSignature: this.evaluatorSignature,
+                approvedBy: this.approvedBy,
+                approverSignature: this.approverSignature,
+                effectiveDate: this.effectiveDate
             },
             withCredentials: false
         })
@@ -985,19 +1069,13 @@ export default {
       .catch(error => {
         console.log(error);
       })
+       
+      
+      // save ADMIN/APPROVER inputs
+
     }
   }
 }
-
-// validate token
-// fetch user
-// if vendor, enable everything accept evaluation, show save and submit
-// if admin, enable evaluated by, show reject and approve review, disable inputs
-// if approver, enable evaluation, buttons, disable inputs
-
-// fetch form from database and update to display
-
-// fetch all form input and update to database
 
 </script>
 
