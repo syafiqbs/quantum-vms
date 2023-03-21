@@ -14,14 +14,15 @@
                         <h1>Workflows</h1>
                     </div>
                     <div class="row">
-                        <p class="col">Overview of workflows for vendor submitted forms</p> 
+                        <p class="col">Overview of all form workflows (in progress / completed)</p> 
                         <div class="col">
-                            <!-- Currently for dummy filling workflow rows. TODO: Change into Search/Filter -->
-                            <b-button type="button" class="btn btn-dark float-end" v-b-modal.modal-prevent-closing1>Test Create</b-button>
+                            <b-button v-if="checkRole() == 'ADMIN' || checkRole() == 'APPROVER'" type="button" class="btn btn-dark float-end mx-1" v-b-modal.modal-prevent-closing1>Create Workflow</b-button>
+                            <!-- TODO: Create modal for Search/Filtering -->
+                            <b-button type="button" class="btn btn-dark float-end mx-1" v-b-modal.modal-prevent-closing1>Filter</b-button>
                         </div>
                     </div>
                     
-                    <!-- Modal Create (TODO: change into Search/Filter) -->
+                    <!-- Modal Create -->
                     <b-modal
                         id="modal-prevent-closing1"
                         ref="modal"
@@ -36,12 +37,17 @@
                                 label-for="name-input"
                                 invalid-feedback="Vendor Name is required"
                             >
-                                <b-form-input
+                                <b-form-select
                                     id="name-input"
                                     v-model="name"
-                                    placeholder="Enter Vendor Name"
+                                    :options=getUserNames()
                                     required
-                                ></b-form-input>
+                                    class="form-control"
+                                >
+                                    <template #first>
+                                        <b-form-select-option :value="null" disabled>-- Please select a Vendor --</b-form-select-option>
+                                    </template>
+                                </b-form-select>
                             </b-form-group>
         
                             <b-form-group
@@ -49,12 +55,19 @@
                                 label-for="form-input"
                                 invalid-feedback="Form is required"
                             >
-                                <b-form-input
+                                <b-form-select
                                     id="form-input"
                                     v-model="form"
-                                    placeholder="Enter Form"
                                     required
-                                ></b-form-input>
+                                    class="form-control"
+                                >
+                                    <template #first>
+                                        <b-form-select-option :value="null" disabled>-- Please select a Form --</b-form-select-option>
+                                    </template>
+                                    <b-form-select-option value="form-1">New Vendor Assessment Form</b-form-select-option>
+                                    <b-form-select-option value="form-2">Health Pre-Evaluation Form</b-form-select-option>
+                                    <b-form-select-option value="form-3">Health Performance Evaluation Form</b-form-select-option>
+                                </b-form-select>
                             </b-form-group>
                         </form>
                     </b-modal>
@@ -103,46 +116,7 @@
                                 <b-form-input
                                     id="status-input"
                                     v-model="status"
-                                    placeholder="Enter Status (Draft/Submitted/Reviewed/Approved)"
-                                    required
-                                ></b-form-input>
-                            </b-form-group>
-
-                            <b-form-group
-                                label="Workflow 1 Mode"
-                                label-for="wf1-input"
-                                invalid-feedback="Workflow 1 Mode is required"
-                            >
-                                <b-form-input
-                                    id="wf1-input"
-                                    v-model="wf1"
-                                    placeholder="Enter Workflow 1's Mode (modeDraft/modeView/modeReview/modeApprove/modeDL)"
-                                    required
-                                ></b-form-input>
-                            </b-form-group>
-
-                            <b-form-group
-                                label="Workflow 2 Mode"
-                                label-for="wf2-input"
-                                invalid-feedback="Workflow 2 Mode is required"
-                            >
-                                <b-form-input
-                                    id="wf2-input"
-                                    v-model="wf2"
-                                    placeholder="Enter Workflow 2's Mode (modeDraft/modeView/modeReview/modeApprove/modeDL)"
-                                    required
-                                ></b-form-input>
-                            </b-form-group>
-
-                            <b-form-group
-                                label="Workflow 3 Mode"
-                                label-for="wf3-input"
-                                invalid-feedback="Workflow 3 Mode is required"
-                            >
-                                <b-form-input
-                                    id="wf3-input"
-                                    v-model="wf3"
-                                    placeholder="Enter Workflow 3's Mode (modeDraft/modeView/modeReview/modeApprove/modeDL)"
+                                    placeholder="Enter Status"
                                     required
                                 ></b-form-input>
                             </b-form-group>
@@ -156,23 +130,45 @@
                             <th scope="col">Vendor Name</th>
                             <th scope="col">Form</th>
                             <th scope="col">Status</th>
-                            <th scope="col">Workflow 1</th>
-                            <th scope="col">Workflow 2</th>
-                            <th scope="col">Workflow 3</th>
-                            <th scope="col">Actions</th> <!-- Might Remove Later -->
+                            <th scope="col">Actions</th>
+                            <th scope="col">Date Created</th>
+                            <th scope="col">Date Modified</th>
+                            <th scope="col">Deadline</th>
+                            <th scope="col">Additional Remarks</th>
+                            <th scope="col" v-if="checkRole() == 'ADMIN' || checkRole() == 'APPROVER'">Admin Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(vendor, k) in workflows" :key="k">
-                            <th scope="row">{{vendor.name}}</th>
-                            <td>{{vendor.form}}</td>
-                            <td>{{vendor.status}}</td>
-                            <td>{{handleWFMode(vendor.wf1)}}</td>
-                            <td>{{handleWFMode(vendor.wf2)}}</td>
-                            <td>{{handleWFMode(vendor.wf3)}}</td>
-                            <td>
-                                <b-button type="button" class="btn btn-dark mx-1" @click="editRow(k, vendor, $event.target)" ref="btnShow">Edit</b-button>
-                                <b-button type="button" class="btn btn-dark mx-1" @click="deleteRow(k, vendor)">Delete</b-button>
+                        <tr v-for="(workflow, k) in workflows" :key="k">
+                            <th scope="row">{{workflow.name}}</th>
+                            <td>{{workflow.form}}</td>
+                            <td>{{handleStatus(workflow.status)}}</td>
+                            <td v-if="handleActions(workflow.status) == 'viewOnly'">
+                                View
+                            </td>
+                            <td v-else-if="handleActions(workflow.status) == 'edit'">
+                                Edit
+                            </td>
+                            <td v-else-if="handleActions(workflow.status) == 'review'">
+                                Review
+                            </td>
+                            <td v-else-if="handleActions(workflow.status) == 'approve'">
+                                Approve
+                            </td>
+                            <td v-else-if="handleActions(workflow.status) == 'done'">
+                                View, Download
+                            </td>
+                            <td v-else-if="handleActions(workflow.status) == 'restore'">
+                                Restore
+                            </td>
+                            <td v-else>Invalid data, please inform Admin!</td>
+                            <td>Date Created</td>
+                            <td>Date Modified</td>
+                            <td>Deadline</td>
+                            <td>Additional Remarks</td>
+                            <td v-if="checkRole() == 'ADMIN' || checkRole() == 'APPROVER'">
+                                <b-button type="button" class="btn btn-dark mx-1" @click="editRow(k, workflow, $event.target)" ref="btnShow">Test Edit</b-button>
+                                <b-button type="button" class="btn btn-dark mx-1" @click="deleteRow(k, workflow)">Delete</b-button>
                             </td>
                         </tr>
                     </tbody>
@@ -183,8 +179,12 @@
 </template>
     
 <script>
+    import axios from 'axios';
     import SideBarVendor from './side-bar';
     import UserService from '../services/user.service';
+    import authHeader from '../services/auth-header';
+
+    const API_URL = "http://localhost:8080/api/v1/";
 
     export default {
         name: 'Workflow',
@@ -210,9 +210,6 @@
                     name: '',
                     form: '',
                     status: '',
-                    wf1: '',
-                    wf2: '',
-                    wf3: '',
                     index: 0
                 }
             }
@@ -240,8 +237,103 @@
             )
         },
         methods: {
-            deleteRow(index, vendor) {
-                var idx = this.workflows.indexOf(vendor);
+            checkRole() {
+                return sessionStorage.getItem('role');
+            },
+            getUserNames() {
+
+                let usernameList = [];
+
+                let result = [
+                    {
+                        "id": 1,
+                        "email": "admin@admin.com",
+                        "password": "$2a$10$Jw/pKkihLbACN6mXs7SFnOV2VrIKgmd8CHhtvRTk5fQvDU3Agn/Za",
+                        "name": "Admin",
+                        "contactNumber": "0123456789",
+                        "dateCreated": "2023-03-12T13:51:22.698+00:00",
+                        "role": "ADMIN",
+                        "vendorAssessmentForm": null,
+                        "preEvaluationForm": null,
+                        "performanceEvaluationForm": null,
+                        "enabled": true,
+                        "username": "admin@admin.com",
+                        "authorities": [
+                            {
+                                "authority": "ADMIN"
+                            }
+                        ],
+                        "accountNonLocked": true,
+                        "credentialsNonExpired": true,
+                        "accountNonExpired": true
+                    },
+                    {
+                        "id": 2,
+                        "email": "user@user.com",
+                        "password": "$2a$10$vWhEHw2QSRE6.cyxYyhCjeDmn6yWwGZw5bgzk63g2caymSLbiNNO2",
+                        "name": "companyABC",
+                        "contactNumber": "123456789",
+                        "dateCreated": "2023-03-12T13:52:45.642+00:00",
+                        "role": "USER",
+                        "vendorAssessmentForm": {
+                            "id": 1,
+                            "companyName": null,
+                            "companyAddress": null,
+                            "vendorAssessmentResults": "false"
+                        },
+                        "preEvaluationForm": {
+                            "id": 1,
+                            "companyName": null,
+                            "companyAddress": null,
+                            "preEvaluationResults": "false"
+                        },
+                        "performanceEvaluationForm": {
+                            "id": 1,
+                            "companyName": "null",
+                            "companyAddress": "null",
+                            "performanceEvaluationResults": "false"
+                        },
+                        "enabled": true,
+                        "username": "user@user.com",
+                        "authorities": [
+                            {
+                                "authority": "USER"
+                            }
+                        ],
+                        "accountNonLocked": true,
+                        "credentialsNonExpired": true,
+                        "accountNonExpired": true
+                    }
+                ];
+
+                for (let userData of result) {
+                    if (userData.role == 'USER') usernameList.push({value: userData.name, text: userData.name})
+                }
+                return usernameList;
+
+                // Error with Authentication???
+                // axios({
+                //     url: 'admin/getAllUsers',
+                //     method: 'get',
+                //     baseURL: API_URL,
+                //     headers: authHeader(),
+                //     withCredentials: false
+                // })
+                // .then(response => {
+                //     var result = response.data;
+                //     for (userData of result) {
+                //         usernameList.push({value: userData.name, text: userData.name})
+                //     }
+                //     return usernameList;
+                // })
+                // .catch(error => {
+                //     console.log(error);
+                //     return null;
+                // })
+
+            },
+            deleteRow(index, workflow) {
+                var idx = this.workflows.indexOf(workflow);
                 console.log(idx, index);
                 if (idx > -1) {
                     this.workflows.splice(idx, 1);
@@ -255,9 +347,6 @@
                 this.name = ''
                 this.form = ''
                 this.status = ''
-                this.wf1 = ''
-                this.wf2 = ''
-                this.wf3 = ''
             },
             handleOk(bvModalEvent) {
                 // Prevent modal from closing
@@ -271,10 +360,7 @@
                     {
                         name : this.name,
                         form : this.form,
-                        status : 'Draft',
-                        wf1 : 'modeDraft',
-                        wf2 : 'modeDraft',
-                        wf3 : 'modeDraft'
+                        status : 'Draft'
                     }
                 )
         
@@ -282,13 +368,10 @@
                     this.$bvModal.hide('modal-prevent-closing1')
                 })
             },
-            editRow(index, vendor, button) {
-                this.modal.name = vendor.name
-                this.modal.form = vendor.form
-                this.modal.status = vendor.status
-                this.modal.wf1 = vendor.wf1
-                this.modal.wf1 = vendor.wf2
-                this.modal.wf1 = vendor.wf3
+            editRow(index, workflow, button) {
+                this.modal.name = workflow.name
+                this.modal.form = workflow.form
+                this.modal.status = workflow.status
                 this.modal.index = index
                 this.$root.$emit('bv::show::modal', this.modal.id, 'btnShow')
         
@@ -304,35 +387,47 @@
                 this.workflows[this.modal.index] = {
                 name : this.name,
                 form : this.form,
-                status : this.status,
-                wf1 : this.wf1,
-                wf2 : this.wf2,
-                wf3 : this.wf3,
+                status : this.status
                 }
         
                 this.$nextTick(() => {
                 this.$bvModal.hide('modal-prevent-closing2')
                 })
             },
-            handleWFMode(wfMode) {
-                switch(wfMode) {
-                    case "modeDraft":
-                        return "handleDraft";
-                        break;
-                    case "modeView":
-                        return "handleView";
-                        break;
-                    case "modeReview":
-                        return "handleReview";
-                        break;
-                    case "modeApprove":
-                        return "handleApprove";
-                        break;
-                    case "modeDL":
-                        return "handleDL";
-                        break;
-                    default:
-                        return "INVALID"
+            handleStatus(status) {
+                let statusConversion = {
+                    "Draft": "Not Submitted",
+                    "Submitted": "Pending Review",
+                    "Evaluation Approved": "Pending Approval",
+                    "Evaluation Rejected": "Revision Required (Rejected by Admin)",
+                    "Form Rejected": "Revision Required (Rejected by Approver)",
+                    "Form Approved": "Approved",
+                    "Archived": "Deleted"
+                }
+                return statusConversion[status];
+            },
+            handleActions(status) {
+                if (status == "Form Approved") return "done";
+                else {
+                    let role = sessionStorage.getItem('role');
+                    if (role == "USER"){
+                        if (status == "Submitted" || status == "Evaluation Approved" || status == "Archived") return "viewOnly";
+                        else if (status == "Draft" || status == "Evaluation Rejected" || status == "Form Rejected") return "edit";
+                        else return null;
+                    }
+                    else if (role == "ADMIN"){
+                        if (status == "Submitted") return "review";
+                        else if (status == "Archived") return "restore";
+                        else if (status == "Evaluation Approved" || status == "Draft" || status == "Evaluation Rejected" || status == "Form Rejected") return "viewOnly";
+                        else return null;
+                    }
+                    else if (role == "APPROVER") {
+                        if (status == "Evaluation Approved") return "approve";
+                        else if (status == "Archived") return "restore";
+                        else if (status == "Submitted" || status == "Draft" || status == "Evaluation Rejected" || status == "Form Rejected") return "viewOnly";
+                        else return null;
+                    }
+                    else return null;
                 }
             }
         }
