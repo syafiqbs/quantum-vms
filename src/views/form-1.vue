@@ -6,7 +6,7 @@
           <span class="form1-text HeadingH2Regular">
             <span>Quantum VMS</span>
           </span>
-          <div class="form1-frame11">
+          <div class="form1-frame11" @click.prevent="handleHome">
             <div class="form1-frame10">
               <span class="form1-text002 ParagraphNormalRegular">
                 <span>Home</span>
@@ -990,6 +990,10 @@ export default {
       
   },
   methods: {
+    handleHome(){
+      alert("Redirecting to home page");
+      this.$router.push('/workflow');
+    },
     checkBizTypeState(event){
       var radioElementBizType = event.target;
       radioElementBizType.id ? this.bizTypeInput = false : this.bizTypeInput = true
@@ -1058,7 +1062,9 @@ export default {
                 evaluatorSignature: this.evaluatorSignature,
                 approvedBy: this.approvedBy,
                 approverSignature: this.approverSignature,
-                effectiveDate: this.effectiveDate
+                effectiveDate: this.effectiveDate,
+
+                vendorAssessmentResults: "Draft"
             },
             withCredentials: false
         })
