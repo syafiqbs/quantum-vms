@@ -831,7 +831,7 @@ export default {
       isApprover: false,
 
       // Form
-      id: 1,
+      id: null,
 
       companyName: '',
       companyRegistrationNo: '',
@@ -893,7 +893,8 @@ export default {
     ],
   },
   async mounted() {
-    // fetch id from url <-- TODO
+    // fetch id from url
+    this.id = this.$route.query.formid;
 
     // fetch form and set result to input
     await axios({
