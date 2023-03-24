@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="form1-container-form-info">
-        <span class="form1-header-form-name">New Vendor Assesment Form</span>
+        <span class="form1-header-form-name">New Vendor Assesment Form <h3>{{ vendorAssessmentResults }}</h3></span>
         <span class="form1-text006">
           <span>Form ID: </span>
           <br />
@@ -107,6 +107,7 @@
           </div>
         </div>
       </div>
+      <form class="form1-form" @submit="handleSubmit">
       <div class="form1-container-vendor-info">
         <div class="form1-inputtext">
           <span class="form1-text029 ParagraphSmallBold">
@@ -267,7 +268,6 @@
             />
           </div>
         </div>
-        <form class="form1-form"></form>
       </div>
       <div class="form1-container-business-nature">
         <span class="form1-text053">Nature of business</span>
@@ -712,7 +712,6 @@
           <input
             type="text"
             id="form1-input-evaluatedBy-name"
-            required
             class="form1-inpuit-vendorEvaluation input"
             :disabled="!isAdminOrApprover"
             v-model="evaluatedBy"
@@ -726,7 +725,6 @@
           <input
             type="text"
             id="form1-input-approvedBy-name"
-            required
             class="form1-inpuit-vendorEvaluation input"
             :disabled="!isApprover"
             v-model="approvedBy"
@@ -740,7 +738,6 @@
           <input
             type="date"
             id="form1-input-effectiveDate"
-            required
             class="form1-inpuit-vendorEvaluation input"
             :disabled="!isApprover"
             v-model="effectiveDate"
@@ -755,7 +752,6 @@
           <input
             type="text"
             id="form1-input-evaluatedBy-sig"
-            required
             class="form1-inpuit-vendorEvaluation input"
             :disabled="!isAdminOrApprover"
             v-model="evaluatorSignature"
@@ -770,7 +766,6 @@
           <input
             type="text"
             id="form1-input-approvedBy-sig"
-            required
             class="form1-inpuit-vendorEvaluation input"
             :disabled="!isApprover"
             v-model="approverSignature"
@@ -781,9 +776,9 @@
         <button id="form1-btn-save" type="button" class="form1-button" @click.prevent="handleSave">
           <span class="form1-text134 ParagraphNormalRegular">Save</span>
         </button>
-        <button id="form1-btn-submit" type="button" class="form1-button1" v-if="isVendor">
-          <span class="form1-text135 ParagraphNormalRegular">Submit</span>
-        </button>
+        <input id="form1-btn-submit" type="submit" class="form1-button1" v-if="isVendor" value="Submit">
+          <!-- <span class="form1-text135 ParagraphNormalRegular">Submit</span>
+        </button> -->
         <button id="form1-btn-rejectEval" class="form1-button2" v-if="isAdminOrApprover" @click.prevent="handleRejectEvaluation">
           <span class="form1-text136 ParagraphNormalRegular">Reject Evaluation</span>
         </button>
@@ -801,6 +796,7 @@
           </span>
         </button>
       </div>
+      </form>
     </div>
   </div>
 </template>
@@ -884,7 +880,7 @@ export default {
       approverSignature: '',
       effectiveDate: '',
 
-      vendorAssessmentResults: "Draft",  
+      vendorAssessmentResults: "",  
     }
   },
   metaInfo: {
@@ -896,29 +892,11 @@ export default {
       },
     ],
   },
-  mounted() {
-    // fetch and set role
-    let role = sessionStorage.getItem('role');
-    if (role == "USER"){
-      this.isVendor = true;
-      this.isAdminOrApprover = false;
-      this.isApprover = false;
-    }
-    else if (role == "APPROVER"){
-      this.isVendor = false;
-      this.isAdminOrApprover = true;
-      this.isApprover = true; 
-    }
-    else { // ADMIN
-      this.isVendor = false;
-      this.isAdminOrApprover = true;
-      this.isApprover = false; 
-    }
-      
+  async mounted() {
     // fetch id from url <-- TODO
 
     // fetch form and set result to input
-    axios({
+    await axios({
             url: 'getVendorAssessmentForm',
             method: 'post',
             baseURL: API_URL,
@@ -983,10 +961,61 @@ export default {
         this.approverSignature = result.approverSignature;
         this.effectiveDate = result.effectiveDate;
 
+        this.vendorAssessmentResults = result.vendorAssessmentResults;
+
       })
       .catch(error => {
         console.log(error);
       })
+
+    // fetch role
+    let role = sessionStorage.getItem('role');
+
+    // control inputs based on form status
+    if (this.vendorAssessmentResults == "Draft" ||
+        this.vendorAssessmentResults == "Evaluation Rejected" || 
+        this.vendorAssessmentResults == "Form Rejected")
+    {
+      if (role == "USER"){
+        this.isVendor = true;
+        this.isAdminOrApprover = false;
+        this.isApprover = false;
+      }
+      else{
+        this.isVendor = false;
+        this.isAdminOrApprover = false;
+        this.isApprover = false; 
+      }
+    }
+    else if (this.vendorAssessmentResults == "Submitted") {
+      if (role == "USER"){
+        this.isVendor = false;
+        this.isAdminOrApprover = false;
+        this.isApprover = false;
+      }
+      else{
+        this.isVendor = false;
+        this.isAdminOrApprover = true;
+        this.isApprover = true; 
+      }
+    }
+    else if (this.vendorAssessmentResults == "Evaluation Approved") {
+      if (role == "USER" || role == "ADMIN"){
+        this.isVendor = false;
+        this.isAdminOrApprover = false;
+        this.isApprover = false;
+      }
+      else{
+        this.isVendor = false;
+        this.isAdminOrApprover = false;
+        this.isApprover = true; 
+      }
+    }
+    else { // "Form Approved" "Archived"
+      this.isVendor = false;
+      this.isAdminOrApprover = false;
+      this.isApprover = false;
+    }
       
   },
   methods: {
@@ -996,7 +1025,7 @@ export default {
     },
     checkBizTypeState(event){
       var radioElementBizType = event.target;
-      radioElementBizType.id ? this.bizTypeInput = false : this.bizTypeInput = true
+      radioElementBizType.id ? this.bizTypeInput = false : this.bizTypeInput = false
     },
     checkBizNatureState(event){
       var checkBizNatureState = event.target;
@@ -1026,7 +1055,7 @@ export default {
       if (this.accreditationLaboratory) this.accreditationLaboratory = this.accredLabInputField;
       if (this.projectCertification) this.projectCertification = this.projCertInputField;
       if (this.others) this.others = this.evaluationOthersInputField;
-      
+      this.vendorAssessmentResults = "Draft";
       axios({
             url: 'updateVendorAssessmentForm',
             method: 'put',
@@ -1064,7 +1093,7 @@ export default {
                 approverSignature: this.approverSignature,
                 effectiveDate: this.effectiveDate,
 
-                vendorAssessmentResults: "Draft"
+                vendorAssessmentResults: this.vendorAssessmentResults
             },
             withCredentials: false
         })
@@ -1075,13 +1104,31 @@ export default {
       // save ADMIN/APPROVER inputs
 
     },
+    handleSubmit(){
+      console.log("submit button clicked");
+      this.handleSave();
+      this.vendorAssessmentResults = "Submitted";
+      axios({
+        url: 'updateVendorAssessmentForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+          id: this.id,
+          vendorAssessmentResults: this.vendorAssessmentResults
+        },
+        withCredentials: false
+      })
+      .then(response => { alert("Form submitted"); })
+      .catch(error => { console.log(error); })
+
+    },
     handleRejectEvaluation(){
       if (this.evaluation != "Not Approved") {
         alert("Please reject evaluation first");
         return
       }
-      this.evaluatedBy = '';
-      this.evaluatorSignature = '';
+      this.vendorAssessmentResults = "Evaluation Rejected";
       axios({
         url: 'updateVendorAssessmentForm',
         method: 'put',
@@ -1092,7 +1139,7 @@ export default {
           evaluation: this.evaluation,
           evaluatedBy: this.evaluatedBy,
           evaluatorSignature: this.evaluatorSignature,
-          vendorAssessmentResults: "Evaluation Rejected"
+          vendorAssessmentResults: this.vendorAssessmentResults
         },
         withCredentials: false
       })
@@ -1108,7 +1155,7 @@ export default {
         alert("Invalid evaluator");
         return
       }
-      
+      this.vendorAssessmentResults = "Evaluation Approved";
       axios({
         url: 'updateVendorAssessmentForm',
         method: 'put',
@@ -1117,7 +1164,7 @@ export default {
         data: {
           id: this.id,
           evaluation: this.evaluation,
-          vendorAssessmentResults: "Evaluation Approved"
+          vendorAssessmentResults: this.vendorAssessmentResults
         },
         withCredentials: false
       })
@@ -1125,8 +1172,7 @@ export default {
       .catch(error => { console.log(error); })
     },
     handleRejectForm(){
-      this.approvedBy = 'Form Rejected';
-      this.approverSignature = 'Form Rejected';
+      this.vendorAssessmentResults = "Form Rejected";
       axios({
         url: 'updateVendorAssessmentForm',
         method: 'put',
@@ -1136,7 +1182,7 @@ export default {
           id: this.id,
           approvedBy: this.approvedBy,
           approverSignature: this.approverSignature,
-          vendorAssessmentResults: "Form Rejected"
+          vendorAssessmentResults: this.vendorAssessmentResults
         },
         withCredentials: false
       })
@@ -1156,6 +1202,7 @@ export default {
         alert("Invalid date");
         return
       }
+      this.vendorAssessmentResults = "Form Approved"
       axios({
         url: 'updateVendorAssessmentForm',
         method: 'put',
@@ -1167,7 +1214,7 @@ export default {
           approvedBy: this.approvedBy,
           approverSignature: this.approverSignature,
           effectiveDate: this.effectiveDate,
-          vendorAssessmentResults: "Evaluation Approved"
+          vendorAssessmentResults: this.vendorAssessmentResults
         },
         withCredentials: false
       })
