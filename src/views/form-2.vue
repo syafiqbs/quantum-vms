@@ -4,27 +4,27 @@
       <div class="form2-header-horizontal">
         <div class="form2-frame12">
           <span class="form2-text">Quantum VMS</span>
-          <div class="form2-frame11">
-            <div class="form2-frame10">
-              <span class="form2-text001"><span>Home</span></span>
-              <span class="form2-text003"><span>Logout</span></span>
+          <div class="form2-frame11" >
+            <div class="form2-frame10" >
+              <span class="form2-text001" @click.prevent="handleHome"><span>Home</span></span>
+              <!-- <span class="form2-text003"><span>Logout</span></span> -->
             </div>
           </div>
         </div>
       </div>
       <div class="form2-container01 form2-info">
-        <span class="form2-text005">Health Pre-Evaluation</span>
+        <span class="form2-text005">Health Pre-Evaluation <h3>{{ preEvaluationResults }}</h3></span>
         <div class="form2-container02">
           <label class="form2-text006">Form ID:</label>
           <span id="form2-id" class="form2-text007">
-            <span>XXX</span>
+            <span>QLI-QHSP-10-F04</span>
             <br />
           </span>
         </div>
         <div class="form2-container03">
           <label class="form2-text010">Rev No:</label>
           <span id="form2-revno" class="form2-text011">
-            <span>XXX</span>
+            <span>00</span>
             <br />
           </span>
         </div>
@@ -34,7 +34,7 @@
             <br />
           </label>
           <span id="form2-effectivedate" class="form2-text017">
-            <span>XXX</span>
+            <span>04.04.2022</span>
             <br />
           </span>
         </div>
@@ -82,525 +82,581 @@
           </div>
         </div>
       </div>
-      <div class="form2-container05">
-        <div class="form2-inputtext">
-          <span class="form2-text024"><span>Date</span></span>
-          <input
-            type="date"
-            id="form2-input-date"
-            required
-            class="form2-textinput input"
-          />
-        </div>
-        <div class="form2-inputtext01">
-          <span class="form2-text026"><span>Scope of Work</span></span>
-          <input
-            type="text"
-            id="form2-input-scope"
-            required
-            class="form2-textinput01 input"
-          />
-        </div>
-        <div class="form2-inputtext02">
-          <span class="form2-text028"><span>Evaluated By</span></span>
-          <input
-            type="text"
-            id="form2-input-evaluatedBy"
-            required
-            class="form2-textinput02 input"
-          />
-        </div>
-        <div class="form2-inputtext03">
-          <span class="form2-text030"><span>Name of Sub-Contractor</span></span>
-          <input
-            type="text"
-            id="form2-input-subconName"
-            required
-            class="form2-textinput03 input"
-          />
-        </div>
-      </div>
-      <div class="form2-container-safety" id="container-safety-health-pol-org">
-        <span class="form2-text032">
-          Safety &amp; Health Policy and Organisation
-        </span>
-        <span class="form2-text033">
-          a) Is there a written Safety &amp; Health Policy?
-        </span>
-        <div id="form2-radio-polandorg-a" class="form1-radio form2-container06">
-          <div class="form2-container-yes-no">
-            <div class="form2-container-yes">
-              <input type="radio" name="form2-radio-polandorg-a" value="Yes" />
-              <label class="form2-text034">Yes</label>
-            </div>
-            <div class="form2-container-no">
-              <input type="radio" name="form2-radio-polandorg-a" value="No" />
-              <label class="form2-text035">
-                <span class="form2-text036">No</span>
-              </label>
-            </div>
+      <form @submit.prevent="handleSubmit">
+        <div class="form2-container05">
+          <div class="form2-inputtext">
+            <span class="form2-text024"><span>Date</span></span>
+            <input
+              type="date"
+              id="form2-input-date"
+              required
+              class="form2-textinput input"
+              :disabled="!isVendor"
+              v-model="evaluationDate"
+            />
+          </div>
+          <div class="form2-inputtext01">
+            <span class="form2-text026"><span>Scope of Work</span></span>
+            <input
+              type="text"
+              id="form2-input-scope"
+              required
+              class="form2-textinput01 input"
+              :disabled="!isVendor"
+              v-model="scopeOfWork"
+            />
+          </div>
+          <div class="form2-inputtext02">
+            <span class="form2-text028"><span>Evaluated By</span></span>
+            <input
+              type="text"
+              id="form2-input-evaluatedBy"
+              required
+              class="form2-textinput02 input"
+              :disabled="!isVendor"
+              v-model="evaluationPerson"
+            />
+          </div>
+          <div class="form2-inputtext03">
+            <span class="form2-text030"><span>Name of Sub-Contractor</span></span>
+            <input
+              type="text"
+              id="form2-input-subconName"
+              class="form2-textinput03 input"
+              v-model="subContractorName"
+              required
+              :disabled="!isVendor"
+            />
           </div>
         </div>
-        <span class="form2-text039">
-          <span>
-            b) Is there a Safety Organisation with proper delegation of
-            responsibility and
-            <span v-html="rawbf0r"></span>
+        <div class="form2-container-safety" id="container-safety-health-pol-org">
+          <span class="form2-text032">
+            Safety &amp; Health Policy and Organisation
           </span>
-          <br />
-          <span>accountability for </span>
-          <span>safety and health?</span>
-        </span>
-        <div id="form2-radio-polcandorg-c" class="form2-container07 form1-radio">
-          <div class="form2-container-yes-no01">
-            <div class="form2-container-yes01">
-              <input type="radio" name="form2-radio-polandorg-b" value="Yes" />
-              <label class="form2-text044">Yes</label>
-            </div>
-            <div class="form2-container-no01">
-              <input type="radio" name="form2-radio-polandorg-b" value="No" />
-              <label class="form2-text045">
-                <span class="form2-text046">No</span>
-              </label>
+          <span class="form2-text033">
+            a) Is there a written Safety &amp; Health Policy?
+          </span>
+          <div id="form2-radio-polandorg-a" class="form1-radio form2-container06">
+            <div class="form2-container-yes-no">
+              <div class="form2-container-yes">
+                <input type="radio" name="form2-radio-polandorg-a" value="Yes" required :disabled="!isVendor" v-model="writtenPolicy"/>
+                <label class="form2-text034">Yes</label>
+              </div>
+              <div class="form2-container-no">
+                <input type="radio" name="form2-radio-polandorg-a" value="No" :disabled="!isVendor" v-model="writtenPolicy"/>
+                <label class="form2-text035">
+                  <span class="form2-text036">No</span>
+                </label>
+              </div>
             </div>
           </div>
-        </div>
-        <span class="form2-text049">
-          c) Is there a written safety commitment and is it submitted?
-        </span>
-        <div id="form2-radio-polcandorg-b" class="form2-container08 form1-radio">
-          <div class="form2-container-yes-no02">
-            <div class="form2-container-yes02">
-              <input type="radio" name="form2-radio-polandorg-c" value="Yes" />
-              <label class="form2-text050">Yes</label>
-            </div>
-            <div class="form2-container-no02">
-              <input type="radio" name="form2-radio-polandorg-c" value="No" />
-              <label class="form2-text051">No</label>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form2-container-toolbox">
-        <span class="form2-text055">
-          <span>
-            a) Are regular tool-box meetings conducted and reports submitted?
-          </span>
-        </span>
-        <span class="form2-text057"><span>Tool Box Meeting</span></span>
-        <div id="form2-radio-toolbox" class="form2-container09">
-          <div class="form2-container-yes-no03">
-            <div class="form2-container-yes03">
-              <input type="radio" name="form2-radio-toolbox" value="Yes" />
-              <label class="form2-text059">Yes</label>
-            </div>
-            <div class="form2-container-no03">
-              <input type="radio" name="form2-radio-toolbox" value="No" />
-              <label class="form2-text060">
-                <span class="form2-text061">No</span>
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form2-container-safetytraining">
-        <span class="form2-text064">
-          <span>
-            a) Are relevant safety training courses provided for management /
-            Supervisors?
-          </span>
-        </span>
-        <span class="form2-text066"><span>Safety Training</span></span>
-        <div
-          id="form2-radio-safetytraining-a"
-          class="form2-radio-safetytraining form2-container10"
-        >
-          <div class="form2-container-yes-no04">
-            <div class="form2-container-yes04">
-              <input
-                type="radio"
-                name="form2-radio-safetytraining-a"
-                value="Yes"
-              />
-              <label class="form2-text068">Yes</label>
-            </div>
-            <div class="form2-container-no04">
-              <input
-                type="radio"
-                name="form2-radio-safetytraining-a"
-                value="No"
-              />
-              <label class="form2-text069">
-                <span class="form2-text070">No</span>
-              </label>
-            </div>
-          </div>
-        </div>
-        <span class="form2-text073">
-          <span>
-            b) Are relevant safety training courses provided for workers?
-          </span>
-        </span>
-        <div
-          id="form2-radio-safetytraining-b"
-          class="form2-container11 form2-radio-safetytraining"
-        >
-          <div class="form2-container-yes-no05">
-            <div class="form2-container-yes05">
-              <input
-                type="radio"
-                name="form2-radio-safetytraining-a"
-                value="Yes"
-              />
-              <label class="form2-text075">Yes</label>
-            </div>
-            <div class="form2-container-no05">
-              <input
-                type="radio"
-                name="form2-radio-safetytraining-a"
-                value="No"
-              />
-              <label class="form2-text076">
-                <span class="form2-text077">No</span>
-              </label>
-            </div>
-          </div>
-        </div>
-        <span class="form2-text080">
-          <span>c) Are relevant safety training certificates submitted?</span>
-        </span>
-        <div
-          id="form2-radio-safetytraining-c"
-          class="form2-container12 form2-radio-safetytraining"
-        >
-          <div class="form2-container-yes-no06">
-            <div class="form2-container-yes06">
-              <input
-                type="radio"
-                name="form2-radio-safetytraining-a"
-                value="Yes"
-              />
-              <label class="form2-text082">Yes</label>
-            </div>
-            <div class="form2-container-no06">
-              <input
-                type="radio"
-                name="form2-radio-safetytraining-a"
-                value="No"
-              />
-              <label class="form2-text083">
-                <span class="form2-text084">No</span>
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form2-container-safetyassesment">
-        <span class="form2-text087">
-          <span>
-            a) Are there written safety &amp; health rules for the workers?
-          </span>
-        </span>
-        <span class="form2-text089">
-          <span>
-            Safety &amp; Health Rules &amp; Safe Work Procedures/ Risk Assessment
-          </span>
-        </span>
-        <div id="form2-radio-rac-a" class="form2-radio-rac form2-container13">
-          <div class="form2-container-yes-no07">
-            <div class="form2-container-yes07">
-              <input type="radio" name="form2-radio-rac-a" value="Yes" />
-              <label class="form2-text091">Yes</label>
-            </div>
-            <div class="form2-container-no07">
-              <input type="radio" name="form2-radio-rac-a" value="No" />
-              <label class="form2-text092">
-                <span class="form2-text093">No</span>
-              </label>
-            </div>
-          </div>
-        </div>
-        <span class="form2-text096">
-          <span>
-            b) Are there written safe work procedures/ risk assessment formulated
-            and
-            <span v-html="rawy2cl"></span>
-          </span>
-          <br />
-          <span>submitted?</span>
-        </span>
-        <div id="form2-radio-rac-b" class="form2-container14 form2-radio-rac">
-          <div class="form2-container-yes-no08">
-            <div class="form2-container-yes08">
-              <input type="radio" name="form2-radio-rac-b" value="Yes" />
-              <label class="form2-text100">Yes</label>
-            </div>
-            <div class="form2-container-no08">
-              <input type="radio" name="form2-radio-rac-b" value="No" />
-              <label class="form2-text101">
-                <span class="form2-text102">No</span>
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form2-container-safetyhealthcheck">
-        <span class="form2-text105">
-          <span>
-            a) Is there a written programme outlining inspection guidelines,
-            frequency and
-            <span v-html="rawyvbr"></span>
-          </span>
-          <br />
-          <span>follow-up corrective actions?</span>
-        </span>
-        <span class="form2-text109">
-          <span>Safety &amp; Health Inspection &amp; Equipment</span>
-        </span>
-        <div
-          id="form2-radio-inspecteqp-a"
-          class="form2-radio-inspecteqp form2-container15"
-        >
-          <div class="form2-container-yes-no09">
-            <div class="form2-container-yes09">
-              <input type="radio" name="form2-radio-inspecteqp-a" value="Yes" />
-              <label class="form2-text111">Yes</label>
-            </div>
-            <div class="form2-container-no09">
-              <input type="radio" name="form2-radio-inspecteqp-a" value="No" />
-              <label class="form2-text112">
-                <span class="form2-text113">No</span>
-              </label>
-            </div>
-          </div>
-        </div>
-        <span class="form2-text116">
-          <span>
-            b) Is there available Personal Protective Equipment and of proper
-            working
-            <span v-html="rawixg1"></span>
-          </span>
-          <br />
-          <span>condition and  </span>
-          <span>comply to safety requirements?</span>
-        </span>
-        <div
-          id="form2-radio-inspecteqp-b"
-          class="form2-container16 form2-radio-inspecteqp"
-        >
-          <div class="form2-container-yes-no10">
-            <div class="form2-container-yes10">
-              <input type="radio" name="form2-radio-inspecteqp-b" value="Yes" />
-              <label class="form2-text121">Yes</label>
-            </div>
-            <div class="form2-container-no10">
-              <input type="radio" name="form2-radio-inspecteqp-b" value="No" />
-              <label class="form2-text122">
-                <span class="form2-text123">No</span>
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form2-container-personnel">
-        <span class="form2-text126">
-          <span>
-            a) Is there a Safety Supervisor working at least 5 hrs / week?
-          </span>
-        </span>
-        <span class="form2-text128"><span>Responsible Personnel</span></span>
-        <div id="form2-radio-resper-a" class="form2-container17">
-          <div class="form2-container-yes-no11">
-            <div class="form2-container-yes11">
-              <input type="radio" name="form2-radio-resper-a" value="Yes" />
-              <label class="form2-text130">Yes</label>
-            </div>
-            <div class="form2-container-no11">
-              <input type="radio" name="form2-radio-resper-a" value="No" />
-              <label class="form2-text131">
-                <span class="form2-text132">No</span>
-              </label>
-            </div>
-          </div>
-        </div>
-        <span class="form2-text135">
-          <span>b) Is there a qualified First Aider?</span>
-        </span>
-        <div id="form2-radio-resper-b" class="form2-radio-resper">
-          <div class="form2-container-yes-no12">
-            <div class="form2-container-yes12">
-              <input type="radio" name="form2-radio-resper" value="Yes" />
-              <label class="form2-text137">Yes</label>
-            </div>
-            <div class="form2-container-no12">
-              <input type="radio" name="form2-radio-resper" value="No" />
-              <label class="form2-text138">
-                <span class="form2-text139">No</span>
-              </label>
-            </div>
-          </div>
-        </div>
-        <span class="form2-text142">
-          <span>
-            c) Are there relevant Licensed Electrical Workers, qualified
-            engineers,
-            <span v-html="rawdcj6"></span>
-          </span>
-          <span>
-            qualified
-            <span v-html="raw2e23"></span>
-          </span>
-          <br />
-          <span>
-            supervisors,
-            <span v-html="rawgg1u"></span>
-          </span>
-          <span>lifting supervisors, qualified  </span>
-          <span>
-            JCB Tower /Mobile / Crawler Crane
-            <span v-html="rawltrs"></span>
-          </span>
-          <br />
-          <span>operators?</span>
-        </span>
-        <div id="form2-radio-resper-c" class="form2-container19">
-          <div class="form2-container-yes-no13">
-            <div class="form2-container-yes13">
-              <input type="radio" name="form2-radio-resper-c" value="Yes" />
-              <label class="form2-text151">Yes</label>
-            </div>
-            <div class="form2-container-no13">
-              <input type="radio" name="form2-radio-resper-c" value="No" />
-              <label class="form2-text152">
-                <span class="form2-text153">No</span>
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form2-container-accidentanalysis">
-        <span class="form2-text156">
-          <span>Number of Temporary Disability Cases in the past 3 years</span>
-        </span>
-        <span class="form2-text158">
-          <span class="form2-text159">
-            <span>Accident Analysis</span>
+          <span class="form2-text039">
+            <span>
+              b) Is there a Safety Organisation with proper delegation of
+              responsibility and
+              <span v-html="rawbf0r"></span>
+            </span>
             <br />
-            <span></span>
+            <span>accountability for </span>
+            <span>safety and health?</span>
           </span>
-          <span>Indicate NA for ‘Not Applicable’</span>
-        </span>
-        <div class="form2-inputtext04">
-          <input
-            type="text"
-            id="form2-input-tempdis"
-            class="form2-textinput04 input"
-          />
+          <div id="form2-radio-polcandorg-c" class="form2-container07 form1-radio">
+            <div class="form2-container-yes-no01">
+              <div class="form2-container-yes01">
+                <input type="radio" name="form2-radio-polandorg-b" value="Yes" required :disabled="!isVendor" v-model="safetyOrganisation"/>
+                <label class="form2-text044">Yes</label>
+              </div>
+              <div class="form2-container-no01">
+                <input type="radio" name="form2-radio-polandorg-b" value="No" :disabled="!isVendor" v-model="safetyOrganisation"/>
+                <label class="form2-text045">
+                  <span class="form2-text046">No</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <span class="form2-text049">
+            c) Is there a written safety commitment and is it submitted?
+          </span>
+          <div id="form2-radio-polcandorg-b" class="form2-container08 form1-radio">
+            <div class="form2-container-yes-no02">
+              <div class="form2-container-yes02">
+                <input type="radio" name="form2-radio-polandorg-c" value="Yes" required :disabled="!isVendor" v-model="safetyCommitment"/>
+                <label class="form2-text050">Yes</label>
+              </div>
+              <div class="form2-container-no02">
+                <input type="radio" name="form2-radio-polandorg-c" value="No" :disabled="!isVendor" v-model="safetyCommitment"/>
+                <label class="form2-text051">No</label>
+              </div>
+            </div>
+          </div>
         </div>
-        <span class="form2-text164">
-          <span>Number of Permanent Disability Cases in the past 3 years</span>
-        </span>
-        <div class="form2-inputtext05">
-          <input
-            type="text"
-            id="form2-input-permdis"
-            class="form2-textinput05 input"
-          />
+        <div class="form2-container-toolbox">
+          <span class="form2-text055">
+            <span>
+              a) Are regular tool-box meetings conducted and reports submitted?
+            </span>
+          </span>
+          <span class="form2-text057"><span>Tool Box Meeting</span></span>
+          <div id="form2-radio-toolbox" class="form2-container09">
+            <div class="form2-container-yes-no03">
+              <div class="form2-container-yes03">
+                <input type="radio" name="form2-radio-toolbox" value="Yes" required :disabled="!isVendor" v-model="toolBoxMeetings"/>
+                <label class="form2-text059">Yes</label>
+              </div>
+              <div class="form2-container-no03">
+                <input type="radio" name="form2-radio-toolbox" value="No" :disabled="!isVendor" v-model="toolBoxMeetings"/>
+                <label class="form2-text060">
+                  <span class="form2-text061">No</span>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
-        <span class="form2-text166">
-          <span>Number of Fatal Cases in the past 3 years</span>
-        </span>
-        <div class="form2-inputtext06">
-          <input
-            type="text"
-            id="form2-input-fatal"
-            class="form2-textinput06 input"
-          />
+        <div class="form2-container-safetytraining">
+          <span class="form2-text064">
+            <span>
+              a) Are relevant safety training courses provided for management /
+              Supervisors?
+            </span>
+          </span>
+          <span class="form2-text066"><span>Safety Training</span></span>
+          <div
+            id="form2-radio-safetytraining-a"
+            class="form2-radio-safetytraining form2-container10"
+          >
+            <div class="form2-container-yes-no04">
+              <div class="form2-container-yes04">
+                <input
+                  type="radio"
+                  name="form2-radio-safetytraining-a"
+                  value="Yes" required
+                  :disabled="!isVendor"
+                  v-model="mgmtTrainingCourse"
+                />
+                <label class="form2-text068">Yes</label>
+              </div>
+              <div class="form2-container-no04">
+                <input
+                  type="radio"
+                  name="form2-radio-safetytraining-a"
+                  value="No"
+                  :disabled="!isVendor"
+                  v-model="mgmtTrainingCourse"
+                />
+                <label class="form2-text069">
+                  <span class="form2-text070">No</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <span class="form2-text073">
+            <span>
+              b) Are relevant safety training courses provided for workers?
+            </span>
+          </span>
+          <div
+            id="form2-radio-safetytraining-b"
+            class="form2-container11 form2-radio-safetytraining"
+          >
+            <div class="form2-container-yes-no05">
+              <div class="form2-container-yes05">
+                <input
+                  type="radio"
+                  name="form2-radio-safetytraining-b"
+                  value="Yes" required
+                  :disabled="!isVendor"
+                  v-model="workersTrainingCourse"
+                />
+                <label class="form2-text075">Yes</label>
+              </div>
+              <div class="form2-container-no05">
+                <input
+                  type="radio"
+                  name="form2-radio-safetytraining-b"
+                  value="No"
+                  :disabled="!isVendor"
+                  v-model="workersTrainingCourse"
+                />
+                <label class="form2-text076">
+                  <span class="form2-text077">No</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <span class="form2-text080">
+            <span>c) Are relevant safety training certificates submitted?</span>
+          </span>
+          <div
+            id="form2-radio-safetytraining-c"
+            class="form2-container12 form2-radio-safetytraining"
+          >
+            <div class="form2-container-yes-no06">
+              <div class="form2-container-yes06">
+                <input
+                  type="radio"
+                  name="form2-radio-safetytraining-c"
+                  value="Yes" required
+                  :disabled="!isVendor"
+                  v-model="trainingCertificates"
+                />
+                <label class="form2-text082">Yes</label>
+              </div>
+              <div class="form2-container-no06">
+                <input
+                  type="radio"
+                  name="form2-radio-safetytraining-c"
+                  value="No"
+                  :disabled="!isVendor"
+                  v-model="trainingCertificates"
+                />
+                <label class="form2-text083">
+                  <span class="form2-text084">No</span>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="form2-container-acknowledment">
-        <span class="form2-text168">
-          <span>
-            I, representative of the above-named sub-contractor, have understand
-            the
-            <span v-html="raw5byb"></span>
+        <div class="form2-container-safetyassesment">
+          <span class="form2-text087">
+            <span>
+              a) Are there written safety &amp; health rules for the workers?
+            </span>
           </span>
-          <br />
-          <span>
-            various
-            <span v-html="rawimof"></span>
+          <span class="form2-text089">
+            <span>
+              Safety &amp; Health Rules &amp; Safe Work Procedures/ Risk Assessment
+            </span>
           </span>
-          <span>
-            Safety Criteria listed above and hereby acknowledged that
-            <span v-html="rawft3n"></span>
+          <div id="form2-radio-rac-a" class="form2-radio-rac form2-container13">
+            <div class="form2-container-yes-no07">
+              <div class="form2-container-yes07">
+                <input type="radio" name="form2-radio-rac-a" value="Yes" required :disabled="!isVendor"
+                  v-model="writtenSafetyRules"/>
+                <label class="form2-text091">Yes</label>
+              </div>
+              <div class="form2-container-no07">
+                <input type="radio" name="form2-radio-rac-a" value="No" :disabled="!isVendor"
+                  v-model="writtenSafetyRules"/>
+                <label class="form2-text092">
+                  <span class="form2-text093">No</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <span class="form2-text096">
+            <span>
+              b) Are there written safe work procedures/ risk assessment formulated
+              and
+              <span v-html="rawy2cl"></span>
+            </span>
+            <br />
+            <span>submitted?</span>
           </span>
-          <br />
-          <span>
-            the information given above are
-            <span v-html="rawlzle"></span>
-          </span>
-          <span>
-            valid and supporting items/documents are
-            <span v-html="rawvvxq"></span>
-          </span>
-          <br />
-          <span>available upon request by the main contractor.</span>
-        </span>
-        <span class="form2-text178">Acknowledged by</span>
-        <div class="form2-inputtext07">
-          <input
-            type="text"
-            id="form2-input-acknowledgement-1"
-            class="form2-textinput07 input"
-          />
+          <div id="form2-radio-rac-b" class="form2-container14 form2-radio-rac">
+            <div class="form2-container-yes-no08">
+              <div class="form2-container-yes08">
+                <input type="radio" name="form2-radio-rac-b" value="Yes" required :disabled="!isVendor"
+                  v-model="writternRiskAssessment"/>
+                <label class="form2-text100">Yes</label>
+              </div>
+              <div class="form2-container-no08">
+                <input type="radio" name="form2-radio-rac-b" value="No" :disabled="!isVendor"
+                  v-model="writternRiskAssessment"/>
+                <label class="form2-text101">
+                  <span class="form2-text102">No</span>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
-        <span class="form2-text179">Signature</span>
-        <div class="form2-inputtext08">
-          <input
-            type="text"
-            id="form2-input-acknowledgement-2"
-            class="form2-textinput08 input"
-          />
-        </div>
-        <span class="form2-text180">Date</span>
-        <div class="form2-inputtext09">
-          <input
-            type="date"
-            id="form2-input-signature"
-            class="form2-textinput09 input"
-          />
-        </div>
-        <span class="form2-text181"><span>Acknowledgment</span></span>
-      </div>
-      <div class="form2-container20">
-        <button id="form2-btn-save" type="button" class="form2-button">
-          <span class="form2-text183 ParagraphNormalRegular">Save</span>
-        </button>
-        <button id="form2-btn-submit" type="button" class="form2-button1">
-          <span class="form2-text184 ParagraphNormalRegular">Submit</span>
-        </button>
-        <button id="form2-btn-rejectReview" class="form2-button2">
-          <span class="form2-text185 ParagraphNormalRegular">Reject Review</span>
-        </button>
-        <button id="form2-btn-approveReview" type="button" class="form2-button3">
-          <span class="form2-text186 ParagraphNormalRegular">Approve Review</span>
-        </button>
-        <button id="form2-disapproveWorkflow" type="button" class="form2-button4">
-          <span class="form2-text187 ParagraphNormalRegular">
-            Disapprove Workflow
+        <div class="form2-container-safetyhealthcheck">
+          <span class="form2-text105">
+            <span>
+              a) Is there a written programme outlining inspection guidelines,
+              frequency and
+              <span v-html="rawyvbr"></span>
+            </span>
+            <br />
+            <span>follow-up corrective actions?</span>
           </span>
-        </button>
-        <button id="form2-approveWorkflow" type="button" class="form2-button5">
-          <span class="form2-text188 ParagraphNormalRegular">
-            Approve Workflow
+          <span class="form2-text109">
+            <span>Safety &amp; Health Inspection &amp; Equipment</span>
           </span>
-        </button>
-      </div>
+          <div
+            id="form2-radio-inspecteqp-a"
+            class="form2-radio-inspecteqp form2-container15"
+          >
+            <div class="form2-container-yes-no09">
+              <div class="form2-container-yes09">
+                <input type="radio" name="form2-radio-inspecteqp-a" value="Yes" required :disabled="!isVendor"
+                  v-model="inspectionGuidelines"/>
+                <label class="form2-text111">Yes</label>
+              </div>
+              <div class="form2-container-no09">
+                <input type="radio" name="form2-radio-inspecteqp-a" value="No" :disabled="!isVendor"
+                  v-model="inspectionGuidelines"/>
+                <label class="form2-text112">
+                  <span class="form2-text113">No</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <span class="form2-text116">
+            <span>
+              b) Is there available Personal Protective Equipment and of proper
+              working
+              <span v-html="rawixg1"></span>
+            </span>
+            <br />
+            <span>condition and  </span>
+            <span>comply to safety requirements?</span>
+          </span>
+          <div
+            id="form2-radio-inspecteqp-b"
+            class="form2-container16 form2-radio-inspecteqp"
+          >
+            <div class="form2-container-yes-no10">
+              <div class="form2-container-yes10">
+                <input type="radio" name="form2-radio-inspecteqp-b" value="Yes" required :disabled="!isVendor"
+                  v-model="ppe"/>
+                <label class="form2-text121">Yes</label>
+              </div>
+              <div class="form2-container-no10">
+                <input type="radio" name="form2-radio-inspecteqp-b" value="No" :disabled="!isVendor"
+                  v-model="ppe"/>
+                <label class="form2-text122">
+                  <span class="form2-text123">No</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form2-container-personnel">
+          <span class="form2-text126">
+            <span>
+              a) Is there a Safety Supervisor working at least 5 hrs / week?
+            </span>
+          </span>
+          <span class="form2-text128"><span>Responsible Personnel</span></span>
+          <div id="form2-radio-resper-a" class="form2-container17">
+            <div class="form2-container-yes-no11">
+              <div class="form2-container-yes11">
+                <input type="radio" name="form2-radio-resper-a" value="Yes" required :disabled="!isVendor"
+                  v-model="safetySupervisorWorkingHours"/>
+                <label class="form2-text130">Yes</label>
+              </div>
+              <div class="form2-container-no11">
+                <input type="radio" name="form2-radio-resper-a" value="No" :disabled="!isVendor"
+                  v-model="safetySupervisorWorkingHours"/>
+                <label class="form2-text131">
+                  <span class="form2-text132">No</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <span class="form2-text135">
+            <span>b) Is there a qualified First Aider?</span>
+          </span>
+          <div id="form2-radio-resper-b" class="form2-radio-resper">
+            <div class="form2-container-yes-no12">
+              <div class="form2-container-yes12">
+                <input type="radio" name="form2-radio-resper" value="Yes" required :disabled="!isVendor"
+                  v-model="firstAider"/>
+                <label class="form2-text137">Yes</label>
+              </div>
+              <div class="form2-container-no12">
+                <input type="radio" name="form2-radio-resper" value="No" :disabled="!isVendor"
+                  v-model="firstAider"/>
+                <label class="form2-text138">
+                  <span class="form2-text139">No</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <span class="form2-text142">
+            <span>
+              c) Are there relevant Licensed Electrical Workers, qualified
+              engineers,
+              <span v-html="rawdcj6"></span>
+            </span>
+            <span>
+              qualified
+              <span v-html="raw2e23"></span>
+            </span>
+            <br />
+            <span>
+              supervisors,
+              <span v-html="rawgg1u"></span>
+            </span>
+            <span>lifting supervisors, qualified  </span>
+            <span>
+              JCB Tower /Mobile / Crawler Crane
+              <span v-html="rawltrs"></span>
+            </span>
+            <br />
+            <span>operators?</span>
+          </span>
+          <div id="form2-radio-resper-c" class="form2-container19">
+            <div class="form2-container-yes-no13">
+              <div class="form2-container-yes13">
+                <input type="radio" name="form2-radio-resper-c" value="Yes" required :disabled="!isVendor"
+                  v-model="qualifiedEngineers"/>
+                <label class="form2-text151">Yes</label>
+              </div>
+              <div class="form2-container-no13">
+                <input type="radio" name="form2-radio-resper-c" value="No" :disabled="!isVendor"
+                  v-model="qualifiedEngineers"/>
+                <label class="form2-text152">
+                  <span class="form2-text153">No</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form2-container-accidentanalysis">
+          <span class="form2-text156">
+            <span>Number of Temporary Disability Cases in the past 3 years</span>
+          </span>
+          <span class="form2-text158">
+            <span class="form2-text159">
+              <span>Accident Analysis</span>
+              <br />
+              <span></span>
+            </span>
+            <span>Indicate NA for ‘Not Applicable’</span>
+          </span>
+          <div class="form2-inputtext04">
+            <input
+              type="text"
+              id="form2-input-tempdis"
+              class="form2-textinput04 input"
+              required
+              v-model="temporaryDisabilityCases"
+            />
+          </div>
+          <span class="form2-text164">
+            <span>Number of Permanent Disability Cases in the past 3 years</span>
+          </span>
+          <div class="form2-inputtext05">
+            <input
+              type="text"
+              id="form2-input-permdis"
+              class="form2-textinput05 input"
+              required
+              v-model="permanentDisabilityCases"
+            />
+          </div>
+          <span class="form2-text166">
+            <span>Number of Fatal Cases in the past 3 years</span>
+          </span>
+          <div class="form2-inputtext06">
+            <input
+              type="text"
+              id="form2-input-fatal"
+              class="form2-textinput06 input"
+              required
+              v-model="fatalityCases"
+            />
+          </div>
+        </div>
+        <div class="form2-container-acknowledgement">
+          <span class="form2-text168">
+            <span>
+              I, representative of the above-named sub-contractor, have understand
+              the
+              <span v-html="raw5byb"></span>
+            </span>
+            <br />
+            <span>
+              various
+              <span v-html="rawimof"></span>
+            </span>
+            <span>
+              Safety Criteria listed above and hereby acknowledged that
+              <span v-html="rawft3n"></span>
+            </span>
+            <br />
+            <span>
+              the information given above are
+              <span v-html="rawlzle"></span>
+            </span>
+            <span>
+              valid and supporting items/documents are
+              <span v-html="rawvvxq"></span>
+            </span>
+            <br />
+            <span>available upon request by the main contractor.</span>
+          </span>
+          <span class="form2-text178">Acknowledged by</span>
+          <div class="form2-inputtext07">
+            <input
+              type="text"
+              id="form2-input-acknowledgement-1"
+              class="form2-textinput07 input"
+              v-model="acknowledgementPerson"
+              required
+              :disabled="!isVendor"
+            />
+          </div>
+          <span class="form2-text179">Signature</span>
+          <div class="form2-inputtext08">
+            <input
+              type="text"
+              id="form2-input-acknowledgement-2"
+              class="form2-textinput08 input"
+              v-model="acknowledgementSignature"
+              required
+              :disabled="!isVendor"
+            />
+          </div>
+          <span class="form2-text180">Date</span>
+          <div class="form2-inputtext09">
+            <input
+              type="date"
+              id="form2-input-signature"
+              class="form2-textinput09 input"
+              v-model="acknowledgementDate"
+              required
+              :disabled="!isVendor"
+            />
+          </div>
+          <span class="form2-text181"><span>Acknowledgment</span></span>
+        </div>
+        <div class="form2-container20">
+          <button id="form2-btn-save" type="button" class="form2-button" @click.prevent="handleSave">
+            <span class="form2-text183 ParagraphNormalRegular">Save</span>
+          </button>
+          <input id="form2-btn-submit" type="submit" class="form2-button1" v-if="isVendor"/>
+            <!-- <span class="form2-text184 ParagraphNormalRegular">Submit</span>
+          </button> -->
+          <!-- <button id="form2-btn-rejectReview" class="form2-button2">
+            <span class="form2-text185 ParagraphNormalRegular">Reject Review</span>
+          </button>
+          <button id="form2-btn-approveReview" type="button" class="form2-button3">
+            <span class="form2-text186 ParagraphNormalRegular">Approve Review</span>
+          </button>
+          <button id="form2-disapproveWorkflow" type="button" class="form2-button4">
+            <span class="form2-text187 ParagraphNormalRegular">
+              Disapprove Workflow
+            </span>
+          </button>
+          <button id="form2-approveWorkflow" type="button" class="form2-button5">
+            <span class="form2-text188 ParagraphNormalRegular">
+              Approve Workflow
+            </span>
+          </button> -->
+        </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+import authHeader from '../services/auth-header';
+
+const API_URL = "http://localhost:8080/api/v1/vendor/";
+
 export default {
   name: 'Form2',
   data() {
@@ -618,7 +674,54 @@ export default {
       rawft3n: ' ',
       rawlzle: ' ',
       rawvvxq: ' ',
+
+      // UI control
+
+      // RBAC
+      isVendor: false,
+      isAdminOrApprover: false,
+      isApprover: false,
+
+      // form
+      id: 1,
+
+      subContractorName: '',
+      scopeOfWork: '',
+      evaluationPerson: '',
+      evaluationDate: '',
+
+      writtenPolicy: null,
+      safetyOrganisation: null,
+      safetyCommitment: null,
+
+      toolBoxMeetings: null,
+
+      mgmtTrainingCourse: null,
+      workersTrainingCourse: null,
+      trainingCertificates: null,
+
+      writtenSafetyRules: null,
+      writternRiskAssessment: null,
+
+      inspectionGuidelines: null,
+      ppe: null,
+
+      safetySupervisorWorkingHours: null,
+      firstAider: null,
+      qualifiedEngineers: null,
+
+      temporaryDisabilityCases: '',
+      permanentDisabilityCases: '',
+      fatalityCases: '',
+
+      acknowledgementPerson: '',
+      acknowledgementSignature: '',
+      acknowledgementDate: '',
+
+      preEvaluationResults: ""
     }
+
+
   },
   metaInfo: {
     title: 'Form-2 - Quantum VMS',
@@ -629,6 +732,173 @@ export default {
       },
     ],
   },
+  async mounted() {
+    // fetch and set id from url
+    this.id = this.$route.query.formid;
+
+    // fetch form and update data
+    await axios({
+      url: 'getPreEvaluationForm',
+      method: 'post',
+      baseURL: API_URL,
+      headers: authHeader(),
+      data: {
+        id: this.id
+      },
+      withCredentials: false
+    })
+    .then(response => {
+      var result = response.data
+
+      this.id= result.id;
+
+      this.subContractorName= result.subContractorName;
+      this.scopeOfWork= result.scopeOfWork;
+      this.evaluationPerson= result.evaluationPerson;
+      this.evaluationDate= result.evaluationDate;
+
+      this.writtenPolicy= result.writtenPolicy;
+      this.safetyOrganisation= result.safetyOrganisation;
+      this.safetyCommitment= result.safetyCommitment;
+
+      this.toolBoxMeetings= result.toolBoxMeetings;
+
+      this.mgmtTrainingCourse= result.mgmtTrainingCourse;
+      this.workersTrainingCourse= result.workersTrainingCourse;
+      this.trainingCertificates= result.trainingCertificates;
+
+      this.writtenSafetyRules= result.writtenSafetyRules;
+      this.writternRiskAssessment= result.writternRiskAssessment;
+
+      this.inspectionGuidelines= result.inspectionGuidelines;
+      this.ppe= result.ppe;
+
+      this.safetySupervisorWorkingHours= result.safetySupervisorWorkingHours;
+      this.firstAider= result.firstAider;
+      this.qualifiedEngineers= result.qualifiedEngineers;
+
+      this.temporaryDisabilityCases= result.temporaryDisabilityCases;
+      this.permanentDisabilityCases= result.permanentDisabilityCases;
+      this.fatalityCases= result.fatalityCases;
+
+      this.acknowledgementPerson= result.acknowledgementPerson;
+      this.acknowledgementDate= result.acknowledgementDate;
+      this.acknowledgementSignature= result.acknowledgementSignature;
+
+      this.preEvaluationResults= result.preEvaluationResults;
+      
+    })
+    .catch(error => {
+      console.log(error);
+    })
+
+    let role = sessionStorage.getItem('role');
+
+    // control inputs based on form status
+    if (this.preEvaluationResults == "Draft")
+    {
+      if (role == "USER"){
+        this.isVendor = true;
+        this.isAdminOrApprover = false;
+        this.isApprover = false;
+      }
+      else{
+        this.isVendor = false;
+        this.isAdminOrApprover = false;
+        this.isApprover = false; 
+      }
+    }
+    else { // "Submitted"
+      if (role == "USER"){
+        this.isVendor = false;
+        this.isAdminOrApprover = false;
+        this.isApprover = false;
+      }
+      else{
+        this.isVendor = false;
+        this.isAdminOrApprover = true;
+        this.isApprover = true; 
+      }
+    }
+
+  },
+  methods: {
+    handleHome(){
+      alert("Redirecting to home page");
+      this.$router.push('/workflow');
+    },
+    async handleSave(){
+      this.preEvaluationResults = "Draft";
+      await axios({
+        url: 'updatePreEvaluationForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+
+          id: this.id,
+
+          subContractorName: this.subContractorName,
+          scopeOfWork: this.scopeOfWork,
+          evaluationPerson: this.evaluationPerson,
+          evaluationDate: this.evaluationDate,
+
+          writtenPolicy: this.writtenPolicy,
+          safetyOrganisation: this.safetyOrganisation,
+          safetyCommitment: this.safetyCommitment,
+
+          toolBoxMeetings: this.toolBoxMeetings,
+
+          mgmtTrainingCourse: this.mgmtTrainingCourse,
+          workersTrainingCourse: this.workersTrainingCourse,
+          trainingCertificates: this.trainingCertificates,
+
+          writtenSafetyRules: this.writtenSafetyRules,
+          writternRiskAssessment: this.writternRiskAssessment,
+
+          inspectionGuidelines: this.inspectionGuidelines,
+          ppe: this.ppe,
+
+          safetySupervisorWorkingHours: this.safetySupervisorWorkingHours,
+          firstAider: this.firstAider,
+          qualifiedEngineers: this.qualifiedEngineers,
+
+          temporaryDisabilityCases: this.temporaryDisabilityCases,
+          permanentDisabilityCases: this.permanentDisabilityCases,
+          fatalityCases: this.fatalityCases,
+
+          acknowledgementPerson: this.acknowledgementPerson,
+          acknowledgementDate: this.acknowledgementDate,
+          acknowledgementSignature: this.acknowledgementSignature,
+
+          preEvaluationResults: this.preEvaluationResults
+        },
+        withCredentials: false
+      })
+      .then(response => { alert("Form saved"); })
+      .catch(error => { console.log(error); })
+    },
+    async handleSubmit(){
+      this.handleSave();
+      this.preEvaluationResults = "Submitted";
+      await axios({
+        url: 'updatePreEvaluationForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+          id: this.id,
+          preEvaluationResults: this.preEvaluationResults
+        },
+        withCredentials: false
+      })
+      .then(response => { 
+        alert("Form submitted"); 
+      })
+      .catch(error => { console.log(error); })
+
+    }
+  }
 }
 </script>
 
@@ -656,7 +926,7 @@ export default {
 .form2-header-horizontal {
   top: 0px;
   right: 0px;
-  width: 1920px;
+  width: 100%;
   height: 144px;
   display: flex;
   padding: 42.66666793823242px;
@@ -758,6 +1028,7 @@ export default {
   position: relative;
   align-self: center;
   margin-top: 0px;
+  width: 100%;
 }
 .form2-text006 {
   align-self: center;
@@ -2283,7 +2554,7 @@ export default {
   height: 100%;
   border-width: 2px;
 }
-.form2-container-acknowledment {
+.form2-container-acknowledgement {
   top: 3195.98974609375px;
   left: 274.6528015136719px;
   width: 1185px;
@@ -2889,7 +3160,7 @@ export default {
   .form2-container-accidentanalysis {
     margin-left: -100px;
   }
-  .form2-container-acknowledment {
+  .form2-container-acknowledgement {
     margin-left: -100px;
   }
   .form2-text168 {
@@ -3018,7 +3289,7 @@ export default {
     margin-top: 10px;
     margin-left: -140px;
   }
-  .form2-container-acknowledment {
+  .form2-container-acknowledgement {
     margin-top: 10px;
     margin-left: -140px;
   }
@@ -3411,7 +3682,7 @@ export default {
   .form2-text166 {
     width: 100%;
   }
-  .form2-container-acknowledment {
+  .form2-container-acknowledgement {
     top: 4150px;
     left: 70px;
     right: 0px;

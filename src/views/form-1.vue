@@ -39,7 +39,7 @@
           <br />
         </span>
         <span id="form1-revno" class="form1-label-rev-no">
-          <span class="form1-text015">00</span>
+          <span class="form1-text015">0</span>
           <br />
           <br />
         </span>
@@ -107,7 +107,7 @@
           </div>
         </div>
       </div>
-      <form class="form1-form" @submit="handleSubmit">
+      <form class="form1-form" @submit.prevent="handleSubmit">
       <div class="form1-container-vendor-info">
         <div class="form1-inputtext">
           <span class="form1-text029 ParagraphSmallBold">
@@ -531,6 +531,7 @@
                 class="form1-radiobutton10"
                 :disabled="!isVendor"
                 v-model="siteEvaluationResults"
+                required
               />
               <label class="form1-text095">Satisfactory</label>
             </div>
@@ -563,6 +564,7 @@
                 class="form1-radiobutton12"
                 :disabled="!isVendor"
                 v-model="sampleProductEvaluation"
+                required
               />
               <label class="form1-text099">Satisfactory</label>
             </div>
@@ -596,6 +598,7 @@
                 class="form1-radiobutton14"
                 :disabled="!isVendor"
                 v-model="resultFirstDeal"
+                required
               />
               <label class="form1-text103">Satisfactory</label>
             </div>
@@ -628,6 +631,7 @@
                 class="form1-radiobutton16"
                 :disabled="!isVendor"
                 v-model="trackRecord"
+                required
               />
               <label class="form1-text107">Satisfactory</label>
             </div>
@@ -896,7 +900,7 @@ export default {
     // fetch id from url
     this.id = this.$route.query.formid;
 
-    // fetch form and set result to input
+    // fetch form and update data
     await axios({
             url: 'getVendorAssessmentForm',
             method: 'post',
@@ -909,6 +913,7 @@ export default {
         })
       .then(response => {
         var result = response.data;
+        console.log(result);
         this.companyName = result.companyName;
         this.companyRegistrationNo = result.companyRegistrationNo;
         this.companyAddress = result.companyAddress;
@@ -934,12 +939,12 @@ export default {
 
         this.productsAndServices = result.productsAndServices;
 
-        this.contactPersonName1;
-        this.contactPersonContactNo1;
-        this.contactPersonDesignation1;
-        this.contactPersonName2;
-        this.contactPersonContactNo2;
-        this.contactPersonDesignation2;
+        this.contactPersonName1 = result.contactPersonName1;
+        this.contactPersonContactNo1 = result.contactPersonContactNo1;
+        this.contactPersonDesignation1 = result.contactPersonDesignation1;
+        this.contactPersonName2 = result.contactPersonName2;
+        this.contactPersonContactNo2 = result.contactPersonContactNo2;
+        this.contactPersonDesignation2 = result.contactPersonDesignation2;
 
         if (result.iso9001) {
           this.iso9001 = true;
@@ -953,6 +958,16 @@ export default {
           this.projectCertification = true;
           this.projectCertification = result.projectCertification;
         }
+
+        if (result.siteEvaluationResults) this.siteEvaluationResults = result.siteEvaluationResults;
+        if (result.sampleProductEvaluation) this.sampleProductEvaluation = result.sampleProductEvaluation;
+        if (result.resultFirstDeal) this.resultFirstDeal = result.resultFirstDeal;
+        if (result.trackRecord) this.trackRecord = result.trackRecord;
+        if (result.others){
+          this.others = true;
+          this.evaluationOthersInputField = result.others;
+        }
+        
 
         if (result.evaluation) this.evaluation = result.evaluation;
 
@@ -1048,7 +1063,7 @@ export default {
       var evalOthersCheckboxEle = event.target;
       evalOthersCheckboxEle.checked ? this.evalOthersInput = false : this.evalOthersCheckboxEle = true;
     },
-    handleSave(){
+    async handleSave(){
       
       if (this.businessType == "Others") this.businessType = this.businessTypeOthers;
       if (this.businessNature == "Others") this.businessNature = this.businessNatureOthers;
@@ -1057,7 +1072,7 @@ export default {
       if (this.projectCertification) this.projectCertification = this.projCertInputField;
       if (this.others) this.others = this.evaluationOthersInputField;
       this.vendorAssessmentResults = "Draft";
-      axios({
+      await axios({
             url: 'updateVendorAssessmentForm',
             method: 'put',
             baseURL: API_URL,
@@ -1073,6 +1088,7 @@ export default {
                 businessNature: this.businessNature,
                 productsAndServices: this.productsAndServices,
                 contactPersonName1: this.contactPersonName1,
+                contactPersonName2: this.contactPersonName2,
                 contactPersonContactNo1: this.contactPersonContactNo1,
                 contactPersonDesignation1: this.contactPersonDesignation1,
                 contactPersonContactNo2: this.contactPersonContactNo2,
@@ -1098,18 +1114,16 @@ export default {
             },
             withCredentials: false
         })
-      .then(response => { alert("Form saved"); })
+      .then(response => { alert("Form saved"); console.log(response) })
       .catch(error => { console.log(error); })
        
-      
-      // save ADMIN/APPROVER inputs
 
     },
-    handleSubmit(){
+    async handleSubmit(){
       console.log("submit button clicked");
       this.handleSave();
       this.vendorAssessmentResults = "Submitted";
-      axios({
+      await axios({
         url: 'updateVendorAssessmentForm',
         method: 'put',
         baseURL: API_URL,
@@ -1120,17 +1134,19 @@ export default {
         },
         withCredentials: false
       })
-      .then(response => { alert("Form submitted"); })
+      .then(response => { 
+        alert("Form submitted"); 
+      })
       .catch(error => { console.log(error); })
 
     },
-    handleRejectEvaluation(){
+    async handleRejectEvaluation(){
       if (this.evaluation != "Not Approved") {
         alert("Please reject evaluation first");
         return
       }
       this.vendorAssessmentResults = "Evaluation Rejected";
-      axios({
+      await axios({
         url: 'updateVendorAssessmentForm',
         method: 'put',
         baseURL: API_URL,
@@ -1147,7 +1163,7 @@ export default {
       .then(response => { alert("Evaluation rejected"); })
       .catch(error => { console.log(error); })
     },
-    handleApproveEvaluation(){
+    async handleApproveEvaluation(){
       if (this.evaluation != "Approved"){
         alert("Please approve evaluation first");
         return
@@ -1157,7 +1173,7 @@ export default {
         return
       }
       this.vendorAssessmentResults = "Evaluation Approved";
-      axios({
+      await axios({
         url: 'updateVendorAssessmentForm',
         method: 'put',
         baseURL: API_URL,
@@ -1172,9 +1188,9 @@ export default {
       .then(response => { alert("Evaluation approved"); })
       .catch(error => { console.log(error); })
     },
-    handleRejectForm(){
+    async handleRejectForm(){
       this.vendorAssessmentResults = "Form Rejected";
-      axios({
+      await axios({
         url: 'updateVendorAssessmentForm',
         method: 'put',
         baseURL: API_URL,
@@ -1190,7 +1206,7 @@ export default {
       .then(response => { alert("Form rejected"); })
       .catch(error => { console.log(error); })
     },
-    handleApproveForm(){
+    async handleApproveForm(){
       if (this.evaluation != "Approved"){
         alert("Please approve evaluation first");
         return
@@ -1204,7 +1220,7 @@ export default {
         return
       }
       this.vendorAssessmentResults = "Form Approved"
-      axios({
+      await axios({
         url: 'updateVendorAssessmentForm',
         method: 'put',
         baseURL: API_URL,
