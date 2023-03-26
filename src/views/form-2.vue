@@ -683,7 +683,7 @@ export default {
       isApprover: false,
 
       // form
-      id: 1,
+      id: null,
 
       subContractorName: '',
       scopeOfWork: '',
@@ -828,7 +828,7 @@ export default {
       this.$router.push('/workflow');
     },
     async handleSave(){
-      this.preEvaluationResults = "Draft";
+      if (sessionStorage.getItem('role') == "USER") this.preEvaluationResults = "Draft";
       await axios({
         url: 'updatePreEvaluationForm',
         method: 'put',
