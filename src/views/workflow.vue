@@ -16,7 +16,7 @@
                     <div class="row">
                         <p class="col">Overview of all form workflows (in progress / completed)</p> 
                         <div class="col">
-                            <b-button v-if="checkRole() == 'ADMIN' || checkRole() == 'APPROVER'" type="button" class="btn btn-dark float-end mx-1" v-b-modal.modal-wfcreate>Create Workflow</b-button>
+                            <b-button v-if="role == 'ADMIN' || role == 'APPROVER'" type="button" class="btn btn-dark float-end mx-1" v-b-modal.modal-wfcreate>Create Workflow</b-button>
                             <!-- TODO: Create modal for Search/Filtering -->
                             <b-button type="button" class="btn btn-dark float-end mx-1" v-b-modal.modal-wfcreate>Filter</b-button>
                         </div>
@@ -72,57 +72,6 @@
                         </form>
                     </b-modal>
 
-                    <!-- Modal Edit (Might Remove Later) -->
-                    <b-modal
-                        id="modal-testEdit"
-                        ref="modal"
-                        title="Edit Workflow"
-                        @show="resetModal2"
-                        @hidden="resetModal2"
-                        @ok="handleOk2"
-                    >
-                        <form ref="form" @submit.stop.prevent="handleSubmit2">
-                            <b-form-group
-                                label="Vendor Name"
-                                label-for="name-input"
-                                invalid-feedback="Vendor Name is required"
-                            >
-                                <b-form-input
-                                    id="name-input"
-                                    v-model="name"
-                                    placeholder="Enter Vendor Name"
-                                    required
-                                ></b-form-input>
-                            </b-form-group>
-        
-                            <b-form-group
-                                label="Form"
-                                label-for="form-input"
-                                invalid-feedback="Form is required"
-                            >
-                                <b-form-input
-                                    id="form-input"
-                                    v-model="form"
-                                    placeholder="Enter Form"
-                                    required
-                                ></b-form-input>
-                            </b-form-group>
-
-                            <b-form-group
-                                label="Status"
-                                label-for="status-input"
-                                invalid-feedback="Status is required"
-                            >
-                                <b-form-input
-                                    id="status-input"
-                                    v-model="status"
-                                    placeholder="Enter Status"
-                                    required
-                                ></b-form-input>
-                            </b-form-group>
-                        </form>
-                    </b-modal>
-
                     <!-- Modal Email -->
                     <b-modal
                         id="modal-sendEmail"
@@ -133,20 +82,7 @@
                         @ok="handleOkEmail"
                     >
                         <form ref="form" @submit.stop.prevent="handleSubmitEmail">
-                            <b-form-group
-                                label="Email Recipient"
-                                label-for="recipient-input"
-                                invalid-feedback="Email Recipient is required"
-                            >
-                                <b-form-input
-                                    id="recipient-input"
-                                    v-model="emailRecipient"
-                                    type="email"
-                                    placeholder="Enter Email Recipient"
-                                    required
-                                ></b-form-input>
-                            </b-form-group>
-
+                            <h5>Email to: {{ this.modal.emailRecipient }}</h5>
                             <b-form-group
                                 label="Email Subject"
                                 label-for="subject-input"
@@ -189,7 +125,7 @@
                             <th scope="col">Date Modified</th>
                             <th scope="col">Deadline</th>
                             <th scope="col">Additional Remarks</th>
-                            <th scope="col" v-if="checkRole() == 'ADMIN' || checkRole() == 'APPROVER'">Admin Actions</th>
+                            <th scope="col" v-if="role == 'ADMIN' || role == 'APPROVER'">Admin Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -221,15 +157,14 @@
                             <td v-else>Invalid data, please inform Admin!</td>
                             <td>{{handleDate(workflow.dateCreated)}}</td>
                             <td>{{handleDate(workflow.dateModified)}}</td>
-                            <td>{{handleDeadline(workflow.deadline)}}</td>
+                            <td>{{handleDeadline(workflow.deadline, workflow.status)}}</td>
                             <td>{{workflow.remarks}}</td>
                             <!-- TODO: Link up buttons to relevant modals/functions on click -->
-                            <td v-if="checkRole() == 'ADMIN' || checkRole() == 'APPROVER'">
-                                <b-button type="button" class="btn btn-dark mx-1" @click="editRow(k, workflow, $event.target)" ref="btnEdit">Test Edit</b-button>
-                                <b-button v-if="workflow.status == 'Draft' || workflow.status == 'Evaluation Rejected' || workflow.status == 'Form Rejected'" type="button" class="btn btn-info mx-1" v-b-modal.modal-sendEmail>Email</b-button>
+                            <td v-if="role == 'ADMIN' || role == 'APPROVER'">
+                                <b-button v-if="workflow.status == 'Draft' || workflow.status == 'Evaluation Rejected' || workflow.status == 'Form Rejected'" type="button" class="btn btn-info mx-1" @click="sendEmail(k, workflow, $event.target)" ref="btnEmail">Send Email</b-button>
                                 <b-button v-if="workflow.status == 'Draft' || workflow.status == 'Evaluation Rejected' || workflow.status == 'Form Rejected'" type="button" class="btn btn-warning mx-1" v-b-modal.modal-wfcreate>Edit Deadline</b-button>
                                 <!-- Add confirmation modal -->
-                                <b-button type="button" class="btn btn-danger mx-1" @click="deleteRow(k, workflow)">Delete</b-button>
+                                <b-button v-if="workflow.status == 'Draft' || workflow.status == 'Submitted' || workflow.status == 'Evaluation Rejected' || workflow.status == 'Form Rejected'" type="button" class="btn btn-danger mx-1" @click="deleteRow(k, workflow)">Delete</b-button>
                             </td>
                         </tr>
                     </tbody>
@@ -272,20 +207,26 @@
                 workflows: [],
                 users: [],
                 modal: {
-                    id: 'modal-testEdit',
-                    name: '',
-                    form: '',
-                    status: '',
+                    id: 'modal-sendEmail',
+                    emailRecipient: '',
+                    emailSubject: '',
+                    emailBody: '',
                     index: 0
-                }
+                },
+                role: null
             }
         },
-        mounted() {
+        created() {
 
             UserService.getUser().then(
                 response => {
                     // is user
                     sessionStorage.setItem('role', response.data["role"]);
+                    this.role = response.data["role"];
+                    if (this.role == "USER") {
+                        this.getAllForms();
+                    }
+
                 },
                 error => {
                     // do nothing
@@ -296,24 +237,21 @@
                 response => {
                     // is admin/approver
                     sessionStorage.setItem('role', response.data["role"]);
+                    this.role = response.data["role"];
+                    this.getAllForms();
                 },
                 error => {
                     // do nothing
                     console.log(error.message);
                 }
             )
-
-            this.getAllForms();
         },
         methods: {
             // -------
-            // Functions for Workflow Retrieval
+            // Function for Workflow + Users Retrieval
             // -------
-            checkRole() {
-                return sessionStorage.getItem('role');
-            },
             getAllForms() {
-                if (this.checkRole() == 'ADMIN' || this.checkRole() == 'APPROVER') {
+                if (this.role == 'ADMIN' || this.role == 'APPROVER') {
                     axios({
                         url: 'admin/getAllUsers',
                         method: 'get',
@@ -328,47 +266,47 @@
                                 name: userData.name,
                                 email: userData.email
                             })
-                            for (let formData of userData.vendorAssessmentForm) {
-                                // Check that the keys are correct
-                                // console.log(formData);
-                                this.workflows.push({
-                                    vendor: userData.name,
-                                    id: formData.id,
-                                    form: "form-1",
-                                    status: formData.vendorAssessmentResults,
-                                    dateCreated: formData.dateCreated,
-                                    dateModified: formData.dateModified,
-                                    deadline: formData.deadline,
-                                    remarks: formData.evaluationComments
-                                })
+                            if (userData.vendorAssessmentForm != null) {
+                                for (let formData of userData.vendorAssessmentForm) {
+                                    this.workflows.push({
+                                        name: userData.name,
+                                        id: formData.id,
+                                        form: "form-1",
+                                        status: formData.vendorAssessmentResults,
+                                        dateCreated: formData.dateCreated,
+                                        dateModified: formData.dateModified,
+                                        deadline: formData.deadline,
+                                        remarks: formData.evaluationComments
+                                    })
+                                }
                             }
-                            for (let formData of userData.preEvaluationForm) {
-                                // Check that the keys are correct
-                                // console.log(formData);
-                                this.workflows.push({
-                                    vendor: userData.name,
-                                    id: formData.id,
-                                    form: "form-2",
-                                    status: formData.preEvaluationResults,
-                                    dateCreated: formData.dateCreated,
-                                    dateModified: formData.dateModified,
-                                    deadline: formData.deadline,
-                                    remarks: formData.evaluationComments
-                                })
+                            if (userData.preEvaluationForm != null) {
+                                for (let formData of userData.preEvaluationForm) {
+                                    this.workflows.push({
+                                        name: userData.name,
+                                        id: formData.id,
+                                        form: "form-2",
+                                        status: formData.preEvaluationResults,
+                                        dateCreated: formData.dateCreated,
+                                        dateModified: formData.dateModified,
+                                        deadline: formData.deadline,
+                                        remarks: formData.evaluationComments
+                                    })
+                                }
                             }
-                            for (let formData of userData.performanceEvaluationForm) {
-                                // Check that the keys are correct
-                                // console.log(formData);
-                                this.workflows.push({
-                                    vendor: userData.name,
-                                    id: formData.id,
-                                    form: "form-3",
-                                    status: formData.performanceEvaluationResults,
-                                    dateCreated: formData.dateCreated,
-                                    dateModified: formData.dateModified,
-                                    deadline: formData.deadline,
-                                    remarks: formData.evaluationComments
-                                })
+                            if (userData.performanceEvaluationForm) {
+                                for (let formData of userData.performanceEvaluationForm) {
+                                    this.workflows.push({
+                                        name: userData.name,
+                                        id: formData.id,
+                                        form: "form-3",
+                                        status: formData.performanceEvaluationResults,
+                                        dateCreated: formData.dateCreated,
+                                        dateModified: formData.dateModified,
+                                        deadline: formData.deadline,
+                                        remarks: formData.evaluationComments
+                                    })
+                                }
                             }
                         }
                         // Sort workflows with this.workflows.sort(function(a, b){return "something"})
@@ -390,47 +328,47 @@
                     })
                     .then(response => {
                         var result = response.data;
-                        for (let formData of result.vendorAssessmentForm) {
-                            // Check that the keys are correct
-                            // console.log(formData);
-                            this.workflows.push({
-                                vendor: result.name,
-                                id: formData.id,
-                                form: "form-1",
-                                status: formData.vendorAssessmentResults,
-                                dateCreated: formData.dateCreated,
-                                dateModified: formData.dateModified,
-                                deadline: formData.deadline,
-                                remarks: formData.evaluationComments
-                            })
+                        if (result.vendorAssessmentForm != null) {
+                            for (let formData of result.vendorAssessmentForm) {
+                                this.workflows.push({
+                                    name: result.name,
+                                    id: formData.id,
+                                    form: "form-1",
+                                    status: formData.vendorAssessmentResults,
+                                    dateCreated: formData.dateCreated,
+                                    dateModified: formData.dateModified,
+                                    deadline: formData.deadline,
+                                    remarks: formData.evaluationComments
+                                })
+                            }
                         }
-                        for (let formData of result.preEvaluationForm) {
-                            // Check that the keys are correct
-                            // console.log(formData);
-                            this.workflows.push({
-                                vendor: result.name,
-                                id: formData.id,
-                                form: "form-2",
-                                status: formData.preEvaluationResults,
-                                dateCreated: formData.dateCreated,
-                                dateModified: formData.dateModified,
-                                deadline: formData.deadline,
-                                remarks: formData.evaluationComments
-                            })
+                        if (result.preEvaluationForm != null) {
+                            for (let formData of result.preEvaluationForm) {
+                                this.workflows.push({
+                                    name: result.name,
+                                    id: formData.id,
+                                    form: "form-2",
+                                    status: formData.preEvaluationResults,
+                                    dateCreated: formData.dateCreated,
+                                    dateModified: formData.dateModified,
+                                    deadline: formData.deadline,
+                                    remarks: formData.evaluationComments
+                                })
+                            }
                         }
-                        for (let formData of result.performanceEvaluationForm) {
-                            // Check that the keys are correct
-                            // console.log(formData);
-                            this.workflows.push({
-                                vendor: result.name,
-                                id: formData.id,
-                                form: "form-3",
-                                status: formData.performanceEvaluationResults,
-                                dateCreated: formData.dateCreated,
-                                dateModified: formData.dateModified,
-                                deadline: formData.deadline,
-                                remarks: formData.evaluationComments
-                            })
+                        if (result.performanceEvaluationForm != null) {
+                            for (let formData of result.performanceEvaluationForm) {
+                                this.workflows.push({
+                                    name: result.name,
+                                    id: formData.id,
+                                    form: "form-3",
+                                    status: formData.performanceEvaluationResults,
+                                    dateCreated: formData.dateCreated,
+                                    dateModified: formData.dateModified,
+                                    deadline: formData.deadline,
+                                    remarks: formData.evaluationComments
+                                })
+                            }
                         }
                         // Sort workflows with this.workflows.sort(function(a, b){return "something"})
                     })
@@ -440,135 +378,17 @@
                     })
                 }
             },
-            getUserNames() {
-
-                let usernameList = [];
-                // -------
-                // TEMPORARY SECTION: To simulate existing users
-                let result = [
-                    {
-                        "id": 1,
-                        "email": "admin@admin.com",
-                        "password": "$2a$10$Jw/pKkihLbACN6mXs7SFnOV2VrIKgmd8CHhtvRTk5fQvDU3Agn/Za",
-                        "name": "Admin",
-                        "contactNumber": "0123456789",
-                        "dateCreated": "2023-03-12T13:51:22.698+00:00",
-                        "role": "ADMIN",
-                        "vendorAssessmentForm": null,
-                        "preEvaluationForm": null,
-                        "performanceEvaluationForm": null,
-                        "enabled": true,
-                        "username": "admin@admin.com",
-                        "authorities": [
-                            {
-                                "authority": "ADMIN"
-                            }
-                        ],
-                        "accountNonLocked": true,
-                        "credentialsNonExpired": true,
-                        "accountNonExpired": true
-                    },
-                    {
-                        "id": 2,
-                        "email": "user@user.com",
-                        "password": "$2a$10$vWhEHw2QSRE6.cyxYyhCjeDmn6yWwGZw5bgzk63g2caymSLbiNNO2",
-                        "name": "companyABC",
-                        "contactNumber": "123456789",
-                        "dateCreated": "2023-03-12T13:52:45.642+00:00",
-                        "role": "USER",
-                        "vendorAssessmentForm": {
-                            "id": 1,
-                            "companyName": null,
-                            "companyAddress": null,
-                            "vendorAssessmentResults": "false"
-                        },
-                        "preEvaluationForm": {
-                            "id": 1,
-                            "companyName": null,
-                            "companyAddress": null,
-                            "preEvaluationResults": "false"
-                        },
-                        "performanceEvaluationForm": {
-                            "id": 1,
-                            "companyName": "null",
-                            "companyAddress": "null",
-                            "performanceEvaluationResults": "false"
-                        },
-                        "enabled": true,
-                        "username": "user@user.com",
-                        "authorities": [
-                            {
-                                "authority": "USER"
-                            }
-                        ],
-                        "accountNonLocked": true,
-                        "credentialsNonExpired": true,
-                        "accountNonExpired": true
-                    }
-                ];
-
-                for (let userData of result) {
-                    if (userData.role == 'USER') usernameList.push({value: userData.name, text: userData.name})
-                }
-                return usernameList;
-                // End of Temp Section!
-                // -------
-                // for (let userData of this.users) {
-                //     usernameList.push({value: userData.name, text: userData.name})
-                // }
-
-            },
-            deleteRow(index, workflow) {
-                var idx = this.workflows.indexOf(workflow);
-                console.log(idx, index);
-                if (idx > -1) {
-                    this.workflows.splice(idx, 1);
-                }
-
-                // if (workflow.form == "form-1" || workflow.form == "form-2" || workflow.form == "form-3") {
-
-                //     let formLinkConversion = {
-                //         "form-1": "vendor/updateVendorAssessmentForm",
-                //         "form-2": "vendor/updatePreEvaluationForm",
-                //         "form-3": "vendor/updatePerformanceEvaluationForm"
-                //     }
-                //     let updateData = {
-                //         id: workflow.id
-                //     }
-
-                //     if (workflow.form == "form-1") {
-                //         updateData.vendorAssessmentResults = "Archived"
-                //     } else if (workflow.form == "form-2") {
-                //         updateData.preEvaluationResults = "Archived"
-                //     } else {
-                //         updateData.performanceEvaluationResults = "Archived"
-                //     }
-
-                //     axios({
-                //         url: formLinkConversion[workflow.form],
-                //         method: 'put',
-                //         baseURL: API_URL,
-                //         headers: authHeader(),
-                //         data: updateData,
-                //         withCredentials: false
-                //     })
-                //     .then(response => {
-                //         var result = response.data;
-                //         alert("(ID: " + result.id + ")" + this.handleForm(workflow.form) + " successfully deleted.")
-                //         this.getAllForms()
-                //     })
-                //     .catch(error => {
-                //         console.log(error);
-                //     })
-
-                // } else {
-                //     alert("Invalid form type!")
-                // }
-            },
 
             // -------
             // Functions for Workflow Creation Button
             // -------
+            getUserNames() {
+                let usernameList = [];
+                for (let userData of this.users) {
+                    usernameList.push({value: userData.name, text: userData.name})
+                }
+                return usernameList;
+            },
             resetModal() {
                 this.name = ''
                 this.form = ''
@@ -585,48 +405,35 @@
 
                     let userEmail = "Email not found"
                     let formLinkConversion = {
-                        "form-1": "vendor/createVendorAssessmentForm",
-                        "form-2": "vendor/createPreEvaluationForm",
-                        "form-3": "vendor/createPerformanceEvaluationForm"
+                        "form-1": "vendor/createVendorAssessmentForm/7",
+                        "form-2": "vendor/createPreEvaluationForm/7",
+                        "form-3": "vendor/createPerformanceEvaluationForm/7"
                     }
 
-                    // ERROR: Email cannot be retrieved at the moment!
                     for (let userData of this.users) {
                         if (userData.name == this.name) {
                             userEmail = userData.email
                         }
                     }
-                    alert("Test: " + this.handleForm(this.form) + " belongs to " + this.name + "(" + userEmail + ")!")
 
-                    // Temporary Creation Code
-                    this.workflows.push({
-                        name: this.name,
-                        form: this.form,
-                        status: 'Draft',
-                        dateCreated: '2023-03-26T13:22:20.764+00:00',
-                        dateModified: '2023-04-01T16:00:00.000+00:00',
-                        deadline: '2023-04-01T16:00:00.000+00:00',
-                        remarks: 'No remarks',
+                    axios({
+                        url: formLinkConversion[this.form],
+                        method: 'post',
+                        baseURL: API_URL,
+                        headers: authHeader(),
+                        data: {
+                            email: userEmail,
+                        },
+                        withCredentials: false
                     })
-
-                    // axios({
-                    //     url: formLinkConversion[this.form],
-                    //     method: 'post',
-                    //     baseURL: API_URL,
-                    //     headers: authHeader(),
-                    //     data: {
-                    //         email: this.value,
-                    //     },
-                    //     withCredentials: false
-                    // })
-                    // .then(response => {
-                    //     var result = response.data;
-                    //     alert("(ID: " + result.id + ")" + this.handleForm(this.form) + " successfully created for " + this.name + "(" + userEmail + ")!")
-                    //     this.getAllForms()
-                    // })
-                    // .catch(error => {
-                    //     console.log(error);
-                    // })
+                    .then(response => {
+                        var result = response.data;
+                        alert("(ID: " + result.id + ")" + this.handleForm(this.form) + " successfully created for " + this.name + "(" + userEmail + ")!")
+                        this.getAllForms()
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
 
                 } else {
                     alert("Invalid form type!")
@@ -638,43 +445,20 @@
             },
 
             // -------
-            // Functions for TEMPORARY Workflow Edit Button, to be REPURPOSED!
-            // -------
-            editRow(index, workflow, button) {
-                this.modal.name = workflow.name
-                this.modal.form = workflow.form
-                this.modal.status = workflow.status
-                this.modal.index = index
-                this.$root.$emit('bv::show::modal', this.modal.id, 'btnEdit')
-        
-            },
-            resetModal2() {
-                this.name = ''
-                this.form = ''
-                this.status = ''
-            },
-            handleOk2(bvModalEvent) {
-                // Prevent modal from closing
-                bvModalEvent.preventDefault()
-                // Trigger edit handler
-                this.handleSubmit2()
-            },
-            handleSubmit2() {
-                // Push the name to submitted names
-                this.workflows[this.modal.index] = {
-                name : this.name,
-                form : this.form,
-                status : this.status
-                }
-        
-                this.$nextTick(() => {
-                this.$bvModal.hide('modal-testEdit')
-                })
-            },
-
-            // -------
             // Functions for sending Email
             // -------
+            sendEmail(index, workflow, button) {
+                for (let userData of this.users) {
+                    if (userData.name == workflow.name) {
+                        this.modal.emailRecipient = userData.email
+                    }
+                }
+                this.modal.emailSubject = "Reminder: your " + this.handleForm(workflow.form) + " is " + this.handleDeadline(workflow.deadline, workflow.status)
+                this.modal.emailBody = "Current Workflow Status: " + workflow.status
+                this.modal.index = index
+                this.$root.$emit('bv::show::modal', this.modal.id, 'btnEmail')
+        
+            },
             resetModalEmail() {
                 this.emailRecipient = ''
                 this.emailSubject = ''
@@ -688,6 +472,8 @@
             },
             handleSubmitEmail() {
 
+                alert(this.modal.emailRecipient + this.emailBody + this.emailSubject);
+
                 // TEMPORARILY DISABLED AS THIS SENDS EMAILS
                 // axios({
                 //     url: 'admin/sendEmail',
@@ -695,7 +481,7 @@
                 //     baseURL: API_URL,
                 //     headers: authHeader(),
                 //     data: {
-                //         recipient: this.emailRecipient,
+                //         recipient: this.modal.emailRecipient,
                 //         msgBody: this.emailBody,
                 //         subject: this.emailSubject
                 //     },
@@ -711,6 +497,51 @@
                 this.$nextTick(() => {
                 this.$bvModal.hide('modal-sendEmail')
                 })
+            },
+
+            // -------
+            // Functions for Workflow Deletion
+            // -------
+            deleteRow(index, workflow) {
+                if (workflow.form == "form-1" || workflow.form == "form-2" || workflow.form == "form-3") {
+
+                    let formLinkConversion = {
+                        "form-1": "vendor/updateVendorAssessmentForm",
+                        "form-2": "vendor/updatePreEvaluationForm",
+                        "form-3": "vendor/updatePerformanceEvaluationForm"
+                    }
+                    let updateData = {
+                        id: workflow.id
+                    }
+
+                    if (workflow.form == "form-1") {
+                        updateData.vendorAssessmentResults = "Archived"
+                    } else if (workflow.form == "form-2") {
+                        updateData.preEvaluationResults = "Archived"
+                    } else {
+                        updateData.performanceEvaluationResults = "Archived"
+                    }
+
+                    axios({
+                        url: formLinkConversion[workflow.form],
+                        method: 'put',
+                        baseURL: API_URL,
+                        headers: authHeader(),
+                        data: updateData,
+                        withCredentials: false
+                    })
+                    .then(response => {
+                        var result = response.data;
+                        alert("(ID: " + result.id + ")" + this.handleForm(workflow.form) + " successfully deleted.")
+                        // this.getAllForms()
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+
+                } else {
+                    alert("Invalid form type!")
+                }
             },
 
             // -------
@@ -739,7 +570,7 @@
             handleActions(status) {
                 if (status == "Form Approved") return "done";
                 else {
-                    let role = sessionStorage.getItem('role');
+                    let role = this.role;
                     if (role == "USER"){
                         if (status == "Submitted" || status == "Evaluation Approved" || status == "Archived") return "viewOnly";
                         else if (status == "Draft" || status == "Evaluation Rejected" || status == "Form Rejected") return "edit";
@@ -761,49 +592,54 @@
                 }
             },
             handleDate(inputDate) {
+                if (inputDate == null) return "-";
                 let d = new Date(inputDate);
                 return d.getFullYear() + "/" + (d.getMonth() +1).toLocaleString(undefined, {minimumIntegerDigits: 2}) + "/" + d.getDate().toLocaleString(undefined, {minimumIntegerDigits: 2}) + " " + d.getHours().toLocaleString(undefined, {minimumIntegerDigits: 2}) + ":" + d.getMinutes().toLocaleString(undefined, {minimumIntegerDigits: 2});
             },
-            handleDeadline(inputDeadline) {
-                let outputDeadline = "(unknown)";
-                let d = new Date(inputDeadline);
-                let now = new Date();
-                let diff = d.getTime() - now.getTime();
+            handleDeadline(inputDeadline, inputStatus) {
+                if (inputStatus == 'Draft' || inputStatus == 'Evaluation Rejected' || inputStatus == 'Form Rejected') {
 
-                if (diff > 0) {
-                    outputDeadline = "Due in ";
-                } else {
-                    outputDeadline = "Overdue by ";
-                }
+                    let outputDeadline = "(unknown)";
+                    let d = new Date(inputDeadline);
+                    let now = new Date();
+                    let diff = d.getTime() - now.getTime();
 
-                // Minutes, at least 0
-                diff = Math.abs(diff) / 1000 / 60;
-                if (diff < 1) {
-                    outputDeadline += "< 1 min!"
-                } else if (diff < 60) {
-                    outputDeadline += (Math.floor(diff) + " mins")
-                } else {
+                    if (diff > 0) {
+                        outputDeadline = "Due in ";
+                    } else {
+                        outputDeadline = "Overdue by ";
+                    }
 
-                    // Hours, at least 1
-                    diff = diff / 60;
-                    if (diff < 24) {
-                        outputDeadline += (Math.floor(diff) + " hours")
+                    // Minutes, at least 0
+                    diff = Math.abs(diff) / 1000 / 60;
+                    if (diff < 1) {
+                        outputDeadline += "< 1 min!"
+                    } else if (diff < 60) {
+                        outputDeadline += (Math.floor(diff) + " mins")
                     } else {
 
-                        // Days, at least 1
-                        diff = diff / 24;
-                        outputDeadline += (Math.floor(diff) + " days")
-                    }
-                }
+                        // Hours, at least 1
+                        diff = diff / 60;
+                        if (diff < 24) {
+                            outputDeadline += (Math.floor(diff) + " hours")
+                        } else {
 
-                return outputDeadline;
+                            // Days, at least 1
+                            diff = diff / 24;
+                            outputDeadline += (Math.floor(diff) + " days")
+                        }
+                    }
+                    return outputDeadline;
+                    
+                } else {
+                    return "-";
+                }
             },
 
             // -------
             // Go to Form page
             // -------
             GoToForm(formType, formID){
-                alert("Redirecting to the " + this.handleForm(formType) + " page!");
                 this.$router.push('/' + formType + '?formid=' + formID);
             }
         }
