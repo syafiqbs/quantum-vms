@@ -16,15 +16,15 @@
                     <div class="row">
                         <p class="col">Overview of all form workflows (in progress / completed)</p> 
                         <div class="col">
-                            <b-button v-if="checkRole() == 'ADMIN' || checkRole() == 'APPROVER'" type="button" class="btn btn-dark float-end mx-1" v-b-modal.modal-prevent-closing1>Create Workflow</b-button>
+                            <b-button v-if="checkRole() == 'ADMIN' || checkRole() == 'APPROVER'" type="button" class="btn btn-dark float-end mx-1" v-b-modal.modal-wfcreate>Create Workflow</b-button>
                             <!-- TODO: Create modal for Search/Filtering -->
-                            <b-button type="button" class="btn btn-dark float-end mx-1" v-b-modal.modal-prevent-closing1>Filter</b-button>
+                            <b-button type="button" class="btn btn-dark float-end mx-1" v-b-modal.modal-wfcreate>Filter</b-button>
                         </div>
                     </div>
                     
                     <!-- Modal Create -->
                     <b-modal
-                        id="modal-prevent-closing1"
+                        id="modal-wfcreate"
                         ref="modal"
                         title="Create Workflow"
                         @show="resetModal"
@@ -74,7 +74,7 @@
 
                     <!-- Modal Edit (Might Remove Later) -->
                     <b-modal
-                        id="modal-prevent-closing2"
+                        id="modal-testEdit"
                         ref="modal"
                         title="Edit Workflow"
                         @show="resetModal2"
@@ -122,6 +122,60 @@
                             </b-form-group>
                         </form>
                     </b-modal>
+
+                    <!-- Modal Email -->
+                    <b-modal
+                        id="modal-sendEmail"
+                        ref="modal"
+                        title="Send Email"
+                        @show="resetModalEmail"
+                        @hidden="resetModalEmail"
+                        @ok="handleOkEmail"
+                    >
+                        <form ref="form" @submit.stop.prevent="handleSubmitEmail">
+                            <b-form-group
+                                label="Email Recipient"
+                                label-for="recipient-input"
+                                invalid-feedback="Email Recipient is required"
+                            >
+                                <b-form-input
+                                    id="recipient-input"
+                                    v-model="emailRecipient"
+                                    type="email"
+                                    placeholder="Enter Email Recipient"
+                                    required
+                                ></b-form-input>
+                            </b-form-group>
+
+                            <b-form-group
+                                label="Email Subject"
+                                label-for="subject-input"
+                                invalid-feedback="Subject is required"
+                            >
+                                <b-form-input
+                                    id="subject-input"
+                                    v-model="emailSubject"
+                                    placeholder="Enter Email Subject"
+                                    required
+                                ></b-form-input>
+                            </b-form-group>
+        
+                            <b-form-group
+                                label="Email Message Body"
+                                label-for="emailmsg-input"
+                                invalid-feedback="The email needs some content!"
+                            >
+                                <b-form-textarea
+                                    id="emailmsg-input"
+                                    v-model="emailBody"
+                                    placeholder="Enter Email's content here..."
+                                    rows="5"
+                                    max-rows="12"
+                                    required
+                                ></b-form-textarea>
+                            </b-form-group>
+                        </form>
+                    </b-modal>
                 </div>
     
                 <table class="table table-hover">
@@ -141,34 +195,41 @@
                     <tbody>
                         <tr v-for="(workflow, k) in workflows" :key="k">
                             <th scope="row">{{workflow.name}}</th>
-                            <td>{{workflow.form}}</td>
+                            <td>{{handleForm(workflow.form)}}</td>
                             <td>{{handleStatus(workflow.status)}}</td>
                             <td v-if="handleActions(workflow.status) == 'viewOnly'">
-                                View
+                                <b-button type="button" class="btn btn-secondary mx-1" @click="GoToForm(workflow.form, workflow.id)">View</b-button>
                             </td>
                             <td v-else-if="handleActions(workflow.status) == 'edit'">
-                                Edit
+                                <b-button type="button" class="btn btn-dark mx-1" @click="GoToForm(workflow.form, workflow.id)">Edit</b-button>
                             </td>
                             <td v-else-if="handleActions(workflow.status) == 'review'">
-                                Review
+                                <b-button type="button" class="btn btn-info mx-1" @click="GoToForm(workflow.form, workflow.id)">Review</b-button>
                             </td>
                             <td v-else-if="handleActions(workflow.status) == 'approve'">
-                                Approve
+                                <b-button type="button" class="btn btn-warning mx-1" @click="GoToForm(workflow.form, workflow.id)">Approve</b-button>
                             </td>
                             <td v-else-if="handleActions(workflow.status) == 'done'">
-                                View, Download
+                                <b-button type="button" class="btn btn-secondary mx-1" @click="GoToForm(workflow.form, workflow.id)">View</b-button>
+                                <!-- TODO: Link up button to relevant modal -> function on click -->
+                                <b-button type="button" class="btn btn-success mx-1">Download</b-button>
                             </td>
                             <td v-else-if="handleActions(workflow.status) == 'restore'">
-                                Restore
+                                <!-- TODO: Link up button to relevant modal -> function on click -->
+                                <b-button type="button" class="btn btn-danger mx-1">Restore</b-button>
                             </td>
                             <td v-else>Invalid data, please inform Admin!</td>
-                            <td>Date Created</td>
-                            <td>Date Modified</td>
-                            <td>Deadline</td>
-                            <td>Additional Remarks</td>
+                            <td>{{handleDate(workflow.dateCreated)}}</td>
+                            <td>{{handleDate(workflow.dateModified)}}</td>
+                            <td>{{handleDeadline(workflow.deadline)}}</td>
+                            <td>{{workflow.remarks}}</td>
+                            <!-- TODO: Link up buttons to relevant modals/functions on click -->
                             <td v-if="checkRole() == 'ADMIN' || checkRole() == 'APPROVER'">
-                                <b-button type="button" class="btn btn-dark mx-1" @click="editRow(k, workflow, $event.target)" ref="btnShow">Test Edit</b-button>
-                                <b-button type="button" class="btn btn-dark mx-1" @click="deleteRow(k, workflow)">Delete</b-button>
+                                <b-button type="button" class="btn btn-dark mx-1" @click="editRow(k, workflow, $event.target)" ref="btnEdit">Test Edit</b-button>
+                                <b-button v-if="workflow.status == 'Draft' || workflow.status == 'Evaluation Rejected' || workflow.status == 'Form Rejected'" type="button" class="btn btn-info mx-1" v-b-modal.modal-sendEmail>Email</b-button>
+                                <b-button v-if="workflow.status == 'Draft' || workflow.status == 'Evaluation Rejected' || workflow.status == 'Form Rejected'" type="button" class="btn btn-warning mx-1" v-b-modal.modal-wfcreate>Edit Deadline</b-button>
+                                <!-- Add confirmation modal -->
+                                <b-button type="button" class="btn btn-danger mx-1" @click="deleteRow(k, workflow)">Delete</b-button>
                             </td>
                         </tr>
                     </tbody>
@@ -204,9 +265,14 @@
             return {
                 name: '',
                 form: '',
+                status: '',
+                emailRecipient: '',
+                emailSubject: '',
+                emailBody: '',
                 workflows: [],
+                users: [],
                 modal: {
-                    id: 'modal-prevent-closing2',
+                    id: 'modal-testEdit',
                     name: '',
                     form: '',
                     status: '',
@@ -215,6 +281,7 @@
             }
         },
         mounted() {
+
             UserService.getUser().then(
                 response => {
                     // is user
@@ -235,15 +302,149 @@
                     console.log(error.message);
                 }
             )
+
+            this.getAllForms();
         },
         methods: {
+            // -------
+            // Functions for Workflow Retrieval
+            // -------
             checkRole() {
                 return sessionStorage.getItem('role');
+            },
+            getAllForms() {
+                if (this.checkRole() == 'ADMIN' || this.checkRole() == 'APPROVER') {
+                    axios({
+                        url: 'admin/getAllUsers',
+                        method: 'get',
+                        baseURL: API_URL,
+                        headers: authHeader(),
+                        withCredentials: false
+                    })
+                    .then(response => {
+                        var result = response.data;
+                        for (let userData of result) {
+                            if (userData.role == 'USER') this.users.push({
+                                name: userData.name,
+                                email: userData.email
+                            })
+                            for (let formData of userData.vendorAssessmentForm) {
+                                // Check that the keys are correct
+                                // console.log(formData);
+                                this.workflows.push({
+                                    vendor: userData.name,
+                                    id: formData.id,
+                                    form: "form-1",
+                                    status: formData.vendorAssessmentResults,
+                                    dateCreated: formData.dateCreated,
+                                    dateModified: formData.dateModified,
+                                    deadline: formData.deadline,
+                                    remarks: formData.evaluationComments
+                                })
+                            }
+                            for (let formData of userData.preEvaluationForm) {
+                                // Check that the keys are correct
+                                // console.log(formData);
+                                this.workflows.push({
+                                    vendor: userData.name,
+                                    id: formData.id,
+                                    form: "form-2",
+                                    status: formData.preEvaluationResults,
+                                    dateCreated: formData.dateCreated,
+                                    dateModified: formData.dateModified,
+                                    deadline: formData.deadline,
+                                    remarks: formData.evaluationComments
+                                })
+                            }
+                            for (let formData of userData.performanceEvaluationForm) {
+                                // Check that the keys are correct
+                                // console.log(formData);
+                                this.workflows.push({
+                                    vendor: userData.name,
+                                    id: formData.id,
+                                    form: "form-3",
+                                    status: formData.performanceEvaluationResults,
+                                    dateCreated: formData.dateCreated,
+                                    dateModified: formData.dateModified,
+                                    deadline: formData.deadline,
+                                    remarks: formData.evaluationComments
+                                })
+                            }
+                        }
+                        // Sort workflows with this.workflows.sort(function(a, b){return "something"})
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        return [];
+                    })
+                } else {
+                    axios({
+                        url: 'vendor/getUser',
+                        method: 'post',
+                        baseURL: API_URL,
+                        headers: authHeader(),
+                        data: {
+                            email: sessionStorage.getItem('email'),
+                        },
+                        withCredentials: false
+                    })
+                    .then(response => {
+                        var result = response.data;
+                        for (let formData of result.vendorAssessmentForm) {
+                            // Check that the keys are correct
+                            // console.log(formData);
+                            this.workflows.push({
+                                vendor: result.name,
+                                id: formData.id,
+                                form: "form-1",
+                                status: formData.vendorAssessmentResults,
+                                dateCreated: formData.dateCreated,
+                                dateModified: formData.dateModified,
+                                deadline: formData.deadline,
+                                remarks: formData.evaluationComments
+                            })
+                        }
+                        for (let formData of result.preEvaluationForm) {
+                            // Check that the keys are correct
+                            // console.log(formData);
+                            this.workflows.push({
+                                vendor: result.name,
+                                id: formData.id,
+                                form: "form-2",
+                                status: formData.preEvaluationResults,
+                                dateCreated: formData.dateCreated,
+                                dateModified: formData.dateModified,
+                                deadline: formData.deadline,
+                                remarks: formData.evaluationComments
+                            })
+                        }
+                        for (let formData of result.performanceEvaluationForm) {
+                            // Check that the keys are correct
+                            // console.log(formData);
+                            this.workflows.push({
+                                vendor: result.name,
+                                id: formData.id,
+                                form: "form-3",
+                                status: formData.performanceEvaluationResults,
+                                dateCreated: formData.dateCreated,
+                                dateModified: formData.dateModified,
+                                deadline: formData.deadline,
+                                remarks: formData.evaluationComments
+                            })
+                        }
+                        // Sort workflows with this.workflows.sort(function(a, b){return "something"})
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        return [];
+                    })
+                }
             },
             getUserNames() {
 
                 let usernameList = [];
-
+                // -------
+                // TEMPORARY SECTION: To simulate existing users
                 let result = [
                     {
                         "id": 1,
@@ -310,26 +511,11 @@
                     if (userData.role == 'USER') usernameList.push({value: userData.name, text: userData.name})
                 }
                 return usernameList;
-
-                // Error with Authentication???
-                // axios({
-                //     url: 'admin/getAllUsers',
-                //     method: 'get',
-                //     baseURL: API_URL,
-                //     headers: authHeader(),
-                //     withCredentials: false
-                // })
-                // .then(response => {
-                //     var result = response.data;
-                //     for (userData of result) {
-                //         usernameList.push({value: userData.name, text: userData.name})
-                //     }
-                //     return usernameList;
-                // })
-                // .catch(error => {
-                //     console.log(error);
-                //     return null;
-                // })
+                // End of Temp Section!
+                // -------
+                // for (let userData of this.users) {
+                //     usernameList.push({value: userData.name, text: userData.name})
+                // }
 
             },
             deleteRow(index, workflow) {
@@ -338,15 +524,54 @@
                 if (idx > -1) {
                     this.workflows.splice(idx, 1);
                 }
+
+                // if (workflow.form == "form-1" || workflow.form == "form-2" || workflow.form == "form-3") {
+
+                //     let formLinkConversion = {
+                //         "form-1": "vendor/updateVendorAssessmentForm",
+                //         "form-2": "vendor/updatePreEvaluationForm",
+                //         "form-3": "vendor/updatePerformanceEvaluationForm"
+                //     }
+                //     let updateData = {
+                //         id: workflow.id
+                //     }
+
+                //     if (workflow.form == "form-1") {
+                //         updateData.vendorAssessmentResults = "Archived"
+                //     } else if (workflow.form == "form-2") {
+                //         updateData.preEvaluationResults = "Archived"
+                //     } else {
+                //         updateData.performanceEvaluationResults = "Archived"
+                //     }
+
+                //     axios({
+                //         url: formLinkConversion[workflow.form],
+                //         method: 'put',
+                //         baseURL: API_URL,
+                //         headers: authHeader(),
+                //         data: updateData,
+                //         withCredentials: false
+                //     })
+                //     .then(response => {
+                //         var result = response.data;
+                //         alert("(ID: " + result.id + ")" + this.handleForm(workflow.form) + " successfully deleted.")
+                //         this.getAllForms()
+                //     })
+                //     .catch(error => {
+                //         console.log(error);
+                //     })
+
+                // } else {
+                //     alert("Invalid form type!")
+                // }
             },
+
+            // -------
+            // Functions for Workflow Creation Button
+            // -------
             resetModal() {
                 this.name = ''
                 this.form = ''
-            },
-            resetModal2() {
-                this.name = ''
-                this.form = ''
-                this.status = ''
             },
             handleOk(bvModalEvent) {
                 // Prevent modal from closing
@@ -355,27 +580,79 @@
                 this.handleSubmit()
             },
             handleSubmit() {
-                // Push the workflow to workflow array
-                this.workflows.push(
-                    {
-                        name : this.name,
-                        form : this.form,
-                        status : 'Draft'
+                // Create form
+                if (this.form == "form-1" || this.form == "form-2" || this.form == "form-3") {
+
+                    let userEmail = "Email not found"
+                    let formLinkConversion = {
+                        "form-1": "vendor/createVendorAssessmentForm",
+                        "form-2": "vendor/createPreEvaluationForm",
+                        "form-3": "vendor/createPerformanceEvaluationForm"
                     }
-                )
+
+                    // ERROR: Email cannot be retrieved at the moment!
+                    for (let userData of this.users) {
+                        if (userData.name == this.name) {
+                            userEmail = userData.email
+                        }
+                    }
+                    alert("Test: " + this.handleForm(this.form) + " belongs to " + this.name + "(" + userEmail + ")!")
+
+                    // Temporary Creation Code
+                    this.workflows.push({
+                        name: this.name,
+                        form: this.form,
+                        status: 'Draft',
+                        dateCreated: 'creation date',
+                        dateModified: 'modified date',
+                        deadline: 'due in x days',
+                        remarks: 'No remarks',
+                    })
+
+                    // axios({
+                    //     url: formLinkConversion[this.form],
+                    //     method: 'post',
+                    //     baseURL: API_URL,
+                    //     headers: authHeader(),
+                    //     data: {
+                    //         email: this.value,
+                    //     },
+                    //     withCredentials: false
+                    // })
+                    // .then(response => {
+                    //     var result = response.data;
+                    //     alert("(ID: " + result.id + ")" + this.handleForm(this.form) + " successfully created for " + this.name + "(" + userEmail + ")!")
+                    //     this.getAllForms()
+                    // })
+                    // .catch(error => {
+                    //     console.log(error);
+                    // })
+
+                } else {
+                    alert("Invalid form type!")
+                }
         
                 this.$nextTick(() => {
-                    this.$bvModal.hide('modal-prevent-closing1')
+                    this.$bvModal.hide('modal-wfcreate')
                 })
             },
+
+            // -------
+            // Functions for TEMPORARY Workflow Edit Button, to be REPURPOSED!
+            // -------
             editRow(index, workflow, button) {
                 this.modal.name = workflow.name
                 this.modal.form = workflow.form
                 this.modal.status = workflow.status
                 this.modal.index = index
-                this.$root.$emit('bv::show::modal', this.modal.id, 'btnShow')
+                this.$root.$emit('bv::show::modal', this.modal.id, 'btnEdit')
         
-            },   
+            },
+            resetModal2() {
+                this.name = ''
+                this.form = ''
+                this.status = ''
+            },
             handleOk2(bvModalEvent) {
                 // Prevent modal from closing
                 bvModalEvent.preventDefault()
@@ -391,8 +668,61 @@
                 }
         
                 this.$nextTick(() => {
-                this.$bvModal.hide('modal-prevent-closing2')
+                this.$bvModal.hide('modal-testEdit')
                 })
+            },
+
+            // -------
+            // Functions for sending Email
+            // -------
+            resetModalEmail() {
+                this.emailRecipient = ''
+                this.emailSubject = ''
+                this.emailBody = ''
+            },
+            handleOkEmail(bvModalEvent) {
+                // Prevent modal from closing
+                bvModalEvent.preventDefault()
+                // Trigger edit handler
+                this.handleSubmitEmail()
+            },
+            handleSubmitEmail() {
+
+                // TEMPORARILY DISABLED AS THIS SENDS EMAILS
+                // axios({
+                //     url: 'admin/sendEmail',
+                //     method: 'post',
+                //     baseURL: API_URL,
+                //     headers: authHeader(),
+                //     data: {
+                //         recipient: this.emailRecipient,
+                //         msgBody: this.emailBody,
+                //         subject: this.emailSubject
+                //     },
+                //     withCredentials: false
+                // })
+                // .then(response => {
+                //     alert("Email successfully sent to" + this.emailRecipient + "!")
+                // })
+                // .catch(error => {
+                //     console.log(error);
+                // })
+        
+                this.$nextTick(() => {
+                this.$bvModal.hide('modal-sendEmail')
+                })
+            },
+
+            // -------
+            // Functions to handle Form + Status + Actions + Date + Deadline views
+            // -------
+            handleForm(formType) {
+                let formConversion = {
+                    "form-1": "New Vendor Assessment",
+                    "form-2": "Health Pre-Evaluation",
+                    "form-3": "Health Performance Evaluation"
+                }
+                return formConversion[formType];
             },
             handleStatus(status) {
                 let statusConversion = {
@@ -429,6 +759,20 @@
                     }
                     else return null;
                 }
+            },
+            handleDate(inputDate) {
+                return inputDate;
+            },
+            handleDeadline(inputDeadline) {
+                return inputDeadline;
+            },
+
+            // -------
+            // Go to Form page
+            // -------
+            GoToForm(formType, formID){
+                alert("Redirecting to the " + this.handleForm(formType) + " page!");
+                this.$router.push('/' + formType + '?formid=' + formID);
             }
         }
     }
