@@ -603,8 +603,8 @@
                         name: this.name,
                         form: this.form,
                         status: 'Draft',
-                        dateCreated: 'creation date',
-                        dateModified: 'modified date',
+                        dateCreated: '2023-03-26T13:22:20.764+00:00',
+                        dateModified: '2023-04-01T16:00:00.000+00:00',
                         deadline: 'due in x days',
                         remarks: 'No remarks',
                     })
@@ -761,7 +761,8 @@
                 }
             },
             handleDate(inputDate) {
-                return inputDate;
+                let d = new Date(inputDate);
+                return d.getFullYear() + "/" + (d.getMonth() +1).toLocaleString(undefined, {minimumIntegerDigits: 2}) + "/" + d.getDate().toLocaleString(undefined, {minimumIntegerDigits: 2}) + " " + d.getHours().toLocaleString(undefined, {minimumIntegerDigits: 2}) + ":" + d.getMinutes().toLocaleString(undefined, {minimumIntegerDigits: 2});
             },
             handleDeadline(inputDeadline) {
                 return inputDeadline;
