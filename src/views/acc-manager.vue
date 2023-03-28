@@ -16,12 +16,12 @@
                     <div class="row">
                         <p class="col">Overview of vendor accounts</p> 
                         <div class="col">
-                            <b-button type="button" class="btn btn-dark float-end">{{token}}</b-button>
                             <b-button type="button" class="btn btn-dark float-end" v-b-modal.modal-prevent-closing1>Create</b-button>
                         </div>
                     </div>
                     <div class="row">
-                        <h1>{{vendorToken}}</h1>
+                      <p>"token: "{{token}}</p>
+                      <h1>{{vendorToken}}</h1>
                     </div>
                     
                     <!-- Modal Create-->
@@ -158,11 +158,11 @@
                     </thead>
                     <tbody>
                         <tr v-for="(vendor, k) in vendors" :key="k">
-                          <th scope="row">1</th>
+                          <th scope="row">{{vendor.id}}</th>
                           <td>{{vendor.name}}</td>
                           <td>{{vendor.email}}</td>
-                          <td>{{vendor.contact}}</td>
-                          <td>03/02/23</td>
+                          <td>{{vendor.contactNumber}}</td>
+                          <td>{{vendor.dateCreated}}</td>
                           <td>
                             <b-button type="button" class="btn btn-dark mx-1" @click="editRow(k, vendor, $event.target)" ref="btnShow">Edit</b-button>
                             <b-button type="button" class="btn btn-dark mx-1" @click="deleteRow(k, vendor)">Delete</b-button>
@@ -199,7 +199,6 @@
       },
       data () {
           return {
-            
             name: '',
             email: '',
             contact: '',
@@ -226,15 +225,44 @@
             "password" : "123"
         };
         axios.post("http://localhost:8080/api/v1/auth/user/authenticate", user)
-          .then(response => this.token = response.data.token);
+          .then(response => {
+            this.token = response.data.token
+            axios.get('http://localhost:8080/api/v1/admin/getAllUsers', {headers: {
+              Authorization : `Bearer `+ this.token
+            }})
+            .then(response => this.vendors = response.data)
+            .catch ((error) => {
+              console.log(this.vendors)
+              console.log(error)
+            })
+          }); 
+        
       },
       
       methods: {
+          getUsers() {
+            axios.get('http://localhost:8080/api/v1/admin/getAllUsers', {headers: {
+              Authorization : `Bearer `+ this.token
+            }})
+            .then(response => this.vendors = response.data)
+            console.log(this.vendors)
+            .catch ((error) => {
+              console.log(vendors)
+              console.log(error)
+            })
+          },
           deleteRow(index, vendor) {
-            var idx = this.vendors.indexOf(vendor);
-            console.log(idx, index);
-            if (idx > -1) {
-              this.vendors.splice(idx, 1);
+            axios.delete('http://localhost:8080/api/v1/admin/deleteUser', {
+              headers: {
+                Authorization : `Bearer `+ this.token
+              },
+              data: {
+                "email": vendor.email
+              }
+            })
+            console.log(vendor.email)
+            if (index > -1) {
+              this.vendors.splice(index, 1);
             }
           },
           resetModal() {
@@ -252,18 +280,27 @@
           handleSubmit() {
             // Push the name to submitted names
             const user = {
-    "name" : "companyABC",
-    "email" : "user@user5.com",
-    "contactNumber" : "123456789",
-    "password" : "123"
-};
-            this.token = `Bearer ` + this.token
+                "name" : this.name,
+                "email" : this.email,
+                "contactNumber" : this.contact,
+                "password" : this.password
+            };
             console.log(this.token);
             console.log(user)
             axios.post("http://localhost:8080/api/v1/auth/admin/register", user, {headers: {
-              Authorization : this.token
+              Authorization : `Bearer ` + this.token
             }})
-            .then(response => console.log(response))
+            .then(response => {
+                this.vendors.push(user)
+                axios.get('http://localhost:8080/api/v1/admin/getAllUsers', {headers: {
+                Authorization : `Bearer `+ this.token
+              }})
+              .then(response => this.vendors = response.data)
+              .catch ((error) => {
+                console.log(this.vendors)
+                console.log(error)
+              })
+            })
             .catch ((error) => {
               console.log(error)
             })
