@@ -605,7 +605,7 @@
                         status: 'Draft',
                         dateCreated: '2023-03-26T13:22:20.764+00:00',
                         dateModified: '2023-04-01T16:00:00.000+00:00',
-                        deadline: 'due in x days',
+                        deadline: '2023-04-01T16:00:00.000+00:00',
                         remarks: 'No remarks',
                     })
 
@@ -765,7 +765,38 @@
                 return d.getFullYear() + "/" + (d.getMonth() +1).toLocaleString(undefined, {minimumIntegerDigits: 2}) + "/" + d.getDate().toLocaleString(undefined, {minimumIntegerDigits: 2}) + " " + d.getHours().toLocaleString(undefined, {minimumIntegerDigits: 2}) + ":" + d.getMinutes().toLocaleString(undefined, {minimumIntegerDigits: 2});
             },
             handleDeadline(inputDeadline) {
-                return inputDeadline;
+                let outputDeadline = "(unknown)";
+                let d = new Date(inputDeadline);
+                let now = new Date();
+                let diff = d.getTime() - now.getTime();
+
+                if (diff > 0) {
+                    outputDeadline = "Due in ";
+                } else {
+                    outputDeadline = "Overdue by ";
+                }
+
+                // Minutes, at least 0
+                diff = Math.abs(diff) / 1000 / 60;
+                if (diff < 1) {
+                    outputDeadline += "< 1 min!"
+                } else if (diff < 60) {
+                    outputDeadline += (Math.floor(diff) + " mins")
+                } else {
+
+                    // Hours, at least 1
+                    diff = diff / 60;
+                    if (diff < 24) {
+                        outputDeadline += (Math.floor(diff) + " hours")
+                    } else {
+
+                        // Days, at least 1
+                        diff = diff / 24;
+                        outputDeadline += (Math.floor(diff) + " days")
+                    }
+                }
+
+                return outputDeadline;
             },
 
             // -------
