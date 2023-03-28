@@ -1802,9 +1802,9 @@
               class="form3-textinput08 input"
               v-model="computePartFiveScore"
             />
-            <button id="form3-btn-fetchScore-p5" class="form3-button04 button">
+            <!-- <button id="form3-btn-fetchScore-p5" class="form3-button04 button">
               Fetch Score
-            </button>
+            </button> -->
           </div>
         </div>
         <div class="form3-container-scoring">
@@ -1849,6 +1849,7 @@
             <textarea
               id="form3-textarea-comment"
               class="form3-textarea textarea"
+              :disabled="!isVendor"
             ></textarea>
             <span class="form3-text229">Comments</span>
           </div>
@@ -1861,7 +1862,7 @@
             id="form3-input-evaluatedByName"
             required
             class="form3-textinput11 input"
-            :disabled="!isAdminOrApprover"
+            :disabled="isAdminOrApprover"
           />
         </div>
         <div class="form3-container06">
@@ -1871,7 +1872,7 @@
             id="form3-input-evaluatedBySig"
             required
             class="form3-textinput12 input"
-            :disabled="!isAdminOrApprover"
+            :disabled="isAdminOrApprover"
           />
         </div>
         <div class="form3-container07">
@@ -1881,7 +1882,7 @@
             id="form3-input-evaluatedByDate"
             required
             class="form3-textinput13 input"
-            :disabled="!isAdminOrApprover"
+            :disabled="isAdminOrApprover"
           />
         </div>
       </div>
@@ -1893,7 +1894,7 @@
             id="form3-input-approvedByName"
             required
             class="form3-textinput14 input"
-            :disabled="!isAdmin"
+            :disabled="isApprover"
           />
         </div>
         <div class="form3-container09">
@@ -1903,7 +1904,7 @@
             id="form3-input-approvedBySig"
             required
             class="form3-textinput15 input"
-            :disabled="!isAdmin"
+            :disabled="isApprover"
           />
         </div>
         <div class="form3-container10">
@@ -1913,7 +1914,7 @@
             id="form3-input-approvedByDate"
             required
             class="form3-textinput16 input"
-            :disabled="!isAdmin"
+            :disabled="isApprover"
           />
         </div>
       </div>
@@ -1924,30 +1925,32 @@
         <input id="form3-btn-submit" type="submit" class="form3-button08" v-if="isVendor"/>
           <!-- <span class="form3-text241 ParagraphNormalRegular">Submit</span>
         </button> -->
-        <button id="form3-btn-rejectReview" class="form3-button09" v-if="isAdminOrApprover">
-          <span class="form3-text242 ParagraphNormalRegular">Reject Review</span>
+        <button id="form3-btn-rejectEvaluation" class="form3-button09" v-if="!isAdminOrApprover" @click.prevent="handleRejectEvaluation">
+          <span class="form3-text242 ParagraphNormalRegular">Reject Evaluation</span>
         </button>
-        <button id="form3-btn-approveReview" type="button" class="form3-button10" v-if="isAdminOrApprover">
-          <span class="form3-text243 ParagraphNormalRegular">Approve Review</span>
+        <button id="form3-btn-approveEvaluation" type="button" class="form3-button10" v-if="!isAdminOrApprover" @click.prevent="handleApproveEvaluation">
+          <span class="form3-text243 ParagraphNormalRegular">Approve Evaluation</span>
         </button>
         <button
-          id="form3-disapproveWorkflow"
+          id="form3-disapproveForm"
           type="button"
           class="form3-button11"
           v-if="isApprover"
+          @click.prevent="handleRejectForm"
         >
           <span class="form3-text244 ParagraphNormalRegular">
-            Disapprove Workflow
+            Disapprove Form
           </span>
         </button>
         <button 
-          id="form3-approveWorkflow" 
+          id="form3-approveForm" 
           type="button" 
           class="form3-button12" 
           v-if="isApprover"
+          @click.prevent="handleApproveForm"
         >
           <span class="form3-text245 ParagraphNormalRegular">
-            Approve Workflow
+            Approve Form
           </span>
         </button>
       </div>
@@ -2027,6 +2030,7 @@ export default {
     }
   },
   async mounted() {
+    
     this.id = this.$route.query.formid;
 
     await axios({
@@ -2109,6 +2113,7 @@ export default {
 
         // fetch role
     var role = sessionStorage.getItem('role');
+    console.log(role);
 
     // control inputs based on form status
     if (this.performanceEvaluationResults == "Draft" ||
@@ -2292,6 +2297,125 @@ export default {
       })
       .then(response => { 
         alert("Form submitted"); 
+      })
+      .catch(error => { console.log(error); })
+    },
+    async handleRejectEvaluation(){
+      if (this.evaluatedBy === "" || 
+          this.evaluatorSignature === "" ||
+          this.evaluatedDate === "") 
+      {
+            alert("Please fill in the evaluation part.");
+            return
+      }
+      this.performanceEvaluationResults = "Evaluation Rejected";
+
+      await axios({
+        url: 'updatePerformanceEvaluationForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+          id: this.id,
+          evaluatedBy: this.evaluatedBy,
+          evaluatorSignature: this.evaluatorSignature,
+          evaluatedDate: this.evaluatedDate,
+          performanceEvaluationResults: this.performanceEvaluationResults
+        },
+        withCredentials: false
+      })
+      .then(response => { 
+        alert("Evaluation rejected"); 
+      })
+      .catch(error => { console.log(error); })
+    },
+    async handleApproveEvaluation(){
+      if (this.evaluatedBy === "" || 
+          this.evaluatorSignature === "" ||
+          this.evaluatedDate === "") 
+      {
+            alert("Please fill in the evaluation part.");
+            return
+      }
+
+      this.performanceEvaluationResults = "Evaluation Approved";
+
+      await axios({
+        url: 'updatePerformanceEvaluationForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+          id: this.id,
+          evaluatedBy: this.evaluatedBy,
+          evaluatorSignature: this.evaluatorSignature,
+          evaluatedDate: this.evaluatedDate,
+          performanceEvaluationResults: this.performanceEvaluationResults
+        },
+        withCredentials: false
+      })
+      .then(response => { 
+        alert("Evaluation approved"); 
+      })
+      .catch(error => { console.log(error); })
+    },
+    async handleRejectForm(){
+      if (this.approvedBy === "" || 
+          this.approverSignature === "" ||
+          this.approvedDate === "") 
+      {
+            alert("Please fill in the approver part.");
+            return
+      }
+
+      this.performanceEvaluationResults = "Form Rejected";
+
+      await axios({
+        url: 'updatePerformanceEvaluationForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+          id: this.id,
+          approvedBy: this.approvedBy,
+          approverSignature: this.approverSignature,
+          evaluatedDate: this.evaluatedDate,
+          performanceEvaluationResults: this.performanceEvaluationResults
+        },
+        withCredentials: false
+      })
+      .then(response => { 
+        alert("Form rejected"); 
+      })
+      .catch(error => { console.log(error); })
+    },
+    async handleApproveForm(){
+      if (this.approvedBy === "" || 
+          this.approverSignature === "" ||
+          this.approvedDate === "") 
+      {
+            alert("Please fill in the approver part.");
+            return
+      }
+
+      this.performanceEvaluationResults = "Form Approved";
+
+      await axios({
+        url: 'updatePerformanceEvaluationForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+          id: this.id,
+          approvedBy: this.approvedBy,
+          approverSignature: this.approverSignature,
+          evaluatedDate: this.evaluatedDate,
+          performanceEvaluationResults: this.performanceEvaluationResults
+        },
+        withCredentials: false
+      })
+      .then(response => { 
+        alert("Form approved"); 
       })
       .catch(error => { console.log(error); })
     }
@@ -3404,11 +3528,11 @@ export default {
   top: 0px;
   left: 0px;
   color: #000000;
-  width: var(--dl-size-size-small);
+  width: var(--dl-size-size-medium);
   position: absolute;
   margin-top: 2px;
   text-align: center;
-  margin-left: 150px;
+  margin-left: 0px;
   border-style: hidden;
   border-radius: var(--dl-radius-radius-round);
   background-color: #c48a1e;
@@ -3929,11 +4053,11 @@ export default {
   top: 0px;
   left: 0px;
   color: #000000;
-  width: var(--dl-size-size-small);
+  width: var(--dl-size-size-medium);
   position: absolute;
   margin-top: 2px;
   text-align: center;
-  margin-left: 150px;
+  margin-left: 0px;
   border-style: hidden;
   margin-right: 0px;
   border-radius: var(--dl-radius-radius-round);
@@ -4455,11 +4579,11 @@ export default {
   top: 0px;
   left: 0px;
   color: #000000;
-  width: var(--dl-size-size-small);
+  width: var(--dl-size-size-medium);
   position: absolute;
   margin-top: 2px;
   text-align: center;
-  margin-left: 150px;
+  margin-left: 0px;
   border-style: hidden;
   margin-right: 0px;
   border-radius: var(--dl-radius-radius-round);
@@ -4981,11 +5105,11 @@ export default {
   top: 0px;
   left: 0px;
   color: #000000;
-  width: var(--dl-size-size-small);
+  width: var(--dl-size-size-medium);
   position: absolute;
   margin-top: 2px;
   text-align: center;
-  margin-left: 150px;
+  margin-left: 0px;
   border-style: hidden;
   margin-right: 0px;
   border-radius: var(--dl-radius-radius-round);
@@ -5507,11 +5631,11 @@ export default {
   top: 0px;
   left: 0px;
   color: #000000;
-  width: var(--dl-size-size-small);
+  width: var(--dl-size-size-medium);
   position: absolute;
   margin-top: 2px;
   text-align: center;
-  margin-left: 150px;
+  margin-left: 0px;
   border-style: hidden;
   margin-right: 0px;
   border-radius: var(--dl-radius-radius-round);
@@ -5545,7 +5669,7 @@ export default {
   top: 0px;
   left: 0px;
   color: #000000;
-  width: var(--dl-size-size-small);
+  width: var(--dl-size-size-medium);
   position: absolute;
   margin-top: 2px;
   text-align: center;
@@ -5557,7 +5681,7 @@ export default {
 }
 .form3-button05 {
   top: 0px;
-  left: 0px;
+  left: 25px;
   position: absolute;
   font-size: 18px;
 }
@@ -5574,7 +5698,7 @@ export default {
   top: 0px;
   left: 0px;
   color: #000000;
-  width: var(--dl-size-size-small);
+  width: var(--dl-size-size-large);
   position: absolute;
   margin-top: 2px;
   text-align: center;
@@ -5610,7 +5734,7 @@ export default {
   position: absolute;
   font-size: 21px;
   font-style: normal;
-  margin-top: -24px;
+  margin-top: -30px;
   font-weight: 500;
 }
 .form3-container-evaluated-by {
