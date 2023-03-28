@@ -4,29 +4,28 @@
       <div class="form3-header-horizontal">
         <div class="form3-frame12">
           <span class="form3-text"><span>Quantum VMS</span></span>
-          <div class="form3-frame11">
+          <div class="form3-frame11" @click.prevent="handleHome">
             <div class="form3-frame10">
               <span class="form3-text002"><span>Home</span></span>
-              <span class="form3-text004"><span>Logout</span></span>
             </div>
           </div>
         </div>
       </div>
       <div class="form3-container-form-info">
         <span class="form3-text006">
-          <span>Health Performance Evaluation</span>
+          <span>Health Performance Evaluation <h3>{{ performanceEvaluationResults }}</h3></span>
         </span>
         <div class="form3-container01">
           <label class="form3-text008">Form ID:</label>
           <span id="form3-id" class="form3-text009">
-            <span>XXX</span>
+            <span>QLI-QHSP-10-F05</span>
             <br />
           </span>
         </div>
         <div class="form3-container02">
           <label class="form3-text012">Rev No:</label>
           <span id="form3-revno" class="form3-text013">
-            <span>XXX</span>
+            <span>0</span>
             <br />
           </span>
         </div>
@@ -36,7 +35,7 @@
             <br />
           </label>
           <span id="form3-effectivedate" class="form3-text019">
-            <span>XXX</span>
+            <span>04.04.2022</span>
             <br />
           </span>
         </div>
@@ -93,1476 +92,1768 @@
           </div>
         </div>
       </div>
-      <div class="form3-container-contractor-info">
-        <div class="form3-inputtext">
-          <span class="form3-text032"><span>Name of Contractor</span></span>
-          <input
-            type="text"
-            id="form3-input-contractorName"
-            required
-            class="form3-textinput input form3-contractorInfo"
-          />
+      <form @submit="handleSubmit">
+        <div class="form3-container-contractor-info">
+          <div class="form3-inputtext">
+            <span class="form3-text032"><span>Name of Contractor</span></span>
+            <input
+              type="text"
+              id="form3-input-contractorName"
+              required
+              class="form3-textinput input form3-contractorInfo"
+              :disabled="!isVendor"
+              v-model="contractorName"
+            />
+          </div>
+          <div class="form3-inputtext1">
+            <span class="form3-text034"><span>Trade</span></span>
+            <input
+              type="text"
+              id="form3-input-trade"
+              required
+              class="form3-textinput01 input form3-contractorInfo"
+              :disabled="!isVendor"
+              v-model="trade"
+            />
+          </div>
+          <div class="form3-inputtext2">
+            <span class="form3-text036"><span>Project/ Worksite</span></span>
+            <input
+              type="text"
+              id="form3-input-worksite"
+              required
+              class="form3-textinput02 input form3-contractorInfo"
+              :disabled="!isVendor"
+              v-model="projectWorksite"
+            />
+          </div>
+          <div class="form3-inputtext3">
+            <span class="form3-text038"><span>Date of Evaluation</span></span>
+            <input
+              type="date"
+              id="form3-input-dateOfEval"
+              required
+              class="form3-textinput03 input form3-contractorInfo"
+              :disabled="!isVendor"
+              v-model="date"
+            />
+          </div>
         </div>
-        <div class="form3-inputtext1">
-          <span class="form3-text034"><span>Trade</span></span>
-          <input
-            type="text"
-            id="form3-input-trade"
-            required
-            class="form3-textinput01 input form3-contractorInfo"
-          />
-        </div>
-        <div class="form3-inputtext2">
-          <span class="form3-text036"><span>Project/ Worksite</span></span>
-          <input
-            type="text"
-            id="form3-input-worksite"
-            required
-            class="form3-textinput02 input form3-contractorInfo"
-          />
-        </div>
-        <div class="form3-inputtext3">
-          <span class="form3-text038"><span>Date of Evaluation</span></span>
-          <input
-            type="date"
-            id="form3-input-dateOfEval"
-            required
-            class="form3-textinput03 input form3-contractorInfo"
-          />
-        </div>
-      </div>
-      <div class="form3-container04">
-        <span class="form3-text040">
-          1 (Poor) | 2 (Below Average) | 3 (Average) | 4 (Above Average) | 5
-          (Good)
-        </span>
-      </div>
-      <div id="container-part1" class="form3-container-part1">
-        <span class="form3-text041">
-          <span>PART I: PARTICIPATION IN SAFETY</span>
-        </span>
-        <div class="form3-container-part1a">
-          <span class="form3-text043">
-            <span>a) Attendance in Safety Meeting</span>
+        <div class="form3-container04">
+          <span class="form3-text040">
+            1 (Poor) | 2 (Below Average) | 3 (Average) | 4 (Above Average) | 5
+            (Good)
           </span>
-          <div id="form3-radio-1a" class="form3-container-radio-1a">
-            <div class="form3-container-1">
-              <input
-                type="radio"
-                name="form3-radio-1a"
-                value="1"
-                class="form3-radiobutton"
-              />
-              <label class="form3-text045">1</label>
-            </div>
-            <div class="form3-container-2">
-              <input
-                type="radio"
-                name="form3-radio-1a"
-                value="2"
-                class="form3-radiobutton001"
-              />
-              <label class="form3-text046">2</label>
-            </div>
-            <div class="form3-container-3">
-              <input
-                type="radio"
-                name="form3-radio-1a"
-                value="3"
-                class="form3-radiobutton002"
-              />
-              <label class="form3-text047">3</label>
-            </div>
-            <div class="form3-container-4">
-              <input
-                type="radio"
-                name="form3-radio-1a"
-                value="4"
-                class="form3-radiobutton003"
-              />
-              <label class="form3-text048">4</label>
-            </div>
-            <div class="form3-container-5">
-              <input
-                type="radio"
-                name="form3-radio-1a"
-                value="5"
-                class="form3-radio"
-              />
-              <label class="form3-text049">5</label>
-            </div>
-          </div>
         </div>
-        <div class="form3-container-part1b">
-          <span class="form3-text050"><span>b) Tool Box Meeting</span></span>
-          <div id="form3-radio-1b" class="form3-container-radio-1b">
-            <div class="form3-container-101">
-              <input
-                type="radio"
-                name="form3-radio-1b"
-                value="1"
-                class="form3-radiobutton004"
-              />
-              <label class="form3-text052">1</label>
-            </div>
-            <div class="form3-container-201">
-              <input
-                type="radio"
-                name="form3-radio-1b"
-                value="2"
-                class="form3-radiobutton005"
-              />
-              <label class="form3-text053">2</label>
-            </div>
-            <div class="form3-container-301">
-              <input
-                type="radio"
-                name="form3-radio-1b"
-                value="3"
-                class="form3-radiobutton006"
-              />
-              <label class="form3-text054">3</label>
-            </div>
-            <div class="form3-container-401">
-              <input
-                type="radio"
-                name="form3-radio-1b"
-                value="4"
-                class="form3-radiobutton007"
-              />
-              <label class="form3-text055">4</label>
-            </div>
-            <div class="form3-container-501">
-              <input
-                type="radio"
-                name="form3-radio-1b"
-                value="5"
-                class="form3-radio01"
-              />
-              <label class="form3-text056">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part1c">
-          <span class="form3-text057">
-            <span>c) Compliance To Rules &amp; Regulation</span>
+        <div id="container-part1" class="form3-container-part1">
+          <span class="form3-text041">
+            <span>PART I: PARTICIPATION IN SAFETY</span>
           </span>
-          <div id="form3-radio-1c" class="form3-container-radio-1c">
-            <div class="form3-container-102">
-              <input
-                type="radio"
-                name="form3-radio-1c"
-                value="1"
-                class="form3-radiobutton008"
-              />
-              <label class="form3-text059">1</label>
-            </div>
-            <div class="form3-container-202">
-              <input
-                type="radio"
-                name="form3-radio-1c"
-                value="2"
-                class="form3-radiobutton009"
-              />
-              <label class="form3-text060">2</label>
-            </div>
-            <div class="form3-container-302">
-              <input
-                type="radio"
-                name="form3-radio-1c"
-                value="3"
-                class="form3-radiobutton010"
-              />
-              <label class="form3-text061">3</label>
-            </div>
-            <div class="form3-container-402">
-              <input
-                type="radio"
-                name="form3-radio-1c"
-                value="4"
-                class="form3-radiobutton011"
-              />
-              <label class="form3-text062">4</label>
-            </div>
-            <div class="form3-container-502">
-              <input
-                type="radio"
-                name="form3-radio-1c"
-                value="5"
-                class="form3-radio02"
-              />
-              <label class="form3-text063">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part1d">
-          <span class="form3-text064">
-            <span>d) Safety Promotional Activities</span>
-          </span>
-          <div id="form3-radio-1d" class="form3-container-radio-1d">
-            <div class="form3-container-103">
-              <input
-                type="radio"
-                name="form3-radio-1d"
-                value="1"
-                class="form3-radiobutton012"
-              />
-              <label class="form3-text066">1</label>
-            </div>
-            <div class="form3-container-203">
-              <input
-                type="radio"
-                name="form3-radio-1d"
-                value="2"
-                class="form3-radiobutton013"
-              />
-              <label class="form3-text067">2</label>
-            </div>
-            <div class="form3-container-303">
-              <input
-                type="radio"
-                name="form3-radio-1d"
-                value="3"
-                class="form3-radiobutton014"
-              />
-              <label class="form3-text068">3</label>
-            </div>
-            <div class="form3-container-403">
-              <input
-                type="radio"
-                name="form3-radio-1d"
-                value="4"
-                class="form3-radiobutton015"
-              />
-              <label class="form3-text069">4</label>
-            </div>
-            <div class="form3-container-503">
-              <input
-                type="radio"
-                name="form3-radio-1d"
-                value="5"
-                class="form3-radio03"
-              />
-              <label class="form3-text070">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part1e">
-          <span class="form3-text071"><span>e) Document Submission</span></span>
-          <div id="form3-radio-1e" class="form3-container-radio-1e">
-            <div class="form3-container-104">
-              <input
-                type="radio"
-                name="form3-radio-1e"
-                value="1"
-                class="form3-radiobutton016"
-              />
-              <label class="form3-text073">1</label>
-            </div>
-            <div class="form3-container-204">
-              <input
-                type="radio"
-                name="form3-radio-1e"
-                value="2"
-                class="form3-radiobutton017"
-              />
-              <label class="form3-text074">2</label>
-            </div>
-            <div class="form3-container-304">
-              <input
-                type="radio"
-                name="form3-radio-1e"
-                value="3"
-                class="form3-radiobutton018"
-              />
-              <label class="form3-text075">3</label>
-            </div>
-            <div class="form3-container-404">
-              <input
-                type="radio"
-                name="form3-radio-1e"
-                value="4"
-                class="form3-radiobutton019"
-              />
-              <label class="form3-text076">4</label>
-            </div>
-            <div class="form3-container-504">
-              <input
-                type="radio"
-                name="form3-radio-1e"
-                value="5"
-                class="form3-radio04"
-              />
-              <label class="form3-text077">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part1-score">
-          <input
-            type="text"
-            id="form3-part1-score"
-            disabled
-            placeholder="0"
-            class="form3-textinput04 input"
-          />
-          <button
-            id="form3-btn-fetchScore-p1"
-            type="button"
-            class="form3-button button"
-          >
-            Fetch Score
-          </button>
-        </div>
-      </div>
-      <div class="form3-container-part2">
-        <span class="form3-text078">
-          <span>PART II: SAFETY TRAINING AND COMPETENCIES (% OF ATTENDANCE)</span>
-        </span>
-        <div class="form3-container-part2a">
-          <span class="form3-text080">
-            <span>a) Statutory Safety Training Course</span>
-          </span>
-          <div id="form3-radio-2a" class="form3-container-radio-2a">
-            <div class="form3-container-105">
-              <input
-                type="radio"
-                name="form3-radio-2a"
-                value="1"
-                class="form3-radiobutton020"
-              />
-              <label class="form3-text082">1</label>
-            </div>
-            <div class="form3-container-205">
-              <input
-                type="radio"
-                name="form3-radio-2a"
-                value="2"
-                class="form3-radiobutton021"
-              />
-              <label class="form3-text083">2</label>
-            </div>
-            <div class="form3-container-305">
-              <input
-                type="radio"
-                name="form3-radio-2a"
-                value="3"
-                class="form3-radiobutton022"
-              />
-              <label class="form3-text084">3</label>
-            </div>
-            <div class="form3-container-405">
-              <input
-                type="radio"
-                name="form3-radio-2a"
-                value="4"
-                class="form3-radiobutton023"
-              />
-              <label class="form3-text085">4</label>
-            </div>
-            <div class="form3-container-505">
-              <input
-                type="radio"
-                name="form3-radio-2a"
-                value="5"
-                class="form3-radio05"
-              />
-              <label class="form3-text086">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part2b">
-          <span class="form3-text087"><span>b) Safety Trade Course</span></span>
-          <div id="form3-radio-2b" class="form3-container-radio-2b">
-            <div class="form3-container-106">
-              <input
-                type="radio"
-                name="form3-radio-2b"
-                value="1"
-                class="form3-radiobutton024"
-              />
-              <label class="form3-text089">1</label>
-            </div>
-            <div class="form3-container-206">
-              <input
-                type="radio"
-                name="form3-radio-2b"
-                value="2"
-                class="form3-radiobutton025"
-              />
-              <label class="form3-text090">2</label>
-            </div>
-            <div class="form3-container-306">
-              <input
-                type="radio"
-                name="form3-radio-2b"
-                value="3"
-                class="form3-radiobutton026"
-              />
-              <label class="form3-text091">3</label>
-            </div>
-            <div class="form3-container-406">
-              <input
-                type="radio"
-                name="form3-radio-2b"
-                value="4"
-                class="form3-radiobutton027"
-              />
-              <label class="form3-text092">4</label>
-            </div>
-            <div class="form3-container-506">
-              <input
-                type="radio"
-                name="form3-radio-2b"
-                value="5"
-                class="form3-radio06"
-              />
-              <label class="form3-text093">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part2c">
-          <span class="form3-text094"><span>c) Mass Safety Talk</span></span>
-          <div id="form3-radio-2c" class="form3-container-radio-2c">
-            <div class="form3-container-107">
-              <input
-                type="radio"
-                name="form3-radio-2c"
-                value="1"
-                class="form3-radiobutton028"
-              />
-              <label class="form3-text096">1</label>
-            </div>
-            <div class="form3-container-207">
-              <input
-                type="radio"
-                name="form3-radio-2c"
-                value="2"
-                class="form3-radiobutton029"
-              />
-              <label class="form3-text097">2</label>
-            </div>
-            <div class="form3-container-307">
-              <input
-                type="radio"
-                name="form3-radio-2c"
-                value="3"
-                class="form3-radiobutton030"
-              />
-              <label class="form3-text098">3</label>
-            </div>
-            <div class="form3-container-407">
-              <input
-                type="radio"
-                name="form3-radio-2c"
-                value="4"
-                class="form3-radiobutton031"
-              />
-              <label class="form3-text099">4</label>
-            </div>
-            <div class="form3-container-507">
-              <input
-                type="radio"
-                name="form3-radio-2c"
-                value="5"
-                class="form3-radio07"
-              />
-              <label class="form3-text100">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part2d">
-          <span class="form3-text101">
-            <span>d) WSH Safety Coordinator/ Supervisor</span>
-          </span>
-          <div id="form3-radio-2d" class="form3-container-radio-2d">
-            <div class="form3-container-108">
-              <input
-                type="radio"
-                name="form3-radio-2d"
-                value="1"
-                class="form3-radiobutton032"
-              />
-              <label class="form3-text103">1</label>
-            </div>
-            <div class="form3-container-208">
-              <input
-                type="radio"
-                name="form3-radio-2d"
-                value="2"
-                class="form3-radiobutton033"
-              />
-              <label class="form3-text104">2</label>
-            </div>
-            <div class="form3-container-308">
-              <input
-                type="radio"
-                name="form3-radio-2d"
-                value="3"
-                class="form3-radiobutton034"
-              />
-              <label class="form3-text105">3</label>
-            </div>
-            <div class="form3-container-408">
-              <input
-                type="radio"
-                name="form3-radio-2d"
-                value="4"
-                class="form3-radiobutton035"
-              />
-              <label class="form3-text106">4</label>
-            </div>
-            <div class="form3-container-508">
-              <input
-                type="radio"
-                name="form3-radio-2d"
-                value="5"
-                class="form3-radio08"
-              />
-              <label class="form3-text107">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part2e">
-          <span class="form3-text108"><span>e) Other Safety Training</span></span>
-          <div id="form3-radio-2e" class="form3-container-part2e1">
-            <div class="form3-container-109">
-              <input
-                type="radio"
-                name="form3-radio-2e"
-                value="1"
-                class="form3-radiobutton036"
-              />
-              <label class="form3-text110">1</label>
-            </div>
-            <div class="form3-container-209">
-              <input
-                type="radio"
-                name="form3-radio-2e"
-                value="2"
-                class="form3-radiobutton037"
-              />
-              <label class="form3-text111">2</label>
-            </div>
-            <div class="form3-container-309">
-              <input
-                type="radio"
-                name="form3-radio-2e"
-                value="3"
-                class="form3-radiobutton038"
-              />
-              <label class="form3-text112">3</label>
-            </div>
-            <div class="form3-container-409">
-              <input
-                type="radio"
-                name="form3-radio-2e"
-                value="4"
-                class="form3-radiobutton039"
-              />
-              <label class="form3-text113">4</label>
-            </div>
-            <div class="form3-container-509">
-              <input
-                type="radio"
-                name="form3-radio-2e"
-                value="5"
-                class="form3-radio09"
-              />
-              <label class="form3-text114">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part2-score">
-          <input
-            type="text"
-            id="form3-part2-score"
-            disabled
-            placeholder="0"
-            class="form3-textinput05 input"
-          />
-          <button
-            id="form3-btn-fetchScore-p2"
-            type="button"
-            class="form3-button01 button"
-          >
-            Fetch Score
-          </button>
-        </div>
-      </div>
-      <div class="form3-container-part3">
-        <span class="form3-text115">
-          <span>PART III: ACCIDENT/ INCIDENT PREVIEW</span>
-        </span>
-        <div class="form3-container-part3a">
-          <span class="form3-text117">
-            <span>a) Effort in Accident Prevention</span>
-          </span>
-          <div id="form3-radio-3a" class="form3-container-radio-3a">
-            <div class="form3-container-110">
-              <input
-                type="radio"
-                name="form3-radio-3a"
-                value="1"
-                class="form3-radiobutton040"
-              />
-              <label class="form3-text119">1</label>
-            </div>
-            <div class="form3-container-210">
-              <input
-                type="radio"
-                name="form3-radio-3a"
-                value="2"
-                class="form3-radiobutton041"
-              />
-              <label class="form3-text120">2</label>
-            </div>
-            <div class="form3-container-310">
-              <input
-                type="radio"
-                name="form3-radio-3a"
-                value="3"
-                class="form3-radiobutton042"
-              />
-              <label class="form3-text121">3</label>
-            </div>
-            <div class="form3-container-410">
-              <input
-                type="radio"
-                name="form3-radio-3a"
-                value="4"
-                class="form3-radiobutton043"
-              />
-              <label class="form3-text122">4</label>
-            </div>
-            <div class="form3-container-510">
-              <input
-                type="radio"
-                name="form3-radio-3a"
-                value="5"
-                class="form3-radio10"
-              />
-              <label class="form3-text123">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part3b">
-          <span class="form3-text124">
-            <span>b) Safe Work Practice/ Permit To Work</span>
-          </span>
-          <div id="form3-radio-3b" class="form3-container-radio-3b">
-            <div class="form3-container-111">
-              <input
-                type="radio"
-                name="form3-radio-3b"
-                value="1"
-                class="form3-radiobutton044"
-              />
-              <label class="form3-text126">1</label>
-            </div>
-            <div class="form3-container-211">
-              <input
-                type="radio"
-                name="form3-radio-3b"
-                value="2"
-                class="form3-radiobutton045"
-              />
-              <label class="form3-text127">2</label>
-            </div>
-            <div class="form3-container-311">
-              <input
-                type="radio"
-                name="form3-radio-3b"
-                value="3"
-                class="form3-radiobutton046"
-              />
-              <label class="form3-text128">3</label>
-            </div>
-            <div class="form3-container-411">
-              <input
-                type="radio"
-                name="form3-radio-3b"
-                value="4"
-                class="form3-radiobutton047"
-              />
-              <label class="form3-text129">4</label>
-            </div>
-            <div class="form3-container-511">
-              <input
-                type="radio"
-                name="form3-radio-3b"
-                value="5"
-                class="form3-radio11"
-              />
-              <label class="form3-text130">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part3c">
-          <span class="form3-text131">
-            <span>c) Incident Severity &amp; Frequency Rate</span>
-          </span>
-          <div id="form3-radio-3c" class="form3-container-radio-3c">
-            <div class="form3-container-112">
-              <input
-                type="radio"
-                name="form3-radio-3c"
-                value="1"
-                class="form3-radiobutton048"
-              />
-              <label class="form3-text133">1</label>
-            </div>
-            <div class="form3-container-212">
-              <input
-                type="radio"
-                name="form3-radio-3c"
-                value="2"
-                class="form3-radiobutton049"
-              />
-              <label class="form3-text134">2</label>
-            </div>
-            <div class="form3-container-312">
-              <input
-                type="radio"
-                name="form3-radio-3c"
-                value="3"
-                class="form3-radiobutton050"
-              />
-              <label class="form3-text135">3</label>
-            </div>
-            <div class="form3-container-412">
-              <input
-                type="radio"
-                name="form3-radio-3c"
-                value="4"
-                class="form3-radiobutton051"
-              />
-              <label class="form3-text136">4</label>
-            </div>
-            <div class="form3-container-512">
-              <input
-                type="radio"
-                name="form3-radio-3c"
-                value="5"
-                class="form3-radio12"
-              />
-              <label class="form3-text137">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part3d">
-          <span class="form3-text138"><span>d) Safety Offence</span></span>
-          <div id="form3-radio-3d" class="form3-container-radio-3d">
-            <div class="form3-container-113">
-              <input
-                type="radio"
-                name="form3-radio-3d"
-                value="1"
-                class="form3-radiobutton052"
-              />
-              <label class="form3-text140">1</label>
-            </div>
-            <div class="form3-container-213">
-              <input
-                type="radio"
-                name="form3-radio-3d"
-                value="2"
-                class="form3-radiobutton053"
-              />
-              <label class="form3-text141">2</label>
-            </div>
-            <div class="form3-container-313">
-              <input
-                type="radio"
-                name="form3-radio-3d"
-                value="3"
-                class="form3-radiobutton054"
-              />
-              <label class="form3-text142">3</label>
-            </div>
-            <div class="form3-container-413">
-              <input
-                type="radio"
-                name="form3-radio-3d"
-                value="4"
-                class="form3-radiobutton055"
-              />
-              <label class="form3-text143">4</label>
-            </div>
-            <div class="form3-container-513">
-              <input
-                type="radio"
-                name="form3-radio-3d"
-                value="5"
-                class="form3-radio13"
-              />
-              <label class="form3-text144">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part3e">
-          <span class="form3-text145">
-            <span>e) Safety Inspection And Rectification</span>
-          </span>
-          <div id="form3-radio-3e" class="form3-container-radio-3e">
-            <div class="form3-container-114">
-              <input
-                type="radio"
-                name="form3-radio-3e"
-                value="1"
-                class="form3-radiobutton056"
-              />
-              <label class="form3-text147">1</label>
-            </div>
-            <div class="form3-container-214">
-              <input
-                type="radio"
-                name="form3-radio-3e"
-                value="2"
-                class="form3-radiobutton057"
-              />
-              <label class="form3-text148">2</label>
-            </div>
-            <div class="form3-container-314">
-              <input
-                type="radio"
-                name="form3-radio-3e"
-                value="3"
-                class="form3-radiobutton058"
-              />
-              <label class="form3-text149">3</label>
-            </div>
-            <div class="form3-container-414">
-              <input
-                type="radio"
-                name="form3-radio-3e"
-                value="4"
-                class="form3-radiobutton059"
-              />
-              <label class="form3-text150">4</label>
-            </div>
-            <div class="form3-container-514">
-              <input
-                type="radio"
-                name="form3-radio-3e"
-                value="5"
-                class="form3-radio14"
-              />
-              <label class="form3-text151">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part3-score">
-          <input
-            type="text"
-            id="form3-part3-score"
-            disabled
-            placeholder="0"
-            class="form3-textinput06 input"
-          />
-          <button
-            id="form3-btn-fetchScore-p3"
-            type="button"
-            class="form3-button02 button"
-          >
-            Fetch Score
-          </button>
-        </div>
-      </div>
-      <div class="form3-container-part4">
-        <span class="form3-text152">
-          <span>PART IV: MAINTENANCE OF EQUIPMENT</span>
-        </span>
-        <div class="form3-container-part4a">
-          <span class="form3-text154">
-            <span>a) Explosive Powered Tool/ Cutting Tool</span>
-          </span>
-          <div id="form3-radio-4a" class="form3-container-radio-4a">
-            <div class="form3-container-115">
-              <input
-                type="radio"
-                name="form3-radio-4a"
-                value="1"
-                class="form3-radiobutton060"
-              />
-              <label class="form3-text156">1</label>
-            </div>
-            <div class="form3-container-215">
-              <input
-                type="radio"
-                name="form3-radio-4a"
-                value="2"
-                class="form3-radiobutton061"
-              />
-              <label class="form3-text157">2</label>
-            </div>
-            <div class="form3-container-315">
-              <input
-                type="radio"
-                name="form3-radio-4a"
-                value="3"
-                class="form3-radiobutton062"
-              />
-              <label class="form3-text158">3</label>
-            </div>
-            <div class="form3-container-415">
-              <input
-                type="radio"
-                name="form3-radio-4a"
-                value="4"
-                class="form3-radiobutton063"
-              />
-              <label class="form3-text159">4</label>
-            </div>
-            <div class="form3-container-515">
-              <input
-                type="radio"
-                name="form3-radio-4a"
-                value="5"
-                class="form3-radio15"
-              />
-              <label class="form3-text160">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part4b">
-          <span class="form3-text161"><span>b) Ladder</span></span>
-          <div id="form3-radio-4b" class="form3-container-radio-4b">
-            <div class="form3-container-116">
-              <input
-                type="radio"
-                name="form3-radio-4b"
-                value="1"
-                class="form3-radiobutton064"
-              />
-              <label class="form3-text163">1</label>
-            </div>
-            <div class="form3-container-216">
-              <input
-                type="radio"
-                name="form3-radio-4b"
-                value="2"
-                class="form3-radiobutton065"
-              />
-              <label class="form3-text164">2</label>
-            </div>
-            <div class="form3-container-316">
-              <input
-                type="radio"
-                name="form3-radio-4b"
-                value="3"
-                class="form3-radiobutton066"
-              />
-              <label class="form3-text165">3</label>
-            </div>
-            <div class="form3-container-416">
-              <input
-                type="radio"
-                name="form3-radio-4b"
-                value="4"
-                class="form3-radiobutton067"
-              />
-              <label class="form3-text166">4</label>
-            </div>
-            <div class="form3-container-516">
-              <input
-                type="radio"
-                name="form3-radio-4b"
-                value="5"
-                class="form3-radio16"
-              />
-              <label class="form3-text167">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part4c">
-          <span class="form3-text168">
-            <span>c) Lifting Gear/ Appliance/ Machine</span>
-          </span>
-          <div id="form3-radio-4c" class="form3-container-radio-4c">
-            <div class="form3-container-117">
-              <input
-                type="radio"
-                name="form3-radio-4c"
-                value="1"
-                class="form3-radiobutton068"
-              />
-              <label class="form3-text170">1</label>
-            </div>
-            <div class="form3-container-217">
-              <input
-                type="radio"
-                name="form3-radio-4c"
-                value="2"
-                class="form3-radiobutton069"
-              />
-              <label class="form3-text171">2</label>
-            </div>
-            <div class="form3-container-317">
-              <input
-                type="radio"
-                name="form3-radio-4c"
-                value="3"
-                class="form3-radiobutton070"
-              />
-              <label class="form3-text172">3</label>
-            </div>
-            <div class="form3-container-417">
-              <input
-                type="radio"
-                name="form3-radio-4c"
-                value="4"
-                class="form3-radiobutton071"
-              />
-              <label class="form3-text173">4</label>
-            </div>
-            <div class="form3-container-517">
-              <input
-                type="radio"
-                name="form3-radio-4c"
-                value="5"
-                class="form3-radio17"
-              />
-              <label class="form3-text174">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part4d">
-          <span class="form3-text175">
-            <span>d) Electrical Equipment/ Compressor</span>
-          </span>
-          <div id="form3-radio-4d" class="form3-container-radio-4d">
-            <div class="form3-container-118">
-              <input
-                type="radio"
-                name="form3-radio-4d"
-                value="1"
-                class="form3-radiobutton072"
-              />
-              <label class="form3-text177">1</label>
-            </div>
-            <div class="form3-container-218">
-              <input
-                type="radio"
-                name="form3-radio-4d"
-                value="2"
-                class="form3-radiobutton073"
-              />
-              <label class="form3-text178">2</label>
-            </div>
-            <div class="form3-container-318">
-              <input
-                type="radio"
-                name="form3-radio-4d"
-                value="3"
-                class="form3-radiobutton074"
-              />
-              <label class="form3-text179">3</label>
-            </div>
-            <div class="form3-container-418">
-              <input
-                type="radio"
-                name="form3-radio-4d"
-                value="4"
-                class="form3-radiobutton075"
-              />
-              <label class="form3-text180">4</label>
-            </div>
-            <div class="form3-container-518">
-              <input
-                type="radio"
-                name="form3-radio-4d"
-                value="5"
-                class="form3-radio18"
-              />
-              <label class="form3-text181">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part4e">
-          <span class="form3-text182"><span>e) Other Machineries</span></span>
-          <div id="form3-radio-4e" class="form3-container-radio-4e">
-            <div class="form3-container-119">
-              <input
-                type="radio"
-                name="form3-radio-4e"
-                value="1"
-                class="form3-radiobutton076"
-              />
-              <label class="form3-text184">1</label>
-            </div>
-            <div class="form3-container-219">
-              <input
-                type="radio"
-                name="form3-radio-4e"
-                value="2"
-                class="form3-radiobutton077"
-              />
-              <label class="form3-text185">2</label>
-            </div>
-            <div class="form3-container-319">
-              <input
-                type="radio"
-                name="form3-radio-4e"
-                value="3"
-                class="form3-radiobutton078"
-              />
-              <label class="form3-text186">3</label>
-            </div>
-            <div class="form3-container-419">
-              <input
-                type="radio"
-                name="form3-radio-4e"
-                value="4"
-                class="form3-radiobutton079"
-              />
-              <label class="form3-text187">4</label>
-            </div>
-            <div class="form3-container-519">
-              <input
-                type="radio"
-                name="form3-radio-4e"
-                value="5"
-                class="form3-radio19"
-              />
-              <label class="form3-text188">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part4-score">
-          <input
-            type="text"
-            id="form3-part4-score"
-            disabled
-            placeholder="0"
-            class="form3-textinput07 input"
-          />
-          <button
-            id="form3-btn-fetchScore-p4"
-            type="button"
-            class="form3-button03 button"
-          >
-            Fetch Score
-          </button>
-        </div>
-      </div>
-      <div class="form3-container-part5">
-        <span class="form3-text189">
-          <span>PART V: GENERAL HOUSEKEEPING &amp; Others</span>
-        </span>
-        <div class="form3-container-part5a">
-          <span class="form3-text191">
-            <span>a) Subcon Snr Mgt Commitment to HS</span>
-          </span>
-          <div id="form3-radio-5a" class="form3-container-radio-5a">
-            <div class="form3-container-120">
-              <input
-                type="radio"
-                name="form3-radio-5a"
-                value="1"
-                class="form3-radiobutton080"
-              />
-              <label class="form3-text193">1</label>
-            </div>
-            <div class="form3-container-220">
-              <input
-                type="radio"
-                name="form3-radio-5a"
-                value="2"
-                class="form3-radiobutton081"
-              />
-              <label class="form3-text194">2</label>
-            </div>
-            <div class="form3-container-320">
-              <input
-                type="radio"
-                name="form3-radio-5a"
-                value="3"
-                class="form3-radiobutton082"
-              />
-              <label class="form3-text195">3</label>
-            </div>
-            <div class="form3-container-420">
-              <input
-                type="radio"
-                name="form3-radio-5a"
-                value="4"
-                class="form3-radiobutton083"
-              />
-              <label class="form3-text196">4</label>
-            </div>
-            <div class="form3-container-520">
-              <input
-                type="radio"
-                name="form3-radio-5a"
-                value="5"
-                class="form3-radio20"
-              />
-              <label class="form3-text197">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part5b">
-          <span class="form3-text198"><span>b) Compliance with PPE</span></span>
-          <div id="form3-radio-5b" class="form3-container-radio-5b">
-            <div class="form3-container-121">
-              <input
-                type="radio"
-                name="form3-radio-5b"
-                value="1"
-                class="form3-radiobutton084"
-              />
-              <label class="form3-text200">1</label>
-            </div>
-            <div class="form3-container-221">
-              <input
-                type="radio"
-                name="form3-radio-5b"
-                value="2"
-                class="form3-radiobutton085"
-              />
-              <label class="form3-text201">2</label>
-            </div>
-            <div class="form3-container-321">
-              <input
-                type="radio"
-                name="form3-radio-5b"
-                value="3"
-                class="form3-radiobutton086"
-              />
-              <label class="form3-text202">3</label>
-            </div>
-            <div class="form3-container-421">
-              <input
-                type="radio"
-                name="form3-radio-5b"
-                value="4"
-                class="form3-radiobutton087"
-              />
-              <label class="form3-text203">4</label>
-            </div>
-            <div class="form3-container-521">
-              <input
-                type="radio"
-                name="form3-radio-5b"
-                value="5"
-                class="form3-radio21"
-              />
-              <label class="form3-text204">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part5c">
-          <span class="form3-text205">
-            <span>c) Housekeeping &amp; Cleanliness at Site</span>
-          </span>
-          <div id="form3-radio-5c" class="form3-container-radio-5c">
-            <div class="form3-container-122">
-              <input
-                type="radio"
-                name="form3-radio-5c"
-                value="1"
-                class="form3-radiobutton088"
-              />
-              <label class="form3-text207">1</label>
-            </div>
-            <div class="form3-container-222">
-              <input
-                type="radio"
-                name="form3-radio-5c"
-                value="2"
-                class="form3-radiobutton089"
-              />
-              <label class="form3-text208">2</label>
-            </div>
-            <div class="form3-container-322">
-              <input
-                type="radio"
-                name="form3-radio-5c"
-                value="3"
-                class="form3-radiobutton090"
-              />
-              <label class="form3-text209">3</label>
-            </div>
-            <div class="form3-container-422">
-              <input
-                type="radio"
-                name="form3-radio-5c"
-                value="4"
-                class="form3-radiobutton091"
-              />
-              <label class="form3-text210">4</label>
-            </div>
-            <div class="form3-container-522">
-              <input
-                type="radio"
-                name="form3-radio-5c"
-                value="5"
-                class="form3-radio22"
-              />
-              <label class="form3-text211">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part5d">
-          <span class="form3-text212">
-            <span>d) Housekeeping &amp; Cleanliness at Store</span>
-          </span>
-          <div id="form3-radio-5d" class="form3-container-radio-5d">
-            <div class="form3-container-123">
-              <input
-                type="radio"
-                name="form3-radio-5d"
-                value="1"
-                class="form3-radiobutton092"
-              />
-              <label class="form3-text214">1</label>
-            </div>
-            <div class="form3-container-223">
-              <input
-                type="radio"
-                name="form3-radio-5d"
-                value="2"
-                class="form3-radiobutton093"
-              />
-              <label class="form3-text215">2</label>
-            </div>
-            <div class="form3-container-323">
-              <input
-                type="radio"
-                name="form3-radio-5d"
-                value="3"
-                class="form3-radiobutton094"
-              />
-              <label class="form3-text216">3</label>
-            </div>
-            <div class="form3-container-423">
-              <input
-                type="radio"
-                name="form3-radio-5d"
-                value="4"
-                class="form3-radiobutton095"
-              />
-              <label class="form3-text217">4</label>
-            </div>
-            <div class="form3-container-523">
-              <input
-                type="radio"
-                name="form3-radio-5d"
-                value="5"
-                class="form3-radio23"
-              />
-              <label class="form3-text218">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part5e">
-          <span class="form3-text219">
-            <span>e) Housekeeping &amp; Cleanliness at Quarter</span>
-          </span>
-          <div id="form3-radio-5e" class="form3-container-radio-5e">
-            <div class="form3-container-124">
-              <input
-                type="radio"
-                name="form3-radio-5e"
-                value="1"
-                class="form3-radiobutton096"
-              />
-              <label class="form3-text221">1</label>
-            </div>
-            <div class="form3-container-224">
-              <input
-                type="radio"
-                name="form3-radio-5e"
-                value="2"
-                class="form3-radiobutton097"
-              />
-              <label class="form3-text222">2</label>
-            </div>
-            <div class="form3-container-324">
-              <input
-                type="radio"
-                name="form3-radio-5e"
-                value="3"
-                class="form3-radiobutton098"
-              />
-              <label class="form3-text223">3</label>
-            </div>
-            <div class="form3-container-424">
-              <input
-                type="radio"
-                name="form3-radio-5e"
-                value="4"
-                class="form3-radiobutton099"
-              />
-              <label class="form3-text224">4</label>
-            </div>
-            <div class="form3-container-524">
-              <input
-                type="radio"
-                name="form3-radio-5e"
-                value="5"
-                class="form3-radio24"
-              />
-              <label class="form3-text225">5</label>
-            </div>
-          </div>
-        </div>
-        <div class="form3-container-part5-score">
-          <input
-            type="text"
-            id="form3-part5-score"
-            placeholder="0"
-            class="form3-textinput08 input"
-          />
-          <button id="form3-btn-fetchScore-p5" class="form3-button04 button">
-            Fetch Score
-          </button>
-        </div>
-      </div>
-      <div class="form3-container-scoring">
-        <div class="form3-container-total-score">
-          <input
-            type="text"
-            id="form3-totalScore-out"
-            disabled
-            placeholder="0"
-            class="form3-textinput09 input"
-          />
-          <button
-            id="form3-btn-totalScore"
-            type="button"
-            class="form3-button05 button"
-          >
-            Total Score
-          </button>
-        </div>
-        <div class="form3-container-overall-perf-standard">
-          <input
-            type="text"
-            id="form3-ovPerfStan-out"
-            disabled
-            placeholder="0"
-            class="form3-textinput10 input"
-          />
-          <button
-            id="form3-btn-ovPerfStand"
-            type="button"
-            class="form3-button06 button"
-          >
-            <span>
-              <span>Overall Performance Standard</span>
-              <br />
+          <div class="form3-container-part1a">
+            <span class="form3-text043">
+              <span>a) Attendance in Safety Meeting</span>
             </span>
-          </button>
+            <div id="form3-radio-1a" class="form3-container-radio-1a">
+              <div class="form3-container-1">
+                <input
+                  type="radio"
+                  name="form3-radio-1a"
+                  value="1"
+                  class="form3-radiobutton"
+                  required
+                  :disabled="!isVendor"
+                  v-model="attendanceSafetyMeeting"
+                />
+                <label class="form3-text045">1</label>
+              </div>
+              <div class="form3-container-2">
+                <input
+                  type="radio"
+                  name="form3-radio-1a"
+                  value="2"
+                  class="form3-radiobutton001"
+                  :disabled="!isVendor"
+                  v-model="attendanceSafetyMeeting"
+                />
+                <label class="form3-text046">2</label>
+              </div>
+              <div class="form3-container-3">
+                <input
+                  type="radio"
+                  name="form3-radio-1a"
+                  value="3"
+                  class="form3-radiobutton002"
+                  :disabled="!isVendor"
+                  v-model="attendanceSafetyMeeting"
+                />
+                <label class="form3-text047">3</label>
+              </div>
+              <div class="form3-container-4">
+                <input
+                  type="radio"
+                  name="form3-radio-1a"
+                  value="4"
+                  class="form3-radiobutton003"
+                  :disabled="!isVendor"
+                  v-model="attendanceSafetyMeeting"
+                />
+                <label class="form3-text048">4</label>
+              </div>
+              <div class="form3-container-5">
+                <input
+                  type="radio"
+                  name="form3-radio-1a"
+                  value="5"
+                  class="form3-radio"
+                  :disabled="!isVendor"
+                  v-model="attendanceSafetyMeeting"
+                />
+                <label class="form3-text049">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part1b">
+            <span class="form3-text050"><span>b) Tool Box Meeting</span></span>
+            <div id="form3-radio-1b" class="form3-container-radio-1b">
+              <div class="form3-container-101">
+                <input
+                  type="radio"
+                  name="form3-radio-1b"
+                  value="1"
+                  class="form3-radiobutton004"
+                  :disabled="!isVendor"
+                  required
+                  v-model="toolBoxMeeting"
+                />
+                <label class="form3-text052">1</label>
+              </div>
+              <div class="form3-container-201">
+                <input
+                  type="radio"
+                  name="form3-radio-1b"
+                  value="2"
+                  class="form3-radiobutton005"
+                  :disabled="!isVendor"
+                  v-model="toolBoxMeeting"
+                />
+                <label class="form3-text053">2</label>
+              </div>
+              <div class="form3-container-301">
+                <input
+                  type="radio"
+                  name="form3-radio-1b"
+                  value="3"
+                  class="form3-radiobutton006"
+                  :disabled="!isVendor"
+                  v-model="toolBoxMeeting"
+                />
+                <label class="form3-text054">3</label>
+              </div>
+              <div class="form3-container-401">
+                <input
+                  type="radio"
+                  name="form3-radio-1b"
+                  value="4"
+                  class="form3-radiobutton007"
+                  :disabled="!isVendor"
+                  v-model="toolBoxMeeting"
+                />
+                <label class="form3-text055">4</label>
+              </div>
+              <div class="form3-container-501">
+                <input
+                  type="radio"
+                  name="form3-radio-1b"
+                  value="5"
+                  class="form3-radio01"
+                  :disabled="!isVendor"
+                  v-model="toolBoxMeeting"
+                />
+                <label class="form3-text056">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part1c">
+            <span class="form3-text057">
+              <span>c) Compliance To Rules &amp; Regulation</span>
+            </span>
+            <div id="form3-radio-1c" class="form3-container-radio-1c">
+              <div class="form3-container-102">
+                <input
+                  type="radio"
+                  name="form3-radio-1c"
+                  value="1"
+                  class="form3-radiobutton008"
+                  :disabled="!isVendor"
+                  required
+                  v-model="complianceRulesAndRegulation"
+                />
+                <label class="form3-text059">1</label>
+              </div>
+              <div class="form3-container-202">
+                <input
+                  type="radio"
+                  name="form3-radio-1c"
+                  value="2"
+                  class="form3-radiobutton009"
+                  :disabled="!isVendor"
+                  v-model="complianceRulesAndRegulation"
+                />
+                <label class="form3-text060">2</label>
+              </div>
+              <div class="form3-container-302">
+                <input
+                  type="radio"
+                  name="form3-radio-1c"
+                  value="3"
+                  class="form3-radiobutton010"
+                  :disabled="!isVendor"
+                  v-model="complianceRulesAndRegulation"
+                />
+                <label class="form3-text061">3</label>
+              </div>
+              <div class="form3-container-402">
+                <input
+                  type="radio"
+                  name="form3-radio-1c"
+                  value="4"
+                  class="form3-radiobutton011"
+                  :disabled="!isVendor"
+                  v-model="complianceRulesAndRegulation"
+                />
+                <label class="form3-text062">4</label>
+              </div>
+              <div class="form3-container-502">
+                <input
+                  type="radio"
+                  name="form3-radio-1c"
+                  value="5"
+                  class="form3-radio02"
+                  :disabled="!isVendor"
+                  v-model="complianceRulesAndRegulation"
+                />
+                <label class="form3-text063">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part1d">
+            <span class="form3-text064">
+              <span>d) Safety Promotional Activities</span>
+            </span>
+            <div id="form3-radio-1d" class="form3-container-radio-1d">
+              <div class="form3-container-103">
+                <input
+                  type="radio"
+                  name="form3-radio-1d"
+                  value="1"
+                  class="form3-radiobutton012"
+                  :disabled="!isVendor"
+                  required
+                  v-model="safetyPromotionalActivities"
+                />
+                <label class="form3-text066">1</label>
+              </div>
+              <div class="form3-container-203">
+                <input
+                  type="radio"
+                  name="form3-radio-1d"
+                  value="2"
+                  class="form3-radiobutton013"
+                  :disabled="!isVendor"
+                  v-model="safetyPromotionalActivities"
+                />
+                <label class="form3-text067">2</label>
+              </div>
+              <div class="form3-container-303">
+                <input
+                  type="radio"
+                  name="form3-radio-1d"
+                  value="3"
+                  class="form3-radiobutton014"
+                  :disabled="!isVendor"
+                  v-model="safetyPromotionalActivities"
+                />
+                <label class="form3-text068">3</label>
+              </div>
+              <div class="form3-container-403">
+                <input
+                  type="radio"
+                  name="form3-radio-1d"
+                  value="4"
+                  class="form3-radiobutton015"
+                  :disabled="!isVendor"
+                  v-model="safetyPromotionalActivities"
+                />
+                <label class="form3-text069">4</label>
+              </div>
+              <div class="form3-container-503">
+                <input
+                  type="radio"
+                  name="form3-radio-1d"
+                  value="5"
+                  class="form3-radio03"
+                  v-model="safetyPromotionalActivities"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text070">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part1e">
+            <span class="form3-text071"><span>e) Document Submission</span></span>
+            <div id="form3-radio-1e" class="form3-container-radio-1e">
+              <div class="form3-container-104">
+                <input
+                  type="radio"
+                  name="form3-radio-1e"
+                  value="1"
+                  class="form3-radiobutton016"
+                  :disabled="!isVendor"
+                  required
+                  v-model="documentSubmission"
+                />
+                <label class="form3-text073">1</label>
+              </div>
+              <div class="form3-container-204">
+                <input
+                  type="radio"
+                  name="form3-radio-1e"
+                  value="2"
+                  class="form3-radiobutton017"
+                  :disabled="!isVendor"
+                  v-model="documentSubmission"
+                />
+                <label class="form3-text074">2</label>
+              </div>
+              <div class="form3-container-304">
+                <input
+                  type="radio"
+                  name="form3-radio-1e"
+                  value="3"
+                  class="form3-radiobutton018"
+                  :disabled="!isVendor"
+                  v-model="documentSubmission"
+                />
+                <label class="form3-text075">3</label>
+              </div>
+              <div class="form3-container-404">
+                <input
+                  type="radio"
+                  name="form3-radio-1e"
+                  value="4"
+                  class="form3-radiobutton019"
+                  :disabled="!isVendor"
+                  v-model="documentSubmission"
+                />
+                <label class="form3-text076">4</label>
+              </div>
+              <div class="form3-container-504">
+                <input
+                  type="radio"
+                  name="form3-radio-1e"
+                  value="5"
+                  class="form3-radio04"
+                  v-model="documentSubmission"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text077">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part1-score">
+            <input
+              type="text"
+              id="form3-part1-score"
+              disabled
+              placeholder="0"
+              class="form3-textinput04 input"
+              v-model="computePartOneScore"
+            />
+            <!-- <button
+              id="form3-btn-fetchScore-p1"
+              type="button"
+              class="form3-button button"
+            >
+              Fetch Score
+            </button> -->
+          </div>
         </div>
-        <div class="form3-container-comment">
-          <textarea
-            id="form3-textarea-comment"
-            class="form3-textarea textarea"
-          ></textarea>
-          <span class="form3-text229">Comments</span>
+        <div class="form3-container-part2">
+          <span class="form3-text078">
+            <span>PART II: SAFETY TRAINING AND COMPETENCIES (% OF ATTENDANCE)</span>
+          </span>
+          <div class="form3-container-part2a">
+            <span class="form3-text080">
+              <span>a) Statutory Safety Training Course</span>
+            </span>
+            <div id="form3-radio-2a" class="form3-container-radio-2a">
+              <div class="form3-container-105">
+                <input
+                  type="radio"
+                  name="form3-radio-2a"
+                  value="1"
+                  class="form3-radiobutton020"
+                  :disabled="!isVendor"
+                  required
+                  v-model="safetyTraining"
+                />
+                <label class="form3-text082">1</label>
+              </div>
+              <div class="form3-container-205">
+                <input
+                  type="radio"
+                  name="form3-radio-2a"
+                  value="2"
+                  class="form3-radiobutton021"
+                  :disabled="!isVendor"
+                  v-model="safetyTraining"
+                />
+                <label class="form3-text083">2</label>
+              </div>
+              <div class="form3-container-305">
+                <input
+                  type="radio"
+                  name="form3-radio-2a"
+                  value="3"
+                  class="form3-radiobutton022"
+                  :disabled="!isVendor"
+                  v-model="safetyTraining"
+                />
+                <label class="form3-text084">3</label>
+              </div>
+              <div class="form3-container-405">
+                <input
+                  type="radio"
+                  name="form3-radio-2a"
+                  value="4"
+                  class="form3-radiobutton023"
+                  v-model="safetyTraining"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text085">4</label>
+              </div>
+              <div class="form3-container-505">
+                <input
+                  type="radio"
+                  name="form3-radio-2a"
+                  value="5"
+                  class="form3-radio05"
+                  v-model="safetyTraining"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text086">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part2b">
+            <span class="form3-text087"><span>b) Safety Trade Course</span></span>
+            <div id="form3-radio-2b" class="form3-container-radio-2b">
+              <div class="form3-container-106">
+                <input
+                  type="radio"
+                  name="form3-radio-2b"
+                  value="1"
+                  class="form3-radiobutton024"
+                  :disabled="!isVendor"
+                  required
+                  v-model="safetyTrade"
+                />
+                <label class="form3-text089">1</label>
+              </div>
+              <div class="form3-container-206">
+                <input
+                  type="radio"
+                  name="form3-radio-2b"
+                  value="2"
+                  class="form3-radiobutton025"
+                  :disabled="!isVendor"
+                  v-model="safetyTrade"
+                />
+                <label class="form3-text090">2</label>
+              </div>
+              <div class="form3-container-306">
+                <input
+                  type="radio"
+                  name="form3-radio-2b"
+                  value="3"
+                  class="form3-radiobutton026"
+                  :disabled="!isVendor"
+                  v-model="safetyTrade"
+                />
+                <label class="form3-text091">3</label>
+              </div>
+              <div class="form3-container-406">
+                <input
+                  type="radio"
+                  name="form3-radio-2b"
+                  value="4"
+                  class="form3-radiobutton027"
+                  :disabled="!isVendor"
+                  v-model="safetyTrade"
+                />
+                <label class="form3-text092">4</label>
+              </div>
+              <div class="form3-container-506">
+                <input
+                  type="radio"
+                  name="form3-radio-2b"
+                  value="5"
+                  class="form3-radio06"
+                  v-model="safetyTrade"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text093">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part2c">
+            <span class="form3-text094"><span>c) Mass Safety Talk</span></span>
+            <div id="form3-radio-2c" class="form3-container-radio-2c">
+              <div class="form3-container-107">
+                <input
+                  type="radio"
+                  name="form3-radio-2c"
+                  value="1"
+                  class="form3-radiobutton028"
+                  :disabled="!isVendor"
+                  v-model="safetyTalk"
+
+                />
+                <label class="form3-text096">1</label>
+              </div>
+              <div class="form3-container-207">
+                <input
+                  type="radio"
+                  name="form3-radio-2c"
+                  value="2"
+                  class="form3-radiobutton029"
+                  :disabled="!isVendor"
+                  v-model="safetyTalk"
+                />
+                <label class="form3-text097">2</label>
+              </div>
+              <div class="form3-container-307">
+                <input
+                  type="radio"
+                  name="form3-radio-2c"
+                  value="3"
+                  class="form3-radiobutton030"
+                  :disabled="!isVendor"
+                  v-model="safetyTalk"
+                />
+                <label class="form3-text098">3</label>
+              </div>
+              <div class="form3-container-407">
+                <input
+                  type="radio"
+                  name="form3-radio-2c"
+                  value="4"
+                  class="form3-radiobutton031"
+                  :disabled="!isVendor"
+                  v-model="safetyTalk"
+                />
+                <label class="form3-text099">4</label>
+              </div>
+              <div class="form3-container-507">
+                <input
+                  type="radio"
+                  name="form3-radio-2c"
+                  value="5"
+                  class="form3-radio07"
+                  v-model="safetyTalk"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text100">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part2d">
+            <span class="form3-text101">
+              <span>d) WSH Safety Coordinator/ Supervisor</span>
+            </span>
+            <div id="form3-radio-2d" class="form3-container-radio-2d">
+              <div class="form3-container-108">
+                <input
+                  type="radio"
+                  name="form3-radio-2d"
+                  value="1"
+                  class="form3-radiobutton032"
+                  :disabled="!isVendor"
+                  required
+                  v-model="wshSafetyCoordinator"
+                />
+                <label class="form3-text103">1</label>
+              </div>
+              <div class="form3-container-208">
+                <input
+                  type="radio"
+                  name="form3-radio-2d"
+                  value="2"
+                  class="form3-radiobutton033"
+                  :disabled="!isVendor"
+                  v-model="wshSafetyCoordinator"
+                />
+                <label class="form3-text104">2</label>
+              </div>
+              <div class="form3-container-308">
+                <input
+                  type="radio"
+                  name="form3-radio-2d"
+                  value="3"
+                  class="form3-radiobutton034"
+                  :disabled="!isVendor"
+                  v-model="wshSafetyCoordinator"
+                />
+                <label class="form3-text105">3</label>
+              </div>
+              <div class="form3-container-408">
+                <input
+                  type="radio"
+                  name="form3-radio-2d"
+                  value="4"
+                  class="form3-radiobutton035"
+                  :disabled="!isVendor"
+                  v-model="wshSafetyCoordinator"
+                />
+                <label class="form3-text106">4</label>
+              </div>
+              <div class="form3-container-508">
+                <input
+                  type="radio"
+                  name="form3-radio-2d"
+                  value="5"
+                  class="form3-radio08"
+                  v-model="wshSafetyCoordinator"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text107">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part2e">
+            <span class="form3-text108"><span>e) Other Safety Training</span></span>
+            <div id="form3-radio-2e" class="form3-container-part2e1">
+              <div class="form3-container-109">
+                <input
+                  type="radio"
+                  name="form3-radio-2e"
+                  value="1"
+                  class="form3-radiobutton036"
+                  :disabled="!isVendor"
+                  required
+                  v-model="otherSafetyTraining"
+                />
+                <label class="form3-text110">1</label>
+              </div>
+              <div class="form3-container-209">
+                <input
+                  type="radio"
+                  name="form3-radio-2e"
+                  value="2"
+                  class="form3-radiobutton037"
+                  :disabled="!isVendor"
+                  v-model="otherSafetyTraining"
+                />
+                <label class="form3-text111">2</label>
+              </div>
+              <div class="form3-container-309">
+                <input
+                  type="radio"
+                  name="form3-radio-2e"
+                  value="3"
+                  class="form3-radiobutton038"
+                  :disabled="!isVendor"
+                  v-model="otherSafetyTraining"
+                />
+                <label class="form3-text112">3</label>
+              </div>
+              <div class="form3-container-409">
+                <input
+                  type="radio"
+                  name="form3-radio-2e"
+                  value="4"
+                  class="form3-radiobutton039"
+                  :disabled="!isVendor"
+                  v-model="otherSafetyTraining"
+                />
+                <label class="form3-text113">4</label>
+              </div>
+              <div class="form3-container-509">
+                <input
+                  type="radio"
+                  name="form3-radio-2e"
+                  value="5"
+                  class="form3-radio09"
+                  v-model="otherSafetyTraining"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text114">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part2-score">
+            <input
+              type="text"
+              id="form3-part2-score"
+              disabled
+              placeholder="0"
+              class="form3-textinput05 input"
+              v-model="computePartTwoScore"
+            />
+            <!-- <button
+              id="form3-btn-fetchScore-p2"
+              type="button"
+              class="form3-button01 button"
+            >
+              Fetch Score
+            </button> -->
+          </div>
         </div>
-      </div>
+        <div class="form3-container-part3">
+          <span class="form3-text115">
+            <span>PART III: ACCIDENT/ INCIDENT PREVIEW</span>
+          </span>
+          <div class="form3-container-part3a">
+            <span class="form3-text117">
+              <span>a) Effort in Accident Prevention</span>
+            </span>
+            <div id="form3-radio-3a" class="form3-container-radio-3a">
+              <div class="form3-container-110">
+                <input
+                  type="radio"
+                  name="form3-radio-3a"
+                  value="1"
+                  class="form3-radiobutton040"
+                  :disabled="!isVendor"
+                  required
+                  v-model="accidentPrevention"
+                />
+                <label class="form3-text119">1</label>
+              </div>
+              <div class="form3-container-210">
+                <input
+                  type="radio"
+                  name="form3-radio-3a"
+                  value="2"
+                  class="form3-radiobutton041"
+                  :disabled="!isVendor"
+                  v-model="accidentPrevention"
+                />
+                <label class="form3-text120">2</label>
+              </div>
+              <div class="form3-container-310">
+                <input
+                  type="radio"
+                  name="form3-radio-3a"
+                  value="3"
+                  class="form3-radiobutton042"
+                  :disabled="!isVendor"
+                  v-model="accidentPrevention"
+                />
+                <label class="form3-text121">3</label>
+              </div>
+              <div class="form3-container-410">
+                <input
+                  type="radio"
+                  name="form3-radio-3a"
+                  value="4"
+                  class="form3-radiobutton043"
+                  :disabled="!isVendor"
+                  v-model="accidentPrevention"
+                />
+                <label class="form3-text122">4</label>
+              </div>
+              <div class="form3-container-510">
+                <input
+                  type="radio"
+                  name="form3-radio-3a"
+                  value="5"
+                  class="form3-radio10"
+                  v-model="accidentPrevention"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text123">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part3b">
+            <span class="form3-text124">
+              <span>b) Safe Work Practice/ Permit To Work</span>
+            </span>
+            <div id="form3-radio-3b" class="form3-container-radio-3b">
+              <div class="form3-container-111">
+                <input
+                  type="radio"
+                  name="form3-radio-3b"
+                  value="1"
+                  class="form3-radiobutton044"
+                  :disabled="!isVendor"
+                  required
+                  v-model="safeWorkPractice"
+                />
+                <label class="form3-text126">1</label>
+              </div>
+              <div class="form3-container-211">
+                <input
+                  type="radio"
+                  name="form3-radio-3b"
+                  value="2"
+                  class="form3-radiobutton045"
+                  :disabled="!isVendor"
+                  v-model="safeWorkPractice"
+                />
+                <label class="form3-text127">2</label>
+              </div>
+              <div class="form3-container-311">
+                <input
+                  type="radio"
+                  name="form3-radio-3b"
+                  value="3"
+                  class="form3-radiobutton046"
+                  :disabled="!isVendor"
+                  v-model="safeWorkPractice"
+                />
+                <label class="form3-text128">3</label>
+              </div>
+              <div class="form3-container-411">
+                <input
+                  type="radio"
+                  name="form3-radio-3b"
+                  value="4"
+                  class="form3-radiobutton047"
+                  :disabled="!isVendor"
+                  v-model="safeWorkPractice"
+                />
+                <label class="form3-text129">4</label>
+              </div>
+              <div class="form3-container-511">
+                <input
+                  type="radio"
+                  name="form3-radio-3b"
+                  value="5"
+                  class="form3-radio11"
+                  v-model="safeWorkPractice"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text130">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part3c">
+            <span class="form3-text131">
+              <span>c) Incident Severity &amp; Frequency Rate</span>
+            </span>
+            <div id="form3-radio-3c" class="form3-container-radio-3c">
+              <div class="form3-container-112">
+                <input
+                  type="radio"
+                  name="form3-radio-3c"
+                  value="1"
+                  class="form3-radiobutton048"
+                  :disabled="!isVendor"
+                  required
+                  v-model="incidentSeverity"
+                />
+                <label class="form3-text133">1</label>
+              </div>
+              <div class="form3-container-212">
+                <input
+                  type="radio"
+                  name="form3-radio-3c"
+                  value="2"
+                  class="form3-radiobutton049"
+                  :disabled="!isVendor"
+                  v-model="incidentSeverity"
+                />
+                <label class="form3-text134">2</label>
+              </div>
+              <div class="form3-container-312">
+                <input
+                  type="radio"
+                  name="form3-radio-3c"
+                  value="3"
+                  class="form3-radiobutton050"
+                  :disabled="!isVendor"
+                  v-model="incidentSeverity"
+                />
+                <label class="form3-text135">3</label>
+              </div>
+              <div class="form3-container-412">
+                <input
+                  type="radio"
+                  name="form3-radio-3c"
+                  value="4"
+                  class="form3-radiobutton051"
+                  :disabled="!isVendor"
+                  v-model="incidentSeverity"
+                />
+                <label class="form3-text136">4</label>
+              </div>
+              <div class="form3-container-512">
+                <input
+                  type="radio"
+                  name="form3-radio-3c"
+                  value="5"
+                  class="form3-radio12"
+                  v-model="incidentSeverity"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text137">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part3d">
+            <span class="form3-text138"><span>d) Safety Offence</span></span>
+            <div id="form3-radio-3d" class="form3-container-radio-3d">
+              <div class="form3-container-113">
+                <input
+                  type="radio"
+                  name="form3-radio-3d"
+                  value="1"
+                  class="form3-radiobutton052"
+                  :disabled="!isVendor"
+                  required
+                  v-model="safetyOffense"
+                />
+                <label class="form3-text140">1</label>
+              </div>
+              <div class="form3-container-213">
+                <input
+                  type="radio"
+                  name="form3-radio-3d"
+                  value="2"
+                  class="form3-radiobutton053"
+                  :disabled="!isVendor"
+                  v-model="safetyOffense"
+                />
+                <label class="form3-text141">2</label>
+              </div>
+              <div class="form3-container-313">
+                <input
+                  type="radio"
+                  name="form3-radio-3d"
+                  value="3"
+                  class="form3-radiobutton054"
+                  :disabled="!isVendor"
+                  v-model="safetyOffense"
+                />
+                <label class="form3-text142">3</label>
+              </div>
+              <div class="form3-container-413">
+                <input
+                  type="radio"
+                  name="form3-radio-3d"
+                  value="4"
+                  class="form3-radiobutton055"
+                  :disabled="!isVendor"
+                  v-model="safetyOffense"
+                />
+                <label class="form3-text143">4</label>
+              </div>
+              <div class="form3-container-513">
+                <input
+                  type="radio"
+                  name="form3-radio-3d"
+                  value="5"
+                  class="form3-radio13"
+                  v-model="safetyOffense"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text144">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part3e">
+            <span class="form3-text145">
+              <span>e) Safety Inspection And Rectification</span>
+            </span>
+            <div id="form3-radio-3e" class="form3-container-radio-3e">
+              <div class="form3-container-114">
+                <input
+                  type="radio"
+                  name="form3-radio-3e"
+                  value="1"
+                  class="form3-radiobutton056"
+                  :disabled="!isVendor"
+                  required
+                  v-model="safetyInspection"
+                />
+                <label class="form3-text147">1</label>
+              </div>
+              <div class="form3-container-214">
+                <input
+                  type="radio"
+                  name="form3-radio-3e"
+                  value="2"
+                  class="form3-radiobutton057"
+                  :disabled="!isVendor"
+                  v-model="safetyInspection"
+                />
+                <label class="form3-text148">2</label>
+              </div>
+              <div class="form3-container-314">
+                <input
+                  type="radio"
+                  name="form3-radio-3e"
+                  value="3"
+                  class="form3-radiobutton058"
+                  :disabled="!isVendor"
+                  v-model="safetyInspection"
+                />
+                <label class="form3-text149">3</label>
+              </div>
+              <div class="form3-container-414">
+                <input
+                  type="radio"
+                  name="form3-radio-3e"
+                  value="4"
+                  class="form3-radiobutton059"
+                  :disabled="!isVendor"
+                  v-model="safetyInspection"
+                />
+                <label class="form3-text150">4</label>
+              </div>
+              <div class="form3-container-514">
+                <input
+                  type="radio"
+                  name="form3-radio-3e"
+                  value="5"
+                  class="form3-radio14"
+                  v-model="safetyInspection"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text151">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part3-score">
+            <input
+              type="text"
+              id="form3-part3-score"
+              disabled
+              placeholder="0"
+              class="form3-textinput06 input"
+              v-model="computePartThreeScore"
+            />
+            <!-- <button
+              id="form3-btn-fetchScore-p3"
+              type="button"
+              class="form3-button02 button"
+            >
+              Fetch Score
+            </button> -->
+          </div>
+        </div>
+        <div class="form3-container-part4">
+          <span class="form3-text152">
+            <span>PART IV: MAINTENANCE OF EQUIPMENT</span>
+          </span>
+          <div class="form3-container-part4a">
+            <span class="form3-text154">
+              <span>a) Explosive Powered Tool/ Cutting Tool</span>
+            </span>
+            <div id="form3-radio-4a" class="form3-container-radio-4a">
+              <div class="form3-container-115">
+                <input
+                  type="radio"
+                  name="form3-radio-4a"
+                  value="1"
+                  class="form3-radiobutton060"
+                  :disabled="!isVendor"
+                  required
+                  v-model="explosivePoweredTool"
+                />
+                <label class="form3-text156">1</label>
+              </div>
+              <div class="form3-container-215">
+                <input
+                  type="radio"
+                  name="form3-radio-4a"
+                  value="2"
+                  class="form3-radiobutton061"
+                  :disabled="!isVendor"
+                  v-model="explosivePoweredTool"
+                />
+                <label class="form3-text157">2</label>
+              </div>
+              <div class="form3-container-315">
+                <input
+                  type="radio"
+                  name="form3-radio-4a"
+                  value="3"
+                  class="form3-radiobutton062"
+                  :disabled="!isVendor"
+                  v-model="explosivePoweredTool"
+                />
+                <label class="form3-text158">3</label>
+              </div>
+              <div class="form3-container-415">
+                <input
+                  type="radio"
+                  name="form3-radio-4a"
+                  value="4"
+                  class="form3-radiobutton063"
+                  :disabled="!isVendor"
+                  v-model="explosivePoweredTool"
+                />
+                <label class="form3-text159">4</label>
+              </div>
+              <div class="form3-container-515">
+                <input
+                  type="radio"
+                  name="form3-radio-4a"
+                  value="5"
+                  class="form3-radio15"
+                  v-model="explosivePoweredTool"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text160">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part4b">
+            <span class="form3-text161"><span>b) Ladder</span></span>
+            <div id="form3-radio-4b" class="form3-container-radio-4b">
+              <div class="form3-container-116">
+                <input
+                  type="radio"
+                  name="form3-radio-4b"
+                  value="1"
+                  class="form3-radiobutton064"
+                  :disabled="!isVendor"
+                  required
+                  v-model="ladder"
+                />
+                <label class="form3-text163">1</label>
+              </div>
+              <div class="form3-container-216">
+                <input
+                  type="radio"
+                  name="form3-radio-4b"
+                  value="2"
+                  class="form3-radiobutton065"
+                  :disabled="!isVendor"
+                  v-model="ladder"
+                />
+                <label class="form3-text164">2</label>
+              </div>
+              <div class="form3-container-316">
+                <input
+                  type="radio"
+                  name="form3-radio-4b"
+                  value="3"
+                  class="form3-radiobutton066"
+                  :disabled="!isVendor"
+                  v-model="ladder"
+                />
+                <label class="form3-text165">3</label>
+              </div>
+              <div class="form3-container-416">
+                <input
+                  type="radio"
+                  name="form3-radio-4b"
+                  value="4"
+                  class="form3-radiobutton067"
+                  :disabled="!isVendor"
+                  v-model="ladder"
+                />
+                <label class="form3-text166">4</label>
+              </div>
+              <div class="form3-container-516">
+                <input
+                  type="radio"
+                  name="form3-radio-4b"
+                  value="5"
+                  class="form3-radio16"
+                  v-model="ladder"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text167">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part4c">
+            <span class="form3-text168">
+              <span>c) Lifting Gear/ Appliance/ Machine</span>
+            </span>
+            <div id="form3-radio-4c" class="form3-container-radio-4c">
+              <div class="form3-container-117">
+                <input
+                  type="radio"
+                  name="form3-radio-4c"
+                  value="1"
+                  class="form3-radiobutton068"
+                  :disabled="!isVendor"
+                  required
+                  v-model="liftingGear"
+                />
+                <label class="form3-text170">1</label>
+              </div>
+              <div class="form3-container-217">
+                <input
+                  type="radio"
+                  name="form3-radio-4c"
+                  value="2"
+                  class="form3-radiobutton069"
+                  :disabled="!isVendor"
+                  v-model="liftingGear"
+                />
+                <label class="form3-text171">2</label>
+              </div>
+              <div class="form3-container-317">
+                <input
+                  type="radio"
+                  name="form3-radio-4c"
+                  value="3"
+                  class="form3-radiobutton070"
+                  :disabled="!isVendor"
+                  v-model="liftingGear"
+                />
+                <label class="form3-text172">3</label>
+              </div>
+              <div class="form3-container-417">
+                <input
+                  type="radio"
+                  name="form3-radio-4c"
+                  value="4"
+                  class="form3-radiobutton071"
+                  :disabled="!isVendor"
+                  v-model="liftingGear"
+                />
+                <label class="form3-text173">4</label>
+              </div>
+              <div class="form3-container-517">
+                <input
+                  type="radio"
+                  name="form3-radio-4c"
+                  value="5"
+                  class="form3-radio17"
+                  v-model="liftingGear"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text174">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part4d">
+            <span class="form3-text175">
+              <span>d) Electrical Equipment/ Compressor</span>
+            </span>
+            <div id="form3-radio-4d" class="form3-container-radio-4d">
+              <div class="form3-container-118">
+                <input
+                  type="radio"
+                  name="form3-radio-4d"
+                  value="1"
+                  class="form3-radiobutton072"
+                  :disabled="!isVendor"
+                  required
+                  v-model="electricalEquipment"
+                />
+                <label class="form3-text177">1</label>
+              </div>
+              <div class="form3-container-218">
+                <input
+                  type="radio"
+                  name="form3-radio-4d"
+                  value="2"
+                  class="form3-radiobutton073"
+                  :disabled="!isVendor"
+                  v-model="electricalEquipment"
+                />
+                <label class="form3-text178">2</label>
+              </div>
+              <div class="form3-container-318">
+                <input
+                  type="radio"
+                  name="form3-radio-4d"
+                  value="3"
+                  class="form3-radiobutton074"
+                  :disabled="!isVendor"
+                  v-model="electricalEquipment"
+                />
+                <label class="form3-text179">3</label>
+              </div>
+              <div class="form3-container-418">
+                <input
+                  type="radio"
+                  name="form3-radio-4d"
+                  value="4"
+                  class="form3-radiobutton075"
+                  :disabled="!isVendor"
+                  v-model="electricalEquipment"
+                />
+                <label class="form3-text180">4</label>
+              </div>
+              <div class="form3-container-518">
+                <input
+                  type="radio"
+                  name="form3-radio-4d"
+                  value="5"
+                  class="form3-radio18"
+                  v-model="electricalEquipment"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text181">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part4e">
+            <span class="form3-text182"><span>e) Other Machineries</span></span>
+            <div id="form3-radio-4e" class="form3-container-radio-4e">
+              <div class="form3-container-119">
+                <input
+                  type="radio"
+                  name="form3-radio-4e"
+                  value="1"
+                  class="form3-radiobutton076"
+                  :disabled="!isVendor"
+                  required
+                  v-model="otherMachineries"
+                />
+                <label class="form3-text184">1</label>
+              </div>
+              <div class="form3-container-219">
+                <input
+                  type="radio"
+                  name="form3-radio-4e"
+                  value="2"
+                  class="form3-radiobutton077"
+                  :disabled="!isVendor"
+                  v-model="otherMachineries"
+                />
+                <label class="form3-text185">2</label>
+              </div>
+              <div class="form3-container-319">
+                <input
+                  type="radio"
+                  name="form3-radio-4e"
+                  value="3"
+                  class="form3-radiobutton078"
+                  :disabled="!isVendor"
+                  v-model="otherMachineries"
+                />
+                <label class="form3-text186">3</label>
+              </div>
+              <div class="form3-container-419">
+                <input
+                  type="radio"
+                  name="form3-radio-4e"
+                  value="4"
+                  class="form3-radiobutton079"
+                  :disabled="!isVendor"
+                  v-model="otherMachineries"
+                />
+                <label class="form3-text187">4</label>
+              </div>
+              <div class="form3-container-519">
+                <input
+                  type="radio"
+                  name="form3-radio-4e"
+                  value="5"
+                  class="form3-radio19"
+                  v-model="otherMachineries"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text188">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part4-score">
+            <input
+              type="text"
+              id="form3-part4-score"
+              disabled
+              placeholder="0"
+              class="form3-textinput07 input"
+              v-model="computePartFourScore"
+            />
+            <!-- <button
+              id="form3-btn-fetchScore-p4"
+              type="button"
+              class="form3-button03 button"
+            >
+              Fetch Score
+            </button> -->
+          </div>
+        </div>
+        <div class="form3-container-part5">
+          <span class="form3-text189">
+            <span>PART V: GENERAL HOUSEKEEPING &amp; Others</span>
+          </span>
+          <div class="form3-container-part5a">
+            <span class="form3-text191">
+              <span>a) Subcon Snr Mgt Commitment to HS</span>
+            </span>
+            <div id="form3-radio-5a" class="form3-container-radio-5a">
+              <div class="form3-container-120">
+                <input
+                  type="radio"
+                  name="form3-radio-5a"
+                  value="1"
+                  class="form3-radiobutton080"
+                  :disabled="!isVendor"
+                  required
+                  v-model="subconSnrMgmt"
+                />
+                <label class="form3-text193">1</label>
+              </div>
+              <div class="form3-container-220">
+                <input
+                  type="radio"
+                  name="form3-radio-5a"
+                  value="2"
+                  class="form3-radiobutton081"
+                  :disabled="!isVendor"
+                  v-model="subconSnrMgmt"
+                />
+                <label class="form3-text194">2</label>
+              </div>
+              <div class="form3-container-320">
+                <input
+                  type="radio"
+                  name="form3-radio-5a"
+                  value="3"
+                  class="form3-radiobutton082"
+                  :disabled="!isVendor"
+                  v-model="subconSnrMgmt"
+                />
+                <label class="form3-text195">3</label>
+              </div>
+              <div class="form3-container-420">
+                <input
+                  type="radio"
+                  name="form3-radio-5a"
+                  value="4"
+                  class="form3-radiobutton083"
+                  :disabled="!isVendor"
+                  v-model="subconSnrMgmt"
+                />
+                <label class="form3-text196">4</label>
+              </div>
+              <div class="form3-container-520">
+                <input
+                  type="radio"
+                  name="form3-radio-5a"
+                  value="5"
+                  class="form3-radio20"
+                  v-model="subconSnrMgmt"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text197">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part5b">
+            <span class="form3-text198"><span>b) Compliance with PPE</span></span>
+            <div id="form3-radio-5b" class="form3-container-radio-5b">
+              <div class="form3-container-121">
+                <input
+                  type="radio"
+                  name="form3-radio-5b"
+                  value="1"
+                  class="form3-radiobutton084"
+                  :disabled="!isVendor"
+                  required
+                  v-model="compliancePPE"
+                />
+                <label class="form3-text200">1</label>
+              </div>
+              <div class="form3-container-221">
+                <input
+                  type="radio"
+                  name="form3-radio-5b"
+                  value="2"
+                  class="form3-radiobutton085"
+                  :disabled="!isVendor"
+                  v-model="compliancePPE"
+                />
+                <label class="form3-text201">2</label>
+              </div>
+              <div class="form3-container-321">
+                <input
+                  type="radio"
+                  name="form3-radio-5b"
+                  value="3"
+                  class="form3-radiobutton086"
+                  :disabled="!isVendor"
+                  v-model="compliancePPE"
+                />
+                <label class="form3-text202">3</label>
+              </div>
+              <div class="form3-container-421">
+                <input
+                  type="radio"
+                  name="form3-radio-5b"
+                  value="4"
+                  class="form3-radiobutton087"
+                  :disabled="!isVendor"
+                  v-model="compliancePPE"
+                />
+                <label class="form3-text203">4</label>
+              </div>
+              <div class="form3-container-521">
+                <input
+                  type="radio"
+                  name="form3-radio-5b"
+                  value="5"
+                  class="form3-radio21"
+                  v-model="compliancePPE"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text204">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part5c">
+            <span class="form3-text205">
+              <span>c) Housekeeping &amp; Cleanliness at Site</span>
+            </span>
+            <div id="form3-radio-5c" class="form3-container-radio-5c">
+              <div class="form3-container-122">
+                <input
+                  type="radio"
+                  name="form3-radio-5c"
+                  value="1"
+                  class="form3-radiobutton088"
+                  :disabled="!isVendor"
+                  required
+                  v-model="sitehouseKeepingCleanliness"
+                />
+                <label class="form3-text207">1</label>
+              </div>
+              <div class="form3-container-222">
+                <input
+                  type="radio"
+                  name="form3-radio-5c"
+                  value="2"
+                  class="form3-radiobutton089"
+                  :disabled="!isVendor"
+                  v-model="sitehouseKeepingCleanliness"
+                />
+                <label class="form3-text208">2</label>
+              </div>
+              <div class="form3-container-322">
+                <input
+                  type="radio"
+                  name="form3-radio-5c"
+                  value="3"
+                  class="form3-radiobutton090"
+                  :disabled="!isVendor"
+                  v-model="sitehouseKeepingCleanliness"
+                />
+                <label class="form3-text209">3</label>
+              </div>
+              <div class="form3-container-422">
+                <input
+                  type="radio"
+                  name="form3-radio-5c"
+                  value="4"
+                  class="form3-radiobutton091"
+                  :disabled="!isVendor"
+                  v-model="sitehouseKeepingCleanliness"
+                />
+                <label class="form3-text210">4</label>
+              </div>
+              <div class="form3-container-522">
+                <input
+                  type="radio"
+                  name="form3-radio-5c"
+                  value="5"
+                  class="form3-radio22"
+                  v-model="sitehouseKeepingCleanliness"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text211">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part5d">
+            <span class="form3-text212">
+              <span>d) Housekeeping &amp; Cleanliness at Store</span>
+            </span>
+            <div id="form3-radio-5d" class="form3-container-radio-5d">
+              <div class="form3-container-123">
+                <input
+                  type="radio"
+                  name="form3-radio-5d"
+                  value="1"
+                  class="form3-radiobutton092"
+                  :disabled="!isVendor"
+                  required
+                  v-model="storehouseKeepingCleanliness"
+                />
+                <label class="form3-text214">1</label>
+              </div>
+              <div class="form3-container-223">
+                <input
+                  type="radio"
+                  name="form3-radio-5d"
+                  value="2"
+                  class="form3-radiobutton093"
+                  :disabled="!isVendor"
+                  v-model="storehouseKeepingCleanliness"
+                />
+                <label class="form3-text215">2</label>
+              </div>
+              <div class="form3-container-323">
+                <input
+                  type="radio"
+                  name="form3-radio-5d"
+                  value="3"
+                  class="form3-radiobutton094"
+                  :disabled="!isVendor"
+                  v-model="storehouseKeepingCleanliness"
+                />
+                <label class="form3-text216">3</label>
+              </div>
+              <div class="form3-container-423">
+                <input
+                  type="radio"
+                  name="form3-radio-5d"
+                  value="4"
+                  class="form3-radiobutton095"
+                  :disabled="!isVendor"
+                  v-model="storehouseKeepingCleanliness"
+                />
+                <label class="form3-text217">4</label>
+              </div>
+              <div class="form3-container-523">
+                <input
+                  type="radio"
+                  name="form3-radio-5d"
+                  value="5"
+                  class="form3-radio23"
+                  v-model="storehouseKeepingCleanliness"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text218">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part5e">
+            <span class="form3-text219">
+              <span>e) Housekeeping &amp; Cleanliness at Quarter</span>
+            </span>
+            <div id="form3-radio-5e" class="form3-container-radio-5e">
+              <div class="form3-container-124">
+                <input
+                  type="radio"
+                  name="form3-radio-5e"
+                  value="1"
+                  class="form3-radiobutton096"
+                  :disabled="!isVendor"
+                  required
+                  v-model="quarterhouseKeepingCleanliness"
+                />
+                <label class="form3-text221">1</label>
+              </div>
+              <div class="form3-container-224">
+                <input
+                  type="radio"
+                  name="form3-radio-5e"
+                  value="2"
+                  class="form3-radiobutton097"
+                  :disabled="!isVendor"
+                  v-model="quarterhouseKeepingCleanliness"
+                />
+                <label class="form3-text222">2</label>
+              </div>
+              <div class="form3-container-324">
+                <input
+                  type="radio"
+                  name="form3-radio-5e"
+                  value="3"
+                  class="form3-radiobutton098"
+                  v-model="quarterhouseKeepingCleanliness"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text223">3</label>
+              </div>
+              <div class="form3-container-424">
+                <input
+                  type="radio"
+                  name="form3-radio-5e"
+                  value="4"
+                  class="form3-radiobutton099"
+                  v-model="quarterhouseKeepingCleanliness"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text224">4</label>
+              </div>
+              <div class="form3-container-524">
+                <input
+                  type="radio"
+                  name="form3-radio-5e"
+                  value="5"
+                  class="form3-radio24"
+                  v-model="quarterhouseKeepingCleanliness"
+                  :disabled="!isVendor"
+                />
+                <label class="form3-text225">5</label>
+              </div>
+            </div>
+          </div>
+          <div class="form3-container-part5-score">
+            <input
+              type="text"
+              id="form3-part5-score"
+              placeholder="0"
+              class="form3-textinput08 input"
+              v-model="computePartFiveScore"
+            />
+            <!-- <button id="form3-btn-fetchScore-p5" class="form3-button04 button">
+              Fetch Score
+            </button> -->
+          </div>
+        </div>
+        <div class="form3-container-scoring">
+          <div class="form3-container-total-score">
+            <input
+              type="text"
+              id="form3-totalScore-out"
+              disabled
+              placeholder="0"
+              class="form3-textinput09 input"
+              v-model="computeTotalScore"
+            />
+            <button
+              id="form3-btn-totalScore"
+              type="button"
+              class="form3-button05 button"
+            >
+              Total Score
+            </button>
+          </div>
+          <div class="form3-container-overall-perf-standard">
+            <input
+              type="text"
+              id="form3-ovPerfStan-out"
+              disabled
+              placeholder="0"
+              class="form3-textinput10 input"
+              v-model="computeOverall"
+            />
+            <button
+              id="form3-btn-ovPerfStand"
+              type="button"
+              class="form3-button06 button"
+            >
+              <span>
+                <span>Overall Performance Standard</span>
+                <br />
+              </span>
+            </button>
+          </div>
+          <div class="form3-container-comment">
+            <textarea
+              id="form3-textarea-comment"
+              class="form3-textarea textarea"
+              :disabled="!isVendor"
+            ></textarea>
+            <span class="form3-text229">Comments</span>
+          </div>
+        </div>
       <div class="form3-container-evaluated-by">
         <div class="form3-container05">
           <span class="form3-text230">Evaluated By</span>
@@ -1571,6 +1862,7 @@
             id="form3-input-evaluatedByName"
             required
             class="form3-textinput11 input"
+            :disabled="isAdminOrApprover"
           />
         </div>
         <div class="form3-container06">
@@ -1580,6 +1872,7 @@
             id="form3-input-evaluatedBySig"
             required
             class="form3-textinput12 input"
+            :disabled="isAdminOrApprover"
           />
         </div>
         <div class="form3-container07">
@@ -1589,6 +1882,7 @@
             id="form3-input-evaluatedByDate"
             required
             class="form3-textinput13 input"
+            :disabled="isAdminOrApprover"
           />
         </div>
       </div>
@@ -1600,6 +1894,7 @@
             id="form3-input-approvedByName"
             required
             class="form3-textinput14 input"
+            :disabled="isApprover"
           />
         </div>
         <div class="form3-container09">
@@ -1609,6 +1904,7 @@
             id="form3-input-approvedBySig"
             required
             class="form3-textinput15 input"
+            :disabled="isApprover"
           />
         </div>
         <div class="form3-container10">
@@ -1618,44 +1914,512 @@
             id="form3-input-approvedByDate"
             required
             class="form3-textinput16 input"
+            :disabled="isApprover"
           />
         </div>
       </div>
       <div class="form3-container11">
-        <button id="form3-btn-save" type="button" class="form3-button07">
+        <button id="form3-btn-save" type="button" class="form3-button07" @click.prevent="handleSave">
           <span class="form3-text240 ParagraphNormalRegular">Save</span>
         </button>
-        <button id="form3-btn-submit" type="button" class="form3-button08">
-          <span class="form3-text241 ParagraphNormalRegular">Submit</span>
+        <input id="form3-btn-submit" type="submit" class="form3-button08" v-if="isVendor"/>
+          <!-- <span class="form3-text241 ParagraphNormalRegular">Submit</span>
+        </button> -->
+        <button id="form3-btn-rejectEvaluation" class="form3-button09" v-if="!isAdminOrApprover" @click.prevent="handleRejectEvaluation">
+          <span class="form3-text242 ParagraphNormalRegular">Reject Evaluation</span>
         </button>
-        <button id="form3-btn-rejectReview" class="form3-button09">
-          <span class="form3-text242 ParagraphNormalRegular">Reject Review</span>
-        </button>
-        <button id="form3-btn-approveReview" type="button" class="form3-button10">
-          <span class="form3-text243 ParagraphNormalRegular">Approve Review</span>
+        <button id="form3-btn-approveEvaluation" type="button" class="form3-button10" v-if="!isAdminOrApprover" @click.prevent="handleApproveEvaluation">
+          <span class="form3-text243 ParagraphNormalRegular">Approve Evaluation</span>
         </button>
         <button
-          id="form3-disapproveWorkflow"
+          id="form3-disapproveForm"
           type="button"
           class="form3-button11"
+          v-if="isApprover"
+          @click.prevent="handleRejectForm"
         >
           <span class="form3-text244 ParagraphNormalRegular">
-            Disapprove Workflow
+            Disapprove Form
           </span>
         </button>
-        <button id="form3-approveWorkflow" type="button" class="form3-button12">
+        <button 
+          id="form3-approveForm" 
+          type="button" 
+          class="form3-button12" 
+          v-if="isApprover"
+          @click.prevent="handleApproveForm"
+        >
           <span class="form3-text245 ParagraphNormalRegular">
-            Approve Workflow
+            Approve Form
           </span>
         </button>
       </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+import authHeader from '../services/auth-header';
+
+const API_URL = "http://localhost:8080/api/v1/vendor/";
+
 export default {
   name: 'Form3',
+  data() {
+    return {
+
+      // RBAC
+      isVendor: false,
+      isAdminOrApprover: false,
+      isApprover: false,
+
+      // form
+      id: null,
+
+      contractorName: '',
+      trade: '',
+      projectWorksite: '',
+      date: '',
+
+      attendanceSafetyMeeting: null,
+      toolBoxMeeting: null,
+      complianceRulesAndRegulation: null,
+      safetyPromotionalActivities: null,
+      documentSubmission: null,
+      partOneScore: null,
+
+      safetyTraining: null,
+      safetyTrade: null,
+      safetyTalk: null,
+      wshSafetyCoordinator: null,
+      otherSafetyTraining: null,
+      partTwoScore: null,
+
+      accidentPrevention: null,
+      safeWorkPractice: null,
+      incidentSeverity: null,
+      safetyOffense: null,
+      safetyInspection: null,
+      partThreeScore: null,
+
+      explosivePoweredTool: null,
+      ladder: null,
+      liftingGear: null,
+      electricalEquipment: null,
+      otherMachineries: null,
+      partFourScore: null,
+
+      subconSnrMgmt: null,
+      compliancePPE: null,
+      sitehouseKeepingCleanliness: null,
+      storehouseKeepingCleanliness: null,
+      quarterhouseKeepingCleanliness: null,
+      partFiveScore: null,
+
+      totalScore: null,
+      overallPerformanceStandard: null,
+      comments: '',
+      performanceEvaluationResults: null,
+
+      evaluationComments: null,
+      dateCreated: null,
+      dateModified: null,
+      deadline: null
+    }
+  },
+  async mounted() {
+    
+    this.id = this.$route.query.formid;
+
+    await axios({
+      url: 'getPerformanceEvaluationForm',
+      method: 'post',
+      baseURL: API_URL,
+      headers: authHeader(),
+      data: {
+        id: this.id
+      },
+      withCredentials: false
+    })
+    .then(response => {
+      var result = response.data;
+      console.log(result);
+
+
+      this.contractorName= result.contractorName;
+      this.trade= result.trade;
+      this.projectWorksite= result.projectWorksite;
+      this.date= result.date;
+
+      this.attendanceSafetyMeeting= result.attendanceSafetyMeeting;
+      this.toolBoxMeeting= result.toolBoxMeeting;
+      this.complianceRulesAndRegulation= result.complianceRulesAndRegulation;
+      this.safetyPromotionalActivities= result.safetyPromotionalActivities;
+      this.documentSubmission= result.documentSubmission;
+      this.partOneScore= result.partOneScore;
+
+      this.safetyTraining= result.safetyTraining;
+      this.safetyTrade= result.safetyTrade;
+      this.safetyTalk= result.safetyTalk;
+      this.wshSafetyCoordinator= result.wshSafetyCoordinator;
+      this.otherSafetyTraining= result.otherSafetyTraining;
+      this.partTwoScore= result.partTwoScore;
+
+      this.accidentPrevention= result.accidentPrevention;
+      this.safeWorkPractice= result.safeWorkPractice;
+      this.incidentSeverity= result.incidentSeverity;
+      this.safetyOffense= result.safetyOffense;
+      this.safetyInspection= result.safetyInspection;
+      this.partThreeScore= result.partThreeScore;
+
+      this.explosivePoweredTool= result.explosivePoweredTool;
+      this.ladder= result.ladder;
+      this.liftingGear= result.liftingGear;
+      this.electricalEquipment= result.electricalEquipment;
+      this.otherMachineries= result.otherMachineries;
+      this.partFourScore= result.partFourScore;
+
+      this.subconSnrMgmt= result.subconSnrMgmt;
+      this.compliancePPE= result.compliancePPE;
+      this.sitehouseKeepingCleanliness= result.sitehouseKeepingCleanliness;
+      this.storehouseKeepingCleanliness= result.storehouseKeepingCleanliness;
+      this.quarterhouseKeepingCleanliness= result.quarterhouseKeepingCleanliness;
+      this.partFiveScore= result.partFiveScore;
+
+      this.totalScore= result.totalScore;
+      
+      this.comments= result.comments;
+
+      this.performanceEvaluationResults= result.performanceEvaluationResults;
+
+      // this.evaluatedBy= result.evaluatedBy;
+      // this.evaluatorSignature= result.evaluatorSignature;
+      // this.evaluatedDate = result.evaluatedDate;
+      // this.approvedBy= result.approvedBy;
+      // this.approverSignature= result.approverSignature;
+      // this.effectiveDate= result.effectiveDate;
+      // this.approvedDate = result.approvedDate;
+
+      this.evaluationComments= result.evaluationComments;
+      this.dateCreated= result.dateCreated;
+      this.dateModified= result.dateModified;
+      this.deadline= result.deadline;
+    })
+    .catch(error => {
+      console.log(error);
+    })
+
+        // fetch role
+    var role = sessionStorage.getItem('role');
+    console.log(role);
+
+    // control inputs based on form status
+    if (this.performanceEvaluationResults == "Draft" ||
+        this.performanceEvaluationResults == "Evaluation Rejected" || 
+        this.performanceEvaluationResults == "Form Rejected")
+    {
+      if (role == "USER"){
+        this.isVendor = true;
+        this.isAdminOrApprover = false;
+        this.isApprover = false;
+      }
+      else{
+        this.isVendor = false;
+        this.isAdminOrApprover = false;
+        this.isApprover = false; 
+      }
+    }
+    else if (this.performanceEvaluationResults == "Submitted") {
+      if (role == "USER"){
+        this.isVendor = false;
+        this.isAdminOrApprover = false;
+        this.isApprover = false;
+      }
+      else{
+        this.isVendor = false;
+        this.isAdminOrApprover = true;
+        this.isApprover = true; 
+      }
+    }
+    else if (this.performanceEvaluationResults == "Evaluation Approved") {
+      if (role == "USER" || role == "ADMIN"){
+        this.isVendor = false;
+        this.isAdminOrApprover = false;
+        this.isApprover = false;
+      }
+      else{
+        this.isVendor = false;
+        this.isAdminOrApprover = false;
+        this.isApprover = true; 
+      }
+    }
+    else { // "Form Approved" "Archived"
+      this.isVendor = false;
+      this.isAdminOrApprover = false;
+      this.isApprover = false;
+    }
+  },
+  computed: {
+    computePartOneScore() {
+       return parseInt(this.attendanceSafetyMeeting) + parseInt(this.toolBoxMeeting) + 
+              parseInt(this.complianceRulesAndRegulation) +
+              parseInt(this.safetyPromotionalActivities) + parseInt(this.documentSubmission);
+    },
+    computePartTwoScore(){
+      return parseInt(this.safetyTraining) + parseInt(this.safetyTrade) + 
+              parseInt(this.safetyTalk) +
+              parseInt(this.wshSafetyCoordinator) + parseInt(this.otherSafetyTraining);
+    },
+    computePartThreeScore(){
+      return parseInt(this.accidentPrevention) + parseInt(this.safeWorkPractice) + 
+        parseInt(this.incidentSeverity) +
+        parseInt(this.safetyOffense) + parseInt(this.safetyInspection);
+    },
+    computePartFourScore(){
+      return parseInt(this.explosivePoweredTool) + parseInt(this.ladder) + 
+              parseInt(this.liftingGear) +
+              parseInt(this.electricalEquipment) + parseInt(this.otherMachineries);
+    },
+    computePartFiveScore(){
+      return parseInt(this.subconSnrMgmt) + parseInt(this.compliancePPE) + 
+              parseInt(this.sitehouseKeepingCleanliness) +
+              parseInt(this.storehouseKeepingCleanliness) + parseInt(this.quarterhouseKeepingCleanliness);
+    },
+    computeTotalScore(){
+      return (((parseInt(this.computePartOneScore) + parseInt(this.computePartTwoScore) + 
+        parseInt(this.computePartThreeScore) +
+        parseInt(this.computePartFourScore) + parseInt(this.computePartFiveScore))
+        /(25*5)) * 100) + "%";
+    },
+    computeOverall(){
+      let totalScore = parseInt(this.computeTotalScore);
+      let res = "";
+
+      if (totalScore >= 85) res = "Good";
+      else if (totalScore >= 65) res = "Above Average";
+      else if (totalScore >= 50) res = "Average";
+      else if (totalScore >= 40) res = "Below Average";
+      else res = "Poor";
+
+      return res
+    }
+  },
+  methods: {
+    handleHome(){
+      alert("Redirecting to home page");
+      this.$router.push('/workflow');
+    },
+    async handleSave(){
+      if (sessionStorage.getItem('role') == "USER") this.performanceEvaluationResults = "Draft";
+      await axios({
+        url: 'updatePerformanceEvaluationForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+          id: this.id,
+
+          contractorName: this.contractorName,
+          trade: this.trade,
+          projectWorksite: this.projectWorksite,
+          date: this.date,
+
+          attendanceSafetyMeeting: this.attendanceSafetyMeeting,
+          toolBoxMeeting: this.toolBoxMeeting,
+          complianceRulesAndRegulation: this.complianceRulesAndRegulation,
+          safetyPromotionalActivities: this.safetyPromotionalActivities,
+          documentSubmission: this.documentSubmission,
+          partOneScore: this.partOneScore,
+
+          safetyTraining: this.safetyTraining,
+          safetyTrade: this.safetyTrade,
+          safetyTalk: this.safetyTalk,
+          wshSafetyCoordinator: this.wshSafetyCoordinator,
+          otherSafetyTraining: this.otherSafetyTraining,
+          partTwoScore: this.partTwoScore,
+
+          accidentPrevention: this.accidentPrevention,
+          safeWorkPractice: this.safeWorkPractice,
+          incidentSeverity: this.incidentSeverity,
+          safetyOffense: this.safetyOffense,
+          safetyInspection: this.safetyInspection,
+          partThreeScore: this.partThreeScore,
+
+          explosivePoweredTool: this.explosivePoweredTool,
+          ladder: this.ladder,
+          liftingGear: this.liftingGear,
+          electricalEquipment: this.electricalEquipment,
+          otherMachineries: this.otherMachineries,
+          partFourScore: this.partFourScore,
+
+          subconSnrMgmt: this.subconSnrMgmt,
+          compliancePPE: this.compliancePPE,
+          sitehouseKeepingCleanliness: this.sitehouseKeepingCleanliness,
+          storehouseKeepingCleanliness: this.storehouseKeepingCleanliness,
+          quarterhouseKeepingCleanliness: this.quarterhouseKeepingCleanliness,
+          partFiveScore: this.partFiveScore,
+
+          totalScore: this.totalScore,
+          
+          comments: this.comments,
+
+          performanceEvaluationResults: this.performanceEvaluationResults,
+
+          
+
+          evaluationComments: this.evaluationComments,
+          dateCreated: this.dateCreated,
+          dateModified: this.dateModified,
+          deadline: this.deadline
+        },
+        withCredentials: false
+      })
+      .then(response => { alert("Form saved") })
+      .catch(error => { console.log(error )})
+
+      console.log(this.computeTotalScore);
+    },
+    async handleSubmit(){
+      this.handleSave();
+      this.performanceEvaluationResults = "Submitted";
+      await axios({
+        url: 'updatePerformanceEvaluationForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+          id: this.id,
+          performanceEvaluationResults: this.performanceEvaluationResults
+        },
+        withCredentials: false
+      })
+      .then(response => { 
+        alert("Form submitted"); 
+      })
+      .catch(error => { console.log(error); })
+    },
+    async handleRejectEvaluation(){
+      if (this.evaluatedBy === "" || 
+          this.evaluatorSignature === "" ||
+          this.evaluatedDate === "") 
+      {
+            alert("Please fill in the evaluation part.");
+            return
+      }
+      this.performanceEvaluationResults = "Evaluation Rejected";
+
+      await axios({
+        url: 'updatePerformanceEvaluationForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+          id: this.id,
+          evaluatedBy: this.evaluatedBy,
+          evaluatorSignature: this.evaluatorSignature,
+          evaluatedDate: this.evaluatedDate,
+          performanceEvaluationResults: this.performanceEvaluationResults
+        },
+        withCredentials: false
+      })
+      .then(response => { 
+        alert("Evaluation rejected"); 
+      })
+      .catch(error => { console.log(error); })
+    },
+    async handleApproveEvaluation(){
+      if (this.evaluatedBy === "" || 
+          this.evaluatorSignature === "" ||
+          this.evaluatedDate === "") 
+      {
+            alert("Please fill in the evaluation part.");
+            return
+      }
+
+      this.performanceEvaluationResults = "Evaluation Approved";
+
+      await axios({
+        url: 'updatePerformanceEvaluationForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+          id: this.id,
+          evaluatedBy: this.evaluatedBy,
+          evaluatorSignature: this.evaluatorSignature,
+          evaluatedDate: this.evaluatedDate,
+          performanceEvaluationResults: this.performanceEvaluationResults
+        },
+        withCredentials: false
+      })
+      .then(response => { 
+        alert("Evaluation approved"); 
+      })
+      .catch(error => { console.log(error); })
+    },
+    async handleRejectForm(){
+      if (this.approvedBy === "" || 
+          this.approverSignature === "" ||
+          this.approvedDate === "") 
+      {
+            alert("Please fill in the approver part.");
+            return
+      }
+
+      this.performanceEvaluationResults = "Form Rejected";
+
+      await axios({
+        url: 'updatePerformanceEvaluationForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+          id: this.id,
+          approvedBy: this.approvedBy,
+          approverSignature: this.approverSignature,
+          evaluatedDate: this.evaluatedDate,
+          performanceEvaluationResults: this.performanceEvaluationResults
+        },
+        withCredentials: false
+      })
+      .then(response => { 
+        alert("Form rejected"); 
+      })
+      .catch(error => { console.log(error); })
+    },
+    async handleApproveForm(){
+      if (this.approvedBy === "" || 
+          this.approverSignature === "" ||
+          this.approvedDate === "") 
+      {
+            alert("Please fill in the approver part.");
+            return
+      }
+
+      this.performanceEvaluationResults = "Form Approved";
+
+      await axios({
+        url: 'updatePerformanceEvaluationForm',
+        method: 'put',
+        baseURL: API_URL,
+        headers: authHeader(),
+        data: {
+          id: this.id,
+          approvedBy: this.approvedBy,
+          approverSignature: this.approverSignature,
+          evaluatedDate: this.evaluatedDate,
+          performanceEvaluationResults: this.performanceEvaluationResults
+        },
+        withCredentials: false
+      })
+      .then(response => { 
+        alert("Form approved"); 
+      })
+      .catch(error => { console.log(error); })
+    }
+  },
   metaInfo: {
     title: 'Form-3 - Quantum VMS',
     meta: [
@@ -2764,11 +3528,11 @@ export default {
   top: 0px;
   left: 0px;
   color: #000000;
-  width: var(--dl-size-size-small);
+  width: var(--dl-size-size-medium);
   position: absolute;
   margin-top: 2px;
   text-align: center;
-  margin-left: 150px;
+  margin-left: 0px;
   border-style: hidden;
   border-radius: var(--dl-radius-radius-round);
   background-color: #c48a1e;
@@ -3289,11 +4053,11 @@ export default {
   top: 0px;
   left: 0px;
   color: #000000;
-  width: var(--dl-size-size-small);
+  width: var(--dl-size-size-medium);
   position: absolute;
   margin-top: 2px;
   text-align: center;
-  margin-left: 150px;
+  margin-left: 0px;
   border-style: hidden;
   margin-right: 0px;
   border-radius: var(--dl-radius-radius-round);
@@ -3815,11 +4579,11 @@ export default {
   top: 0px;
   left: 0px;
   color: #000000;
-  width: var(--dl-size-size-small);
+  width: var(--dl-size-size-medium);
   position: absolute;
   margin-top: 2px;
   text-align: center;
-  margin-left: 150px;
+  margin-left: 0px;
   border-style: hidden;
   margin-right: 0px;
   border-radius: var(--dl-radius-radius-round);
@@ -4341,11 +5105,11 @@ export default {
   top: 0px;
   left: 0px;
   color: #000000;
-  width: var(--dl-size-size-small);
+  width: var(--dl-size-size-medium);
   position: absolute;
   margin-top: 2px;
   text-align: center;
-  margin-left: 150px;
+  margin-left: 0px;
   border-style: hidden;
   margin-right: 0px;
   border-radius: var(--dl-radius-radius-round);
@@ -4867,11 +5631,11 @@ export default {
   top: 0px;
   left: 0px;
   color: #000000;
-  width: var(--dl-size-size-small);
+  width: var(--dl-size-size-medium);
   position: absolute;
   margin-top: 2px;
   text-align: center;
-  margin-left: 150px;
+  margin-left: 0px;
   border-style: hidden;
   margin-right: 0px;
   border-radius: var(--dl-radius-radius-round);
@@ -4905,7 +5669,7 @@ export default {
   top: 0px;
   left: 0px;
   color: #000000;
-  width: var(--dl-size-size-small);
+  width: var(--dl-size-size-medium);
   position: absolute;
   margin-top: 2px;
   text-align: center;
@@ -4917,7 +5681,7 @@ export default {
 }
 .form3-button05 {
   top: 0px;
-  left: 0px;
+  left: 25px;
   position: absolute;
   font-size: 18px;
 }
@@ -4934,7 +5698,7 @@ export default {
   top: 0px;
   left: 0px;
   color: #000000;
-  width: var(--dl-size-size-small);
+  width: var(--dl-size-size-large);
   position: absolute;
   margin-top: 2px;
   text-align: center;
@@ -4970,7 +5734,7 @@ export default {
   position: absolute;
   font-size: 21px;
   font-style: normal;
-  margin-top: -24px;
+  margin-top: -30px;
   font-weight: 500;
 }
 .form3-container-evaluated-by {

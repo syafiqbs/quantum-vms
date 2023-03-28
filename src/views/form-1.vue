@@ -1071,7 +1071,7 @@ export default {
       if (this.accreditationLaboratory) this.accreditationLaboratory = this.accredLabInputField;
       if (this.projectCertification) this.projectCertification = this.projCertInputField;
       if (this.others) this.others = this.evaluationOthersInputField;
-      this.vendorAssessmentResults = "Draft";
+      if (sessionStorage.getItem('role') == "USER") this.vendorAssessmentResults = "Draft";
       await axios({
             url: 'updateVendorAssessmentForm',
             method: 'put',
