@@ -5,7 +5,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
         <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
-    
+        
         <SideBarVendor></SideBarVendor>
         <div class="main">
             <div class="mx-4">
@@ -19,10 +19,9 @@
                             <b-button type="button" class="btn btn-dark float-end" v-b-modal.modal-prevent-closing1>Create</b-button>
                         </div>
                     </div>
-                    <div class="row">
-                      <p>"token: "{{token}}</p>
+                    <!-- <div class="row">
                       <h1>{{vendorToken}}</h1>
-                    </div>
+                    </div> -->
                     
                     <!-- Modal Create-->
                     <b-modal
@@ -41,8 +40,8 @@
                         >
                           <b-form-input
                             id="name-input"
-                            v-model="name"
-                            placeholder="Enter name"
+                            v-model="companyName"
+                            placeholder="Enter Company name"
                             required
                           ></b-form-input>
                         </b-form-group>
@@ -68,8 +67,47 @@
                         >
                           <b-form-input
                             id="contact-input"
-                            v-model="contact"
+                            v-model="contactNumber"
                             placeholder="Enter your Contact Number"
+                            required
+                          ></b-form-input>
+                        </b-form-group>
+
+                        <b-form-group
+                          label="ContactName"
+                          label-for="contact-name-input"
+                          invalid-feedback="Contact Name is required"
+                        >
+                          <b-form-input
+                            id="contact-input"
+                            v-model="name"
+                            placeholder="Enter your Contact's name"
+                            required
+                          ></b-form-input>
+                        </b-form-group>
+
+                        <b-form-group
+                          label="gstRegistrationNumber"
+                          label-for="gstRegistrationNumber"
+                          invalid-feedback="Gst registration number is required"
+                        >
+                          <b-form-input
+                            id="contact-input"
+                            v-model="gstRegistrationNumber"
+                            placeholder="Enter your GST registration number"
+                            required
+                          ></b-form-input>
+                        </b-form-group>
+
+                        <b-form-group
+                          label="natureOfBusiness"
+                          label-for="natureOfBusiness"
+                          invalid-feedback="Nature of Business is required"
+                        >
+                          <b-form-input
+                            id="natureOfBusiness"
+                            v-model="natureOfBusiness"
+                            placeholder="Enter the nature of your business"
                             required
                           ></b-form-input>
                         </b-form-group>
@@ -100,29 +138,29 @@
                       @ok="handleOk2"
                     >
                       <form ref="form" @submit.stop.prevent="handleSubmit">
+                        
                         <b-form-group
                           label="Name"
                           label-for="name-input"
-                          invalid-feedback="Name is required"
+                          invalid-feedback="Company Name is required"
+                        >
+                          <b-form-input
+                            id="name-input"
+                            v-model="companyName"
+                            placeholder="Enter your Company name"
+                            required
+                          ></b-form-input>
+                        </b-form-group>
+
+                        <b-form-group
+                          label="Name"
+                          label-for="name-input"
+                          invalid-feedback="Contact's Name is required"
                         >
                           <b-form-input
                             id="name-input"
                             v-model= "name"
-                            placeholder= "name"
-                            required
-                          ></b-form-input>
-                        </b-form-group>
-    
-                        <b-form-group
-                          label="Email"
-                          label-for="email-input"
-                          invalid-feedback="Email is required"
-                        >
-                          <b-form-input
-                            id="name-input"
-                            v-model="email"
-                            type="email"
-                            placeholder="email"
+                            placeholder= "Enter your new contact's name"
                             required
                           ></b-form-input>
                         </b-form-group>
@@ -134,8 +172,34 @@
                         >
                           <b-form-input
                             id="contact-input"
-                            v-model="contact"
-                            placeholder="contact"
+                            v-model="contactNumber"
+                            placeholder="Enter your new contact's number"
+                            required
+                          ></b-form-input>
+                        </b-form-group>
+
+                        <b-form-group
+                          label="gstRegistrationNumber"
+                          label-for="gstRegistrationNumber"
+                          invalid-feedback="Gst registration number is required"
+                        >
+                          <b-form-input
+                            id="contact-input"
+                            v-model="gstRegistrationNumber"
+                            placeholder="Enter your GST registration number"
+                            required
+                          ></b-form-input>
+                        </b-form-group>
+
+                        <b-form-group
+                          label="natureOfBusiness"
+                          label-for="natureOfBusiness"
+                          invalid-feedback="Nature of Business is required"
+                        >
+                          <b-form-input
+                            id="natureOfBusiness"
+                            v-model="natureOfBusiness"
+                            placeholder="Enter the nature of your business"
                             required
                           ></b-form-input>
                         </b-form-group>
@@ -149,26 +213,34 @@
                     <thead>
                         <tr>
                           <th scope="col">ID</th>
-                          <th scope="col">Name</th>
+                          <th scope="col">Company Name</th>
                           <th scope="col">Email</th>
-                          <th scope="col">Contact No</th>
+                          <th scope="col">Contact Name</th>
+                          <th scope="col">Contact Number</th>
+                          <th scope="col">Registration Number</th>
+                          <th scope="col">Nature of Business</th>
                           <th scope="col">Date Created</th>
                           <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(vendor, k) in vendors" :key="k">
-                          <th scope="row">{{vendor.id}}</th>
-                          <td>{{vendor.name}}</td>
-                          <td>{{vendor.email}}</td>
-                          <td>{{vendor.contactNumber}}</td>
-                          <td>{{vendor.dateCreated}}</td>
-                          <td>
-                            <b-button type="button" class="btn btn-dark mx-1" @click="editRow(k, vendor, $event.target)" ref="btnShow">Edit</b-button>
-                            <b-button type="button" class="btn btn-dark mx-1" @click="deleteRow(k, vendor)">Delete</b-button>
-                          </td>
+
+                            <th scope="row" v-if="vendor.role == 'USER'">{{vendor.id}}</th>
+                            <td v-if="vendor.role == 'USER'">{{vendor.companyName}}</td>
+                            <td v-if="vendor.role == 'USER'">{{vendor.email}}</td>
+                            <td v-if="vendor.role == 'USER'">{{vendor.name}}</td>
+                            <td v-if="vendor.role == 'USER'">{{vendor.contactNumber}}</td>
+                            <td v-if="vendor.role == 'USER'">{{vendor.gstRegistrationNumber}}</td>
+                            <td v-if="vendor.role == 'USER'">{{vendor.natureOfBusiness}}</td>
+                            <td v-if="vendor.role == 'USER'">{{vendor.dateCreated}}</td>
+                            <td v-if="vendor.role == 'USER'">
+                              <b-button type="button" class="btn btn-dark mx-1" @click="editRow(k, vendor, $event.target)" ref="btnShow">Edit</b-button>
+                              <b-button type="button" class="btn btn-dark mx-1" @click="deleteRow(k, vendor)">Delete</b-button>
+                            </td>
+
+
                         </tr>
-    
                     </tbody>
                 </table>
             </div>
@@ -180,6 +252,8 @@
     <script>
     import SideBarVendor from './side-bar';
     import axios from "axios";
+    import UserService from '../services/user.service';
+    import authHeader from '../services/auth-header';
     
     
     
@@ -199,9 +273,14 @@
       },
       data () {
           return {
+            userName: '',
+            userEmail:'',
             name: '',
             email: '',
-            contact: '',
+            contactNumber: '',
+            companyName:'',
+            gstRegistrationNumber:'',
+            natureOfBusiness:'',
             password: '',
             vendors: [],
             token: '',
@@ -209,11 +288,12 @@
             modal: {
               id: 'modal-prevent-closing2',
               name: '',
-              email: '',
-              contact: '',
+              contactNumber: '',
+              companyName :'',
+              gstRegistrationNumber: '',
+              natureOfBusiness : '',
               index: 0
             }
-            
             
             
           }
@@ -224,22 +304,57 @@
             "email" : "admin@admin.com",
             "password" : "123"
         };
-        axios.post("http://localhost:8080/api/v1/auth/user/authenticate", user)
-          .then(response => {
-            this.token = response.data.token
-            axios.get('http://localhost:8080/api/v1/admin/getAllUsers', {headers: {
-              Authorization : `Bearer `+ this.token
-            }})
-            .then(response => this.vendors = response.data)
-            .catch ((error) => {
-              console.log(this.vendors)
-              console.log(error)
-            })
-          }); 
-        
+        this.token = sessionStorage.getItem('user').slice(10,154)
+        console.log("from acc-manager"+this.token)
+        // axios.post("http://localhost:8080/api/v1/auth/user/authenticate", user)
+        //   .then(response => {
+        //     this.token = response.data.token
+        //     console.log("from acc-manager"+this.token)
+        //     this.userEmail = sessionStorage.getItem('email')
+        //     if (sessionStorage.getItem('role') == 'ADMIN') {
+        //       axios.post("http://localhost:8080/api/v1/admin/getAdmin", {
+        //       "email": this.userEmail}, {headers: {
+        //         Authorization : `Bearer `+ this.token
+        //       }})
+        //       .then(response => this.userName = response.data.name)
+        //     } else {
+        //       axios.post("http://localhost:8080/api/v1/vendor/getUser", {
+        //       "email": this.userEmail}, {headers: {
+        //         Authorization : `Bearer `+ this.token
+        //       }})
+        //       .then(response => this.userName = response.data.name)
+        //     }
+            
+            
+        axios.get('http://localhost:8080/api/v1/admin/getAllUsers', {headers: {
+          Authorization : `Bearer `+ this.token
+        }})
+        .then(response => this.vendors = response.data)
+        .catch ((error) => {
+          console.log(this.vendors)
+          console.log(error)
+        })
+          // }); 
+
+      },
+      computed: {
+        currentUser() {
+        return this.$store.state.auth.user;
+        }
+      },
+      mounted() {
+        if (!this.currentUser) {
+          this.$router.push('/login');
+        }
       },
       
       methods: {
+          checkRole() {
+                return sessionStorage.getItem('role');
+            },
+          checkUser() {
+                return sessionStorage.getItem('user');
+            },
           getUsers() {
             axios.get('http://localhost:8080/api/v1/admin/getAllUsers', {headers: {
               Authorization : `Bearer `+ this.token
@@ -252,24 +367,34 @@
             })
           },
           deleteRow(index, vendor) {
-            axios.delete('http://localhost:8080/api/v1/admin/deleteUser', {
+            console.log(vendor.email)
+            axios.delete('http://localhost:8080/api/v1/admin/deleteUser',{
               headers: {
                 Authorization : `Bearer `+ this.token
-              },
+              }, 
               data: {
                 "email": vendor.email
               }
             })
-            console.log(vendor.email)
+            .then(response => {
+                 console.log(response);
+             })
+            .catch ((error) => {
+              console.log(error.response.data)
+            })
             if (index > -1) {
-              this.vendors.splice(index, 1);
-            }
+                  this.vendors.splice(index, 1);
+              }
           },
           resetModal() {
             this.name = ''
             this.email = ''
-            this.contact = ''
-            this.password = ''
+            this.contactNumber = ''
+            this.password = '',
+            this.companyName ='',
+            this.gstRegistrationNumber ='',
+            this.natureOfBusiness = ''
+
           },
           handleOk(bvModalEvent) {
             // Prevent modal from closing
@@ -282,8 +407,11 @@
             const user = {
                 "name" : this.name,
                 "email" : this.email,
-                "contactNumber" : this.contact,
-                "password" : this.password
+                "contactNumber" : this.contactNumber,
+                "companyName" : this.companyName,
+                "gstRegistrationNumber": this.gstRegistrationNumber,
+                "natureOfBusiness": this.natureOfBusiness,
+                "password" : this.password,
             };
             console.log(this.token);
             console.log(user)
@@ -312,26 +440,57 @@
           },
           editRow(index, vendor, button) {
             this.modal.name = vendor.name
+            this.modal.contactNumber = vendor.contactNumber
             this.modal.email = vendor.email
-            this.modal.contact = vendor.contact
+            this.modal.companyName = vendor.companyName
+            this.modal.gstRegistrationNumber = vendor.gstRegistrationNumber
+            this.modal.natureOfBusiness = vendor.natureOfBusiness
             this.modal.index = index
+            console.log("opening modal: what is this.modal.name?" +this.modal.name)
             this.$root.$emit('bv::show::modal', this.modal.id, 'btnShow')
-    
+            
           },   
           handleOk2(bvModalEvent) {
             // Prevent modal from closing
             bvModalEvent.preventDefault()
             // Trigger edit handler
+            console.log("what does this do?")
             this.handleSubmit2()
           },
           handleSubmit2() {
             // Push the name to submitted names
-            this.vendors[this.modal.index] = {
-              name : this.name,
-              email : this.email,
-              contact : this.contact
+            // this.vendors[this.modal.index] = {
+            //   name : this.name,
+            //   email : this.email,
+            //   contactNumber : this.contactNumber
+            // }
+            console.log("press ok than got this function")
+            console.log("les check what is this.name"+ this.modal.email)
+            console.log("check if token is correct"+ this.token)
+            const user = {
+              "name" : this.name,
+              "email" : this.email,
+              "contactNumber" : this.contactNumber,
+              "companyName" : this.companyName,
+              "gstRegistrationNumber": this.gstRegistrationNumber,
+              "natureOfBusiness": this.natureOfBusiness
             }
-    
+            axios.put("http://localhost:8080/api/v1/admin/updateUser", user, {headers: {
+              Authorization : `Bearer ` + this.token
+            }})
+            .then(response => {
+                axios.get('http://localhost:8080/api/v1/admin/getAllUsers', {headers: {
+                Authorization : `Bearer `+ this.token
+              }})
+              .then(response => this.vendors = response.data)
+              .catch ((error) => {
+                console.log(this.vendors)
+                console.log(error)
+              })
+            })
+            .catch ((error) => {
+              console.log(error)
+            })
             this.$nextTick(() => {
               this.$bvModal.hide('modal-prevent-closing2')
             })

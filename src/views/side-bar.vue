@@ -7,14 +7,70 @@
         <a href="#accountManager"><i class="fa fa-fw fa-user"></i> Account Manager</a>
         <a href="#workflow"><i class="fa fa-fw fa-sticky-note"></i> Workflows</a>
         <div style="position:absolute; bottom:0;">
-          <a href="#vendor1"><i class="fa fa-fw fa-user-circle"></i> Vendor1</a>
+          <a href="#vendor1"><i class="fa fa-fw fa-user-circle"></i> {{this.userName}}</a>
           <a href="#settings"><i class="fa fa-fw fa-gear"></i> Settings</a>
           <a href @click.prevent="logOut"><i class="fa fa-fw fa-arrow-circle-o-right"></i> Logout</a>
         </div>
+
+
+        <b-modal
+          id="modal-change-password"
+          ref="modal"
+          title="Create new vendor"
+          @show="resetModal"
+          @hidden="resetModal"
+          @ok="handleOk"
+        >
+          <form ref="form" @submit.stop.prevent="handleSubmit">
+            <b-form-group
+              label="Email"
+              label-for="email-input"
+              invalid-feedback="Email is required"
+            >
+              <b-form-input
+                id="email-input"
+                v-model="inputEmail"
+                type="email"
+                placeholder="Enter email"
+                required
+              ></b-form-input>
+            </b-form-group>
+
+            <b-form-group
+              label="CurrentPassword"
+              label-for="CurrentPassword"
+              invalid-feedback="Current Password Invalid"
+            >
+              <b-form-input
+                id="CurrentPassword"
+                v-model="oldPassword"
+                placeholder="Enter your Current Password"
+                required
+              ></b-form-input>
+            </b-form-group>
+
+            <b-form-group
+              label="NewPassword"
+              label-for="password"
+              invalid-feedback="Password is required"
+            >
+              <b-form-input
+                id="password"
+                v-model="newPassword"
+                placeholder="Enter your new password"
+                required
+              ></b-form-input>
+            </b-form-group>
+
+          </form>
+        </b-modal>
     </div>
 </template>
   
 <script>
+  import axios from "axios";
+  import UserService from '../services/user.service';
+  import authHeader from '../services/auth-header';
 
 export default {
 name: 'SideBarVendor',
@@ -27,12 +83,73 @@ metaInfo: {
     },
     ],
 },
+created() {
+  this.token = sessionStorage.getItem('user').slice(10,154)
+  
+  this.userEmail = sessionStorage.getItem('email')
+  console.log("from sidebar"+this.token)
+  this.role = sessionStorage.getItem('role')
+  if (this.role == 'ADMIN') {
+    axios.post("http://localhost:8080/api/v1/admin/getAdmin", {
+    "email": this.userEmail}, {headers: {
+      Authorization : `Bearer `+ this.token
+    }})
+    .then(response => this.userName = response.data.name)
+  } else {
+    axios.post("http://localhost:8080/api/v1/vendor/getUser", {
+    "email": this.userEmail}, {headers: {
+      Authorization : `Bearer `+ this.token
+    }})
+    .then(response => this.userName = response.data.name)
+  }
+},
+data () {
+  return {
+    userName: '',
+    userEmail:'',
+    inputEmail:'',
+    oldPassword:'',
+    newPassword: '',
+    token:'',
+    role: ''
+  }
+},
 methods: {
   logOut() {
     alert("Click OK to logout");
     this.$store.dispatch('auth/logout');
     this.$router.push('/');
-  }
+  },
+  resetModal() {
+    this.inputEmail = ''
+    this.oldPassword = ''
+    this.newPassword = ''
+  },
+  handleOk(bvModalEvent) {
+    // Prevent modal from closing
+    bvModalEvent.preventDefault()
+    // Trigger submit handler
+    this.handleSubmit()
+  },
+  handleSubmit() {
+    // Push the name to submitted names
+    const account = {
+        "email" : this.inputEmail,
+        "oldPassword" : this.oldPassword,
+        "newPassword" : this.newPassword
+    };
+    axios.post("http://localhost:8080/api/v1/auth/user/changePassword", account, {headers: {
+      Authorization : `Bearer ` + this.token
+    }})
+    .then(response => console.log(response))
+    .catch ((error) => {
+      console.log(error)
+    })
+    
+    this.$nextTick(() => {
+      this.$bvModal.hide('modal-change-password')
+    })
+  },
 }
 }
 </script>
