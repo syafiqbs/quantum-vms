@@ -4,8 +4,9 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <a href="#logo"><img src="/playground_assets/qlogo.png" style="width:200px;height:170px;"/></a>
-        <a href="#accountManager"><i class="fa fa-fw fa-user"></i> Account Manager</a>
-        <a href="#workflow"><i class="fa fa-fw fa-sticky-note"></i> Workflows</a>
+        <a href="/acc-manager"><i class="fa fa-fw fa-user"></i> Account Manager</a>
+        <a href="/workflow"><i class="fa fa-fw fa-sticky-note"></i> Workflows</a>
+        <a href="#changePassword" v-b-modal.modal-change-password><i class="fa fa-fw fa-lock"></i> Change Password</a>
         <div style="position:absolute; bottom:0;">
           <a href="#vendor1"><i class="fa fa-fw fa-user-circle"></i> {{this.userName}}</a>
           <a href="#settings"><i class="fa fa-fw fa-gear"></i> Settings</a>
