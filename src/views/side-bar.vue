@@ -17,7 +17,7 @@
         <b-modal
           id="modal-change-password"
           ref="modal"
-          title="Create new vendor"
+          title="Reset Password"
           @show="resetModal"
           @hidden="resetModal"
           @ok="handleOk"

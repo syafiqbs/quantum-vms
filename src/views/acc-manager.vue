@@ -16,23 +16,108 @@
                     <div class="row">
                         <p class="col">Overview of vendor accounts</p> 
                         <div class="col">
-                            <b-button type="button" class="btn btn-dark float-end" v-b-modal.modal-prevent-closing1>Create</b-button>
+                            <b-button type="button" class="btn btn-dark float-end" v-b-modal.modal-create-vendor>Create</b-button>
                         </div>
                     </div>
-                    <!-- <div class="row">
-                      <h1>{{vendorToken}}</h1>
-                    </div> -->
+                    
+                    <b-modal
+                      id="modal-create-vendor"
+                      ref="modal"
+                      :scrollable = true
+                      title="Create new vendor"
+                      @show="resetModal"
+                      @hidden="resetModal"
+                      hide-footer
+                    >
+                      <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+                        
+                        <b-form-group id="input-group-1" label="Company Name:" label-for="input-1">
+                          <b-form-input
+                            id="input-1"
+                            v-model="companyName"
+                            placeholder="Enter Company name"
+                            required
+                          ></b-form-input>
+                        </b-form-group>
+
+                        <b-form-group id="input-group-2" label="Email address:" label-for="input-2">
+                          <b-form-input
+                              id="input-2"
+                              v-model="email"
+                              type="email"
+                              placeholder="Enter email"
+                              required
+                            ></b-form-input>
+                          </b-form-group>
+
+                          <b-form-group id="input-group-3" label="Contact Name:" label-for="input-3">
+                            <b-form-input
+                              id="input-3"
+                              v-model="name"
+                              placeholder="Enter Company name"
+                              required
+                            ></b-form-input>
+                          </b-form-group>
+
+                          <b-form-group id="input-group-4" label="Contact Number:" label-for="input-4">
+                            <b-form-input
+                              id="input-4"
+                              v-model="contactNumber"
+                              placeholder="Enter Company number"
+                              required
+                            ></b-form-input>
+                          </b-form-group>
+
+                          <b-form-group id="input-group-5" label="Registration Number:" label-for="input-5">
+                            <b-form-input
+                              id="input-5"
+                              v-model="gstRegistrationNumber"
+                              placeholder="Enter Registration Number"
+                              required
+                            ></b-form-input>
+                          </b-form-group>
+
+                          <b-form-group id="input-group-6" label="Nature of Business:" label-for="input-6">
+                            <b-form-input
+                              id="input-6"
+                              v-model="natureOfBusiness"
+                              placeholder="Enter the nature of your business"
+                              required
+                            ></b-form-input>
+                          </b-form-group>
+
+                          <b-form-group id="input-group-6" label="Password" label-for="input-6">
+                            <b-form-input
+                              id="input-6"
+                              v-model="password"
+                              :state = "validation"
+                              placeholder="Enter your password"
+                              required
+                            ></b-form-input>
+                            <b-form-invalid-feedback :state="validation">
+                              Your password must be 5-12 characters long.
+                            </b-form-invalid-feedback>
+                            <b-form-valid-feedback :state="validation">
+                              Looks Good.
+                            </b-form-valid-feedback>
+                          </b-form-group>
+
+                          <b-button type="submit" variant="primary">Submit</b-button>
+                          <div></div>
+                      </b-form>
+
+                    </b-modal>
                     
                     <!-- Modal Create-->
-                    <b-modal
-                      id="modal-prevent-closing1"
+                    <!-- <b-modal
+                      id="modal-create-vendor"
                       ref="modal"
                       title="Create new vendor"
                       @show="resetModal"
                       @hidden="resetModal"
                       @ok="handleOk"
                     >
-                      <form ref="form" @submit.stop.prevent="handleSubmit">
+                      <b-form ref="form" @submit.stop.prevent="handleSubmit" v-if="valid">
                         <b-form-group
                           label="Name"
                           label-for="name-input"
@@ -125,23 +210,23 @@
                           ></b-form-input>
                         </b-form-group>
 
-                      </form>
-                    </b-modal>
+                      </b-form>
+                    </b-modal> -->
     
                     <!-- Modal Edit-->
                     <b-modal
-                      id="modal-prevent-closing2"
+                      id="modal-edit-vendor"
                       ref="modal"
-                      title="Edit Name"
+                      title="Edit Vendor"
                       @show="resetModal"
                       @hidden="resetModal"
                       @ok="handleOk2"
                     >
-                      <form ref="form" @submit.stop.prevent="handleSubmit">
+                      <form ref="form" @submit.stop.prevent="handleSubmit2">
                         
                         <b-form-group
-                          label="Name"
-                          label-for="name-input"
+                          label="Company Name"
+                          label-for="Company name-input"
                           invalid-feedback="Company Name is required"
                         >
                           <b-form-input
@@ -153,8 +238,8 @@
                         </b-form-group>
 
                         <b-form-group
-                          label="Name"
-                          label-for="name-input"
+                          label="Contact Name"
+                          label-for="Contact name-input"
                           invalid-feedback="Contact's Name is required"
                         >
                           <b-form-input
@@ -166,7 +251,7 @@
                         </b-form-group>
     
                         <b-form-group
-                          label="ContactNo"
+                          label="Contact Number"
                           label-for="contact-input"
                           invalid-feedback="Contact Number is required"
                         >
@@ -179,12 +264,12 @@
                         </b-form-group>
 
                         <b-form-group
-                          label="gstRegistrationNumber"
-                          label-for="gstRegistrationNumber"
+                          label="GST Registration Number"
+                          label-for="gst Registration Number"
                           invalid-feedback="Gst registration number is required"
                         >
                           <b-form-input
-                            id="contact-input"
+                            id="gst-registration-number"
                             v-model="gstRegistrationNumber"
                             placeholder="Enter your GST registration number"
                             required
@@ -192,8 +277,8 @@
                         </b-form-group>
 
                         <b-form-group
-                          label="natureOfBusiness"
-                          label-for="natureOfBusiness"
+                          label="Nature of Business"
+                          label-for="nature Of Business"
                           invalid-feedback="Nature of Business is required"
                         >
                           <b-form-input
@@ -285,8 +370,9 @@
             vendors: [],
             token: '',
             vendorToken: '',
+            show: true, // test
             modal: {
-              id: 'modal-prevent-closing2',
+              id: 'modal-edit-vendor',
               name: '',
               contactNumber: '',
               companyName :'',
@@ -340,6 +426,9 @@
       computed: {
         currentUser() {
         return this.$store.state.auth.user;
+        },
+        validation() {
+        return this.password.length > 4 && this.password.length < 13
         }
       },
       mounted() {
@@ -349,6 +438,58 @@
       },
       
       methods: {
+        onSubmit(event) {
+        event.preventDefault()
+        const user = {
+                "name" : this.name,
+                "email" : this.email,
+                "contactNumber" : this.contactNumber,
+                "companyName" : this.companyName,
+                "gstRegistrationNumber": this.gstRegistrationNumber,
+                "natureOfBusiness": this.natureOfBusiness,
+                "password" : this.password,
+            };
+            console.log(this.token);
+            console.log(user)
+            axios.post("http://localhost:8080/api/v1/auth/admin/register", user, {headers: {
+              Authorization : `Bearer ` + this.token
+            }})
+            .then(response => {
+                this.vendors.push(user)
+                axios.get('http://localhost:8080/api/v1/admin/getAllUsers', {headers: {
+                Authorization : `Bearer `+ this.token
+              }})
+              .then(response => this.vendors = response.data)
+              .catch ((error) => {
+                console.log(this.vendors)
+                console.log(error)
+              })
+            })
+            .catch ((error) => {
+              console.log(error)
+            })
+            
+    
+            this.$nextTick(() => {
+              this.$bvModal.hide('modal-create-vendor')
+            })
+      },
+      onReset(event) {
+        event.preventDefault()
+        // Reset our form values
+        this.name = ''
+        this.email = ''
+        this.contactNumber = ''
+        this.password = '',
+        this.companyName ='',
+        this.gstRegistrationNumber ='',
+        this.natureOfBusiness = ''
+        // Trick to reset/clear native browser form validation state
+        this.show = false
+        this.$nextTick(() => {
+          this.show = true
+        })
+      }, // test
           checkRole() {
                 return sessionStorage.getItem('role');
             },
@@ -386,6 +527,12 @@
                   this.vendors.splice(index, 1);
               }
           },
+          checkFormValidity() {
+            
+
+            this.nameState = valid
+            return valid
+          },
           resetModal() {
             this.name = ''
             this.email = ''
@@ -394,7 +541,6 @@
             this.companyName ='',
             this.gstRegistrationNumber ='',
             this.natureOfBusiness = ''
-
           },
           handleOk(bvModalEvent) {
             // Prevent modal from closing
@@ -435,7 +581,7 @@
             
     
             this.$nextTick(() => {
-              this.$bvModal.hide('modal-prevent-closing1')
+              this.$bvModal.hide('modal-create-vendor')
             })
           },
           editRow(index, vendor, button) {
@@ -469,12 +615,13 @@
             console.log("check if token is correct"+ this.token)
             const user = {
               "name" : this.name,
-              "email" : this.email,
+              "email" : this.modal.email,
               "contactNumber" : this.contactNumber,
               "companyName" : this.companyName,
               "gstRegistrationNumber": this.gstRegistrationNumber,
               "natureOfBusiness": this.natureOfBusiness
             }
+            console.log("show what is user" +user.name + user.email + user.companyName+user.gstRegistrationNumber)
             axios.put("http://localhost:8080/api/v1/admin/updateUser", user, {headers: {
               Authorization : `Bearer ` + this.token
             }})
