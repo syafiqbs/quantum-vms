@@ -6,11 +6,11 @@
           <span class="form1-text HeadingH2Regular">
             <span>Quantum VMS</span>
           </span>
-          <div class="form1-frame11" @click.prevent="handleHome">
+          <div class="form1-frame11">
             <div class="form1-frame10">
-              <span class="form1-text002 ParagraphNormalRegular">
+              <router-link to="/workflow" class="form1-text002 ParagraphNormalRegular form1-link">
                 <span>Home</span>
-              </span>
+              </router-link>
               <!-- <span class="form1-text004 ParagraphNormalRegular">
                 <span>Logout</span>
               </span> -->
@@ -66,18 +66,18 @@
         </div>
         <div class="form1-tab1">
           <div class="form1-frame112">
-            <a href="#form1-radio-gst">
+            <a href="#form1-radio-gst" class="form1-link">
               <div class="form1-frame102">
-                <span class="form1-text022 ParagraphSmallRegular">Step 2</span>
+                <span class="form1-text022 ParagraphSmallBold">Step 2</span>
               </div>
             </a>
           </div>
         </div>
         <div class="form1-tab2">
           <div class="form1-frame113">
-            <a href="#form1-input-person1-name">
+            <a href="#form1-input-person1-name" class="form1-link">
             <div class="form1-frame103">
-                <span class="form1-text023 ParagraphSmallRegular">
+                <span class="form1-text023 ParagraphSmallBold">
                   <span>Step 3</span>
                 </span>
               </div>
@@ -690,7 +690,7 @@
               name="form1-radio-evalResult"
               value="Approved"
               class="form1-radiobutton18"
-              :disabled="!isAdminOrApprover"
+              :disabled="!isAdminOrApprover && !isApprover"
               v-model="evaluation"
             />
             <label class="form1-text114">Approved</label>
@@ -701,7 +701,7 @@
               name="form1-radio-evalResult"
               value="Not Approved"
               class="form1-radiobutton19"
-              :disabled="!isAdminOrApprover"
+              :disabled="!isAdminOrApprover && !isApprover"
               v-model="evaluation"
             />
             <label class="form1-text115">Not Approved</label>
@@ -717,7 +717,7 @@
             type="text"
             id="form1-input-evaluatedBy-name"
             class="form1-inpuit-vendorEvaluation input"
-            :disabled="!isAdminOrApprover"
+            :disabled="!isAdminOrApprover && !isApprover"
             v-model="evaluatedBy"
           />
         </div>
@@ -757,7 +757,7 @@
             type="text"
             id="form1-input-evaluatedBy-sig"
             class="form1-inpuit-vendorEvaluation input"
-            :disabled="!isAdminOrApprover"
+            :disabled="!isAdminOrApprover && !isApprover"
             v-model="evaluatorSignature"
           />
         </div>
@@ -783,10 +783,10 @@
         <input id="form1-btn-submit" type="submit" class="form1-button1" v-if="isVendor" value="Submit">
           <!-- <span class="form1-text135 ParagraphNormalRegular">Submit</span>
         </button> -->
-        <button id="form1-btn-rejectEval" class="form1-button2" v-if="isAdminOrApprover" @click.prevent="handleRejectEvaluation">
+        <button id="form1-btn-rejectEval" class="form1-button2" v-if="(isAdminOrApprover || isApprover) && !notEvaluated" @click.prevent="handleRejectEvaluation">
           <span class="form1-text136 ParagraphNormalRegular">Reject Evaluation</span>
         </button>
-        <button id="form1-btn-approveEval" type="button" class="form1-button3" v-if="isAdminOrApprover" @click.prevent="handleApproveEvaluation">
+        <button id="form1-btn-approveEval" type="button" class="form1-button3" v-if="(isAdminOrApprover || isApprover) && !notEvaluated" @click.prevent="handleApproveEvaluation">
           <span class="form1-text137 ParagraphNormalRegular">Approve Evaluation</span>
         </button>
         <button id="form1-disapproveForm" type="button" class="form1-button4" v-if="isApprover" @click.prevent="handleRejectForm">
@@ -820,6 +820,7 @@ export default {
       rawl2sy: ' ',
       businessTypesArr: ['Sole Proprietorship', 'Limited Company', 'Partnership Agreement'],
       businessNaturesArr: ['Manufacturing', 'Agent/dealer', 'Distributor'],
+      notEvaluated: false,
 
       // UI control
       bizTypeInput: true,
@@ -913,7 +914,6 @@ export default {
         })
       .then(response => {
         var result = response.data;
-        console.log(result);
         this.companyName = result.companyName;
         this.companyRegistrationNo = result.companyRegistrationNo;
         this.companyAddress = result.companyAddress;
@@ -1009,9 +1009,14 @@ export default {
         this.isAdminOrApprover = false;
         this.isApprover = false;
       }
-      else{
+      else if (role == "ADMIN") {
         this.isVendor = false;
         this.isAdminOrApprover = true;
+        this.isApprover = false; 
+      }
+      else { // APPROVER
+        this.isVendor = false;
+        this.isAdminOrApprover = false;
         this.isApprover = true; 
       }
     }
@@ -1035,10 +1040,7 @@ export default {
       
   },
   methods: {
-    handleHome(){
-      alert("Redirecting to home page");
-      this.$router.push('/workflow');
-    },
+    
     checkBizTypeState(event){
       var radioElementBizType = event.target;
       radioElementBizType.id ? this.bizTypeInput = false : this.bizTypeInput = false
@@ -1064,7 +1066,7 @@ export default {
       evalOthersCheckboxEle.checked ? this.evalOthersInput = false : this.evalOthersCheckboxEle = true;
     },
     async handleSave(){
-      
+      this.notEvaluated = false;
       if (this.businessType == "Others") this.businessType = this.businessTypeOthers;
       if (this.businessNature == "Others") this.businessNature = this.businessNatureOthers;
       if (this.iso9001) this.iso9001 = this.isoInputField;
@@ -1114,14 +1116,13 @@ export default {
             },
             withCredentials: false
         })
-      .then(response => { alert("Form saved"); console.log(response) })
+      .then(response => { alert("Form saved"); })
       .catch(error => { console.log(error); })
        
 
     },
     async handleSubmit(){
-      console.log("submit button clicked");
-      this.handleSave();
+      await this.handleSave();
       this.vendorAssessmentResults = "Submitted";
       await axios({
         url: 'updateVendorAssessmentForm',
@@ -1145,6 +1146,7 @@ export default {
         alert("Please reject evaluation first");
         return
       }
+      this.notEvaluated = true;
       this.vendorAssessmentResults = "Evaluation Rejected";
       await axios({
         url: 'updateVendorAssessmentForm',
@@ -1172,6 +1174,7 @@ export default {
         alert("Invalid evaluator");
         return
       }
+      this.notEvaluated = true
       this.vendorAssessmentResults = "Evaluation Approved";
       await axios({
         url: 'updateVendorAssessmentForm',
@@ -1181,6 +1184,8 @@ export default {
         data: {
           id: this.id,
           evaluation: this.evaluation,
+          evaluatedBy: this.evaluatedBy,
+          evaluatorSignature: this.evaluatorSignature,
           vendorAssessmentResults: this.vendorAssessmentResults
         },
         withCredentials: false
@@ -2915,6 +2920,8 @@ export default {
   border-radius: 7.999999523162842px;
   justify-content: center;
   background-color: var(--dl-color-default-black4);
+  color: white;
+  
 }
 .form1-text135 {
   color: var(--dl-color-neutral-6);
