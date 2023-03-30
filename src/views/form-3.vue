@@ -4,9 +4,11 @@
       <div class="form3-header-horizontal">
         <div class="form3-frame12">
           <span class="form3-text"><span>Quantum VMS</span></span>
-          <div class="form3-frame11" @click.prevent="handleHome">
+          <div class="form3-frame11">
             <div class="form3-frame10">
-              <span class="form3-text002"><span>Home</span></span>
+              <router-link to="/workflow" class="form1-text002 ParagraphNormalRegular form3-link">
+                <span>Home</span>
+              </router-link>
             </div>
           </div>
         </div>
@@ -92,7 +94,7 @@
           </div>
         </div>
       </div>
-      <form @submit="handleSubmit">
+      <form @submit.prevent="handleSubmit">
         <div class="form3-container-contractor-info">
           <div class="form3-inputtext">
             <span class="form3-text032"><span>Name of Contractor</span></span>
@@ -1854,6 +1856,7 @@
             <span class="form3-text229">Comments</span>
           </div>
         </div>
+      
       <div class="form3-container-evaluated-by">
         <div class="form3-container05">
           <span class="form3-text230">Evaluated By</span>
@@ -1862,7 +1865,8 @@
             id="form3-input-evaluatedByName"
             required
             class="form3-textinput11 input"
-            :disabled="isAdminOrApprover"
+            :disabled="!isAdminOrApprover && !isApprover"
+            v-model="evaluatedBy"
           />
         </div>
         <div class="form3-container06">
@@ -1872,7 +1876,8 @@
             id="form3-input-evaluatedBySig"
             required
             class="form3-textinput12 input"
-            :disabled="isAdminOrApprover"
+            :disabled="!isAdminOrApprover && !isApprover"
+            v-model="evaluatorSignature"
           />
         </div>
         <div class="form3-container07">
@@ -1882,7 +1887,8 @@
             id="form3-input-evaluatedByDate"
             required
             class="form3-textinput13 input"
-            :disabled="isAdminOrApprover"
+            :disabled="!isAdminOrApprover && !isApprover"
+            v-model="dateEvaluated"
           />
         </div>
       </div>
@@ -1894,7 +1900,9 @@
             id="form3-input-approvedByName"
             required
             class="form3-textinput14 input"
-            :disabled="isApprover"
+            :disabled="!isApprover"
+            v-model="approvedBy"
+            
           />
         </div>
         <div class="form3-container09">
@@ -1904,7 +1912,8 @@
             id="form3-input-approvedBySig"
             required
             class="form3-textinput15 input"
-            :disabled="isApprover"
+            :disabled="!isApprover"
+            v-model="approverSignature"
           />
         </div>
         <div class="form3-container10">
@@ -1914,7 +1923,8 @@
             id="form3-input-approvedByDate"
             required
             class="form3-textinput16 input"
-            :disabled="isApprover"
+            :disabled="!isApprover"
+            v-model="dateApproved"
           />
         </div>
       </div>
@@ -1922,13 +1932,13 @@
         <button id="form3-btn-save" type="button" class="form3-button07" @click.prevent="handleSave">
           <span class="form3-text240 ParagraphNormalRegular">Save</span>
         </button>
-        <input id="form3-btn-submit" type="submit" class="form3-button08" v-if="isVendor"/>
+        <input id="form3-btn-submit" type="submit" class="form3-button08" v-if="isVendor">
           <!-- <span class="form3-text241 ParagraphNormalRegular">Submit</span>
         </button> -->
-        <button id="form3-btn-rejectEvaluation" class="form3-button09" v-if="!isAdminOrApprover" @click.prevent="handleRejectEvaluation">
+        <button id="form3-btn-rejectEvaluation" class="form3-button09" v-if="(isAdminOrApprover && !evaluatedCheck) || (isApprover && evaluatedCheck)" @click.prevent="handleRejectEvaluation">
           <span class="form3-text242 ParagraphNormalRegular">Reject Evaluation</span>
         </button>
-        <button id="form3-btn-approveEvaluation" type="button" class="form3-button10" v-if="!isAdminOrApprover" @click.prevent="handleApproveEvaluation">
+        <button id="form3-btn-approveEvaluation" type="button" class="form3-button10" v-if="(isAdminOrApprover && !evaluatedCheck) || (isApprover && evaluatedCheck)" @click.prevent="handleApproveEvaluation">
           <span class="form3-text243 ParagraphNormalRegular">Approve Evaluation</span>
         </button>
         <button
@@ -1937,7 +1947,7 @@
           class="form3-button11"
           v-if="isApprover"
           @click.prevent="handleRejectForm"
-        >
+        > 
           <span class="form3-text244 ParagraphNormalRegular">
             Disapprove Form
           </span>
@@ -2023,10 +2033,19 @@ export default {
       comments: '',
       performanceEvaluationResults: null,
 
+      evaluatedBy: '',
+      evaluatorSignature: '',
+      dateEvaluated: '',
+      approvedBy: '',
+      approverSignature: '',
+      dateApproved: '',
+
       evaluationComments: null,
       dateCreated: null,
       dateModified: null,
-      deadline: null
+      deadline: null,
+
+      evaluatedCheck: false,
     }
   },
   async mounted() {
@@ -2045,9 +2064,7 @@ export default {
     })
     .then(response => {
       var result = response.data;
-      console.log(result);
-
-
+      
       this.contractorName= result.contractorName;
       this.trade= result.trade;
       this.projectWorksite= result.projectWorksite;
@@ -2094,13 +2111,13 @@ export default {
 
       this.performanceEvaluationResults= result.performanceEvaluationResults;
 
-      // this.evaluatedBy= result.evaluatedBy;
-      // this.evaluatorSignature= result.evaluatorSignature;
-      // this.evaluatedDate = result.evaluatedDate;
-      // this.approvedBy= result.approvedBy;
-      // this.approverSignature= result.approverSignature;
-      // this.effectiveDate= result.effectiveDate;
-      // this.approvedDate = result.approvedDate;
+      this.evaluatedBy= result.evaluatedBy;
+      this.evaluatorSignature= result.evaluatorSignature;
+      this.dateEvaluated = result.dateEvaluated;
+      this.approvedBy= result.approvedBy;
+      this.approverSignature= result.approverSignature;
+      this.effectiveDate= result.effectiveDate;
+      this.dateApproved = result.dateApproved;
 
       this.evaluationComments= result.evaluationComments;
       this.dateCreated= result.dateCreated;
@@ -2113,7 +2130,6 @@ export default {
 
         // fetch role
     var role = sessionStorage.getItem('role');
-    console.log(role);
 
     // control inputs based on form status
     if (this.performanceEvaluationResults == "Draft" ||
@@ -2137,9 +2153,14 @@ export default {
         this.isAdminOrApprover = false;
         this.isApprover = false;
       }
-      else{
+      else if (role == "ADMIN") {
         this.isVendor = false;
         this.isAdminOrApprover = true;
+        this.isApprover = false; 
+      }
+      else { // APPROVER
+        this.isVendor = false;
+        this.isAdminOrApprover = false;
         this.isApprover = true; 
       }
     }
@@ -2188,30 +2209,29 @@ export default {
               parseInt(this.storehouseKeepingCleanliness) + parseInt(this.quarterhouseKeepingCleanliness);
     },
     computeTotalScore(){
-      return (((parseInt(this.computePartOneScore) + parseInt(this.computePartTwoScore) + 
+      return Math.round((((
+        parseInt(this.computePartOneScore) + 
+        parseInt(this.computePartTwoScore) + 
         parseInt(this.computePartThreeScore) +
-        parseInt(this.computePartFourScore) + parseInt(this.computePartFiveScore))
-        /(25*5)) * 100) + "%";
+        parseInt(this.computePartFourScore) + 
+        parseInt(this.computePartFiveScore)) / (25*5)) * 100)) + "%";
     },
     computeOverall(){
       let totalScore = parseInt(this.computeTotalScore);
-      let res = "";
+      let overallperformancestandard = "";
 
-      if (totalScore >= 85) res = "Good";
-      else if (totalScore >= 65) res = "Above Average";
-      else if (totalScore >= 50) res = "Average";
-      else if (totalScore >= 40) res = "Below Average";
-      else res = "Poor";
+      if (totalScore >= 85) overallperformancestandard = "Good";
+      else if (totalScore >= 65) overallperformancestandard = "Above Average";
+      else if (totalScore >= 50) overallperformancestandard = "Average";
+      else if (totalScore >= 40) overallperformancestandard = "Below Average";
+      else overallperformancestandard = "Poor";
 
-      return res
+      return overallperformancestandard
     }
   },
   methods: {
-    handleHome(){
-      alert("Redirecting to home page");
-      this.$router.push('/workflow');
-    },
     async handleSave(){
+      this.evaluatedCheck = false;
       if (sessionStorage.getItem('role') == "USER") this.performanceEvaluationResults = "Draft";
       await axios({
         url: 'updatePerformanceEvaluationForm',
@@ -2262,12 +2282,10 @@ export default {
           partFiveScore: this.partFiveScore,
 
           totalScore: this.totalScore,
-          
+          overallPerformanceStandard: this.overallPerformanceStandard,
           comments: this.comments,
 
           performanceEvaluationResults: this.performanceEvaluationResults,
-
-          
 
           evaluationComments: this.evaluationComments,
           dateCreated: this.dateCreated,
@@ -2278,11 +2296,10 @@ export default {
       })
       .then(response => { alert("Form saved") })
       .catch(error => { console.log(error )})
-
-      console.log(this.computeTotalScore);
     },
     async handleSubmit(){
-      this.handleSave();
+      console.log('submit');
+      await this.handleSave();
       this.performanceEvaluationResults = "Submitted";
       await axios({
         url: 'updatePerformanceEvaluationForm',
@@ -2301,15 +2318,16 @@ export default {
       .catch(error => { console.log(error); })
     },
     async handleRejectEvaluation(){
-      if (this.evaluatedBy === "" || 
-          this.evaluatorSignature === "" ||
-          this.evaluatedDate === "") 
+      if (!this.evaluatedBy  || 
+          !this.evaluatorSignature  ||
+          !this.dateEvaluated ) 
       {
-            alert("Please fill in the evaluation part.");
-            return
+
+        alert("Please fill in the evaluation part.");
+        return
       }
       this.performanceEvaluationResults = "Evaluation Rejected";
-
+      this.evaluatedCheck = true;
       await axios({
         url: 'updatePerformanceEvaluationForm',
         method: 'put',
@@ -2319,7 +2337,7 @@ export default {
           id: this.id,
           evaluatedBy: this.evaluatedBy,
           evaluatorSignature: this.evaluatorSignature,
-          evaluatedDate: this.evaluatedDate,
+          dateEvaluated: this.dateEvaluated,
           performanceEvaluationResults: this.performanceEvaluationResults
         },
         withCredentials: false
@@ -2330,16 +2348,15 @@ export default {
       .catch(error => { console.log(error); })
     },
     async handleApproveEvaluation(){
-      if (this.evaluatedBy === "" || 
-          this.evaluatorSignature === "" ||
-          this.evaluatedDate === "") 
+      if (!this.evaluatedBy || 
+          !this.evaluatorSignature  ||
+          !this.dateEvaluated ) 
       {
             alert("Please fill in the evaluation part.");
             return
       }
-
       this.performanceEvaluationResults = "Evaluation Approved";
-
+      this.evaluatedCheck = true;
       await axios({
         url: 'updatePerformanceEvaluationForm',
         method: 'put',
@@ -2349,7 +2366,7 @@ export default {
           id: this.id,
           evaluatedBy: this.evaluatedBy,
           evaluatorSignature: this.evaluatorSignature,
-          evaluatedDate: this.evaluatedDate,
+          dateEvaluated: this.dateEvaluated,
           performanceEvaluationResults: this.performanceEvaluationResults
         },
         withCredentials: false
@@ -2360,12 +2377,15 @@ export default {
       .catch(error => { console.log(error); })
     },
     async handleRejectForm(){
-      if (this.approvedBy === "" || 
-          this.approverSignature === "" ||
-          this.approvedDate === "") 
+      if (!this.approvedBy  || 
+          !this.approverSignature  ||
+          !this.dateApproved ) 
       {
-            alert("Please fill in the approver part.");
-            return
+        console.log(this.approvedBy)
+        console.log(this.approverSignature)
+        console.log(this.dateApproved)
+        alert("Please fill in the approver part.");
+        return
       }
 
       this.performanceEvaluationResults = "Form Rejected";
@@ -2390,9 +2410,9 @@ export default {
       .catch(error => { console.log(error); })
     },
     async handleApproveForm(){
-      if (this.approvedBy === "" || 
-          this.approverSignature === "" ||
-          this.approvedDate === "") 
+      if (!this.approvedBy  || 
+          !this.approverSignature  ||
+          !this.dateApproved ) 
       {
             alert("Please fill in the approver part.");
             return
@@ -6002,6 +6022,7 @@ export default {
   border-radius: 7.999999523162842px;
   justify-content: center;
   background-color: var(--dl-color-default-black4);
+  color:white;
 }
 .form3-text241 {
   color: var(--dl-color-neutral-6);
@@ -6199,6 +6220,7 @@ export default {
   .form3-button08 {
     left: 0px;
     margin-left: 200px;
+    color:white;
   }
   .form3-button09 {
     left: 0px;
@@ -6305,6 +6327,7 @@ export default {
     top: 0px;
     right: 0px;
     margin-left: 55%;
+    color:white;
   }
   .form3-button09 {
     top: 80px;
@@ -6786,6 +6809,7 @@ export default {
     bottom: 0px;
     position: absolute;
     align-self: flex-end;
+    color:white;
   }
   .form3-button09 {
     top: var(--dl-space-space-fiveunits);

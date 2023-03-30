@@ -6,7 +6,9 @@
           <span class="form2-text">Quantum VMS</span>
           <div class="form2-frame11" >
             <div class="form2-frame10" >
-              <span class="form2-text001" @click.prevent="handleHome"><span>Home</span></span>
+              <router-link to="/workflow" class="form1-text001 ParagraphNormalRegular form2-link">
+                <span>Home</span>
+              </router-link>
               <!-- <span class="form2-text003"><span>Logout</span></span> -->
             </div>
           </div>
@@ -2755,6 +2757,7 @@ export default {
   border-radius: 7.999999523162842px;
   justify-content: center;
   background-color: var(--dl-color-default-black4);
+  color:white;
 }
 .form2-text184 {
   color: var(--dl-color-neutral-6);

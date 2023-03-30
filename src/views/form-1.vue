@@ -783,10 +783,10 @@
         <input id="form1-btn-submit" type="submit" class="form1-button1" v-if="isVendor" value="Submit">
           <!-- <span class="form1-text135 ParagraphNormalRegular">Submit</span>
         </button> -->
-        <button id="form1-btn-rejectEval" class="form1-button2" v-if="(isAdminOrApprover || isApprover) && !notEvaluated" @click.prevent="handleRejectEvaluation">
+        <button id="form1-btn-rejectEval" class="form1-button2" v-if="(isAdminOrApprover || isApprover) && !evaluatedCheck" @click.prevent="handleRejectEvaluation">
           <span class="form1-text136 ParagraphNormalRegular">Reject Evaluation</span>
         </button>
-        <button id="form1-btn-approveEval" type="button" class="form1-button3" v-if="(isAdminOrApprover || isApprover) && !notEvaluated" @click.prevent="handleApproveEvaluation">
+        <button id="form1-btn-approveEval" type="button" class="form1-button3" v-if="(isAdminOrApprover || isApprover) && !evaluatedCheck" @click.prevent="handleApproveEvaluation">
           <span class="form1-text137 ParagraphNormalRegular">Approve Evaluation</span>
         </button>
         <button id="form1-disapproveForm" type="button" class="form1-button4" v-if="isApprover" @click.prevent="handleRejectForm">
@@ -820,7 +820,7 @@ export default {
       rawl2sy: ' ',
       businessTypesArr: ['Sole Proprietorship', 'Limited Company', 'Partnership Agreement'],
       businessNaturesArr: ['Manufacturing', 'Agent/dealer', 'Distributor'],
-      notEvaluated: false,
+      evaluatedCheck: false,
 
       // UI control
       bizTypeInput: true,
@@ -1066,7 +1066,7 @@ export default {
       evalOthersCheckboxEle.checked ? this.evalOthersInput = false : this.evalOthersCheckboxEle = true;
     },
     async handleSave(){
-      this.notEvaluated = false;
+      this.evaluatedCheck = false;
       if (this.businessType == "Others") this.businessType = this.businessTypeOthers;
       if (this.businessNature == "Others") this.businessNature = this.businessNatureOthers;
       if (this.iso9001) this.iso9001 = this.isoInputField;
@@ -1146,7 +1146,7 @@ export default {
         alert("Please reject evaluation first");
         return
       }
-      this.notEvaluated = true;
+      this.evaluatedCheck = true;
       this.vendorAssessmentResults = "Evaluation Rejected";
       await axios({
         url: 'updateVendorAssessmentForm',
@@ -1174,7 +1174,7 @@ export default {
         alert("Invalid evaluator");
         return
       }
-      this.notEvaluated = true
+      this.evaluatedCheck = true
       this.vendorAssessmentResults = "Evaluation Approved";
       await axios({
         url: 'updateVendorAssessmentForm',
