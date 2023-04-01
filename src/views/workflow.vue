@@ -17,8 +17,7 @@
                         <p class="col">Overview of all form workflows (in progress / completed)</p> 
                         <div class="col">
                             <b-button v-if="role == 'ADMIN' || role == 'APPROVER'" type="button" class="btn btn-dark float-end mx-1" v-b-modal.modal-wfcreate>Create Workflow</b-button>
-                            <!-- TODO: Create modal for Search/Filtering -->
-                            <b-button type="button" class="btn btn-dark float-end mx-1" v-b-modal.modal-wfcreate>Filter</b-button>
+                            <b-button type="button" class="btn btn-dark float-end mx-1" v-b-modal.modal-sortfilter>Sort / Filter</b-button>
                         </div>
                     </div>
                     
@@ -67,6 +66,62 @@
                                     <b-form-select-option value="form-1">New Vendor Assessment Form</b-form-select-option>
                                     <b-form-select-option value="form-2">Health Pre-Evaluation Form</b-form-select-option>
                                     <b-form-select-option value="form-3">Health Performance Evaluation Form</b-form-select-option>
+                                </b-form-select>
+                            </b-form-group>
+                        </form>
+                    </b-modal>
+
+                    <!-- Modal Sort / Filter -->
+                    <b-modal
+                        id="modal-sortfilter"
+                        ref="modal"
+                        title="Sort / Filter"
+                        @show="resetModalSortFilter"
+                        @hidden="resetModalSortFilter"
+                        @ok="handleOkSortFilter"
+                    >
+                        <form ref="form" @submit.stop.prevent="handleSubmitSortFilter">
+                            <b-form-group
+                                label="Sort By:"
+                                label-for="sort-input"
+                                invalid-feedback="Sort is required"
+                            >
+                                <b-form-select
+                                    id="sort-input"
+                                    v-model="sortMode"
+                                    required
+                                    class="form-control"
+                                >
+                                    <template #first>
+                                        <b-form-select-option value="">-- Default Sorting --</b-form-select-option>
+                                    </template>
+                                    <b-form-select-option value="deadline">Deadlines First</b-form-select-option>
+                                    <b-form-select-option value="company">Company Name First</b-form-select-option>
+                                    <b-form-select-option value="type">Form Type First</b-form-select-option>
+                                </b-form-select>
+                            </b-form-group>
+        
+                            <b-form-group
+                                label="Filter By:"
+                                label-for="filter-input"
+                                invalid-feedback="Filter is required"
+                            >
+                                <b-form-select
+                                    id="filter-input"
+                                    v-model="filterMode"
+                                    required
+                                    class="form-control"
+                                >
+                                    <template #first>
+                                        <b-form-select-option value="">-- No Filter --</b-form-select-option>
+                                    </template>
+                                    <b-form-select-option value="approved">Approved Forms Only</b-form-select-option>
+                                    <b-form-select-option value="sub">Forms Pending Submission</b-form-select-option>
+                                    <b-form-select-option value="review">Forms Pending Approval</b-form-select-option>
+                                    <b-form-select-option value="archived">Deleted Forms Only</b-form-select-option>
+                                    <b-form-select-option value="form-1">New Vendor Assessment Forms Only</b-form-select-option>
+                                    <b-form-select-option value="form-2">Health Pre-Evaluation Forms Only</b-form-select-option>
+                                    <b-form-select-option value="form-3">Health Performance Evaluation Forms Only</b-form-select-option>
                                 </b-form-select>
                             </b-form-group>
                         </form>
@@ -145,25 +200,17 @@
                             <td v-else-if="handleActions(workflow.status) == 'approve'">
                                 <b-button type="button" class="btn btn-warning mx-1" @click="GoToForm(workflow.form, workflow.id)">Approve</b-button>
                             </td>
-                            <td v-else-if="handleActions(workflow.status) == 'done'">
-                                <b-button type="button" class="btn btn-secondary mx-1" @click="GoToForm(workflow.form, workflow.id)">View</b-button>
-                                <!-- TODO: Link up button to relevant modal -> function on click -->
-                                <b-button type="button" class="btn btn-success mx-1">Download</b-button>
-                            </td>
                             <td v-else-if="handleActions(workflow.status) == 'restore'">
-                                <!-- TODO: Link up button to relevant modal -> function on click -->
-                                <b-button type="button" class="btn btn-danger mx-1">Restore</b-button>
+                                <b-button type="button" class="btn btn-danger mx-1" @click="restoreRow(k, workflow)">Restore</b-button>
                             </td>
                             <td v-else>Invalid data, please inform Admin!</td>
                             <td>{{handleDate(workflow.dateCreated)}}</td>
                             <td>{{handleDate(workflow.dateModified)}}</td>
                             <td>{{handleDeadline(workflow.deadline, workflow.status)}}</td>
                             <td>{{workflow.remarks}}</td>
-                            <!-- TODO: Link up buttons to relevant modals/functions on click -->
                             <td v-if="role == 'ADMIN' || role == 'APPROVER'">
                                 <b-button v-if="workflow.status == 'Draft' || workflow.status == 'Evaluation Rejected' || workflow.status == 'Form Rejected'" type="button" class="btn btn-info mx-1" @click="sendEmail(k, workflow, $event.target)" ref="btnEmail">Send Email</b-button>
-                                <b-button v-if="workflow.status == 'Draft' || workflow.status == 'Evaluation Rejected' || workflow.status == 'Form Rejected'" type="button" class="btn btn-warning mx-1" v-b-modal.modal-wfcreate>Edit Deadline</b-button>
-                                <!-- Add confirmation modal -->
+                                <!-- <b-button v-if="workflow.status == 'Draft' || workflow.status == 'Evaluation Rejected' || workflow.status == 'Form Rejected'" type="button" class="btn btn-warning mx-1" v-b-modal.modal-wfcreate>Edit Deadline</b-button> -->
                                 <b-button v-if="workflow.status == 'Draft' || workflow.status == 'Submitted' || workflow.status == 'Evaluation Rejected' || workflow.status == 'Form Rejected'" type="button" class="btn btn-danger mx-1" @click="deleteRow(k, workflow)">Delete</b-button>
                             </td>
                         </tr>
@@ -198,6 +245,8 @@
         },
         data () {
             return {
+                sortMode: '',
+                filterMode: '',
                 name: '',
                 form: '',
                 status: '',
@@ -217,6 +266,15 @@
             }
         },
         created() {
+
+            this.sortMode = this.$route.query.sort;
+            this.filterMode = this.$route.query.filter;
+            if (this.sortMode == undefined) {
+                this.sortMode = "";
+            }
+            if (this.filterMode == undefined) {
+                this.filterMode = "";
+            }
 
             UserService.getUser().then(
                 response => {
@@ -309,7 +367,222 @@
                                 }
                             }
                         }
-                        // Sort workflows with this.workflows.sort(function(a, b){return "something"})
+                        // Filtering Workflows
+                        if (this.filterMode == "approved") {
+							let filtered = [];
+                            for (let workflow of this.workflows) {
+                                if (workflow.status == "Form Approved") filtered.push(workflow);
+                            }
+							this.workflows = filtered;
+
+                        } else if (this.filterMode == "archived") {
+							let filtered = [];
+                            for (let workflow of this.workflows) {
+                                if (workflow.status == "Archived") filtered.push(workflow);
+                            }
+							this.workflows = filtered;
+
+                        } else if (this.filterMode == "sub") {
+							let filtered = [];
+                            for (let workflow of this.workflows) {
+                                if (workflow.status == "Draft" || workflow.status == "Evaluation Rejected" || workflow.status == "Form Rejected") filtered.push(workflow);
+                            }
+							this.workflows = filtered;
+
+                        } else if (this.filterMode == "review") {
+							let filtered = [];
+                            for (let workflow of this.workflows) {
+                                if (workflow.status == "Submitted" || workflow.status == "Evaluation Approved") filtered.push(workflow);
+                            }
+							this.workflows = filtered;
+
+                        } else if (this.filterMode == "form-1" || this.filterMode == "form-2" || this.filterMode == "form-3") {
+                            let filtered = [];
+                            for (let workflow of this.workflows) {
+                                if (workflow.form == this.filterMode) filtered.push(workflow);
+                            }
+                            this.workflows = filtered;
+
+                        }
+
+                        // Sorting Workflows
+                        if (this.sortMode == "deadline") {
+							// Sort by "Deadline" > "Date Modified" / "Date Created" first
+							this.workflows.sort(function(a, b) {
+								if (a.deadline == b.deadline) {
+                                    let lastMod_a = a.dateModified;
+                                    let lastMod_b = b.dateModified;
+                                    if (lastMod_a == null) lastMod_a = a.dateCreated;
+                                    if (lastMod_b == null) lastMod_b = b.dateCreated;
+                                    if (lastMod_a == lastMod_b) {
+                                        if (a.status == b.status) {
+                                            if (a.name == b.name) {
+                                                if (a.form == b.form) return 1;
+                                                else {
+                                                    if (a.form < b.form) return -1;
+                                                    else return 1;
+                                                }
+                                            } else {
+                                                if (a.name < b.name) return -1;
+                                                else return 1;
+                                            }
+                                        } else {
+                                            let statusWeight = {
+                                                "Draft": 3,
+                                                "Submitted": 6,
+                                                "Evaluation Approved": 7,
+                                                "Evaluation Rejected": 4,
+                                                "Form Rejected": 5,
+                                                "Form Approved": 2,
+                                                "Archived": 1
+                                            }
+                                            return statusWeight[a.status] - statusWeight[b.status];
+                                        }
+                                    } else {
+                                        let d1 = new Date(lastMod_a);
+                                        let d2 = new Date(lastMod_b);
+                                        return d1.getTime() - d2.getTime();
+                                    }
+                                } else {
+                                    let d1 = new Date(a.deadline);
+                                    let d2 = new Date(b.deadline);
+                                    return d1.getTime() - d2.getTime();
+                                }
+							})
+						
+						} else if (this.sortMode == "company") {
+							// Sort by company first
+							this.workflows.sort(function(a, b) {
+								if (a.name == b.name) {
+                                    if (a.status == b.status) {
+                                        if (a.deadline == b.deadline) {
+                                            let lastMod_a = a.dateModified;
+                                            let lastMod_b = b.dateModified;
+                                            if (lastMod_a == null) lastMod_a = a.dateCreated;
+                                            if (lastMod_b == null) lastMod_b = b.dateCreated;
+                                            if (lastMod_a == lastMod_b) {
+                                                if (a.form == b.form) return 1;
+                                                else {
+                                                    if (a.form < b.form) return -1;
+                                                    else return 1;
+                                                }
+                                            } else {
+                                                let d1 = new Date(lastMod_a);
+                                                let d2 = new Date(lastMod_b);
+                                                return d1.getTime() - d2.getTime();
+                                            }
+                                        } else {
+                                            let d1 = new Date(a.deadline);
+                                            let d2 = new Date(b.deadline);
+                                            return d1.getTime() - d2.getTime();
+                                        }
+                                    } else {
+                                        let statusWeight = {
+                                            "Draft": 3,
+                                            "Submitted": 6,
+                                            "Evaluation Approved": 7,
+                                            "Evaluation Rejected": 4,
+                                            "Form Rejected": 5,
+                                            "Form Approved": 2,
+                                            "Archived": 1
+                                        }
+                                        return statusWeight[a.status] - statusWeight[b.status];
+                                    }
+                                } else {
+                                    if (a.name < b.name) return -1;
+                                    else return 1;
+                                }							
+							})
+						
+						} else if (this.sortMode == "type") {
+							// Sort by Form Type first
+							this.workflows.sort(function(a, b) {
+								if (a.form == b.form) {
+                                    if (a.status == b.status) {
+                                        if (a.deadline == b.deadline) {
+                                            let lastMod_a = a.dateModified;
+                                            let lastMod_b = b.dateModified;
+                                            if (lastMod_a == null) lastMod_a = a.dateCreated;
+                                            if (lastMod_b == null) lastMod_b = b.dateCreated;
+                                            if (lastMod_a == lastMod_b) {
+                                                if (a.name == b.name) return 1;
+                                                else {
+                                                    if (a.name < b.name) return -1;
+                                                    else return 1;
+                                                }
+                                            } else {
+                                                let d1 = new Date(lastMod_a);
+                                                let d2 = new Date(lastMod_b);
+                                                return d1.getTime() - d2.getTime();
+                                            }
+                                        } else {
+                                            let d1 = new Date(a.deadline);
+                                            let d2 = new Date(b.deadline);
+                                            return d1.getTime() - d2.getTime();
+                                        }
+                                    } else {
+                                        let statusWeight = {
+                                            "Draft": 3,
+                                            "Submitted": 6,
+                                            "Evaluation Approved": 7,
+                                            "Evaluation Rejected": 4,
+                                            "Form Rejected": 5,
+                                            "Form Approved": 2,
+                                            "Archived": 1
+                                        }
+                                        return statusWeight[a.status] - statusWeight[b.status];
+                                    }
+                                } else {
+                                    if (a.form < b.form) return -1;
+                                    else return 1;
+                                }							
+							})
+						
+						} else {
+							this.workflows.sort(function(a, b) {
+								// Default Sort: Status > Date > Company > Form Type
+								if (a.status == b.status) {
+                                    if (a.deadline == b.deadline) {
+                                        let lastMod_a = a.dateModified;
+                                        let lastMod_b = b.dateModified;
+                                        if (lastMod_a == null) lastMod_a = a.dateCreated;
+                                        if (lastMod_b == null) lastMod_b = b.dateCreated;
+                                        if (lastMod_a == lastMod_b) {
+                                            if (a.name == b.name) {
+                                                if (a.form == b.form) return 1;
+                                                else {
+                                                    if (a.form < b.form) return -1;
+                                                    else return 1;
+                                                }
+                                            } else {
+                                                if (a.name < b.name) return -1;
+                                                else return 1;
+                                            }
+                                        } else {
+                                            let d1 = new Date(lastMod_a);
+                                            let d2 = new Date(lastMod_b);
+                                            return d1.getTime() - d2.getTime();
+                                        }
+                                    } else {
+                                        let d1 = new Date(a.deadline);
+                                        let d2 = new Date(b.deadline);
+                                        return d1.getTime() - d2.getTime();
+                                    }
+                                } else {
+                                    let statusWeight = {
+                                        "Draft": 3,
+                                        "Submitted": 6,
+                                        "Evaluation Approved": 7,
+                                        "Evaluation Rejected": 4,
+                                        "Form Rejected": 5,
+                                        "Form Approved": 2,
+                                        "Archived": 1
+                                    }
+                                    return statusWeight[a.status] - statusWeight[b.status];
+                                }
+							})
+						
+						}
                     })
                     .catch(error => {
                         console.log(error);
@@ -370,7 +643,222 @@
                                 })
                             }
                         }
-                        // Sort workflows with this.workflows.sort(function(a, b){return "something"})
+                        // Filtering Workflows
+                        if (this.filterMode == "approved") {
+							let filtered = [];
+                            for (let workflow of this.workflows) {
+                                if (workflow.status == "Form Approved") filtered.push(workflow);
+                            }
+							this.workflows = filtered;
+
+                        } else if (this.filterMode == "archived") {
+							let filtered = [];
+                            for (let workflow of this.workflows) {
+                                if (workflow.status == "Archived") filtered.push(workflow);
+                            }
+							this.workflows = filtered;
+
+                        } else if (this.filterMode == "sub") {
+							let filtered = [];
+                            for (let workflow of this.workflows) {
+                                if (workflow.status == "Draft" || workflow.status == "Evaluation Rejected" || workflow.status == "Form Rejected") filtered.push(workflow);
+                            }
+							this.workflows = filtered;
+
+                        } else if (this.filterMode == "review") {
+							let filtered = [];
+                            for (let workflow of this.workflows) {
+                                if (workflow.status == "Submitted" || workflow.status == "Evaluation Approved") filtered.push(workflow);
+                            }
+							this.workflows = filtered;
+
+                        } else if (this.filterMode == "form-1" || this.filterMode == "form-2" || this.filterMode == "form-3") {
+                            let filtered = [];
+                            for (let workflow of this.workflows) {
+                                if (workflow.form == this.filterMode) filtered.push(workflow);
+                            }
+                            this.workflows = filtered;
+
+                        }
+
+                        // Sorting Workflows
+                        if (this.sortMode == "deadline") {
+							// Sort by "Deadline" > "Date Modified" / "Date Created" first
+							this.workflows.sort(function(a, b) {
+								if (a.deadline == b.deadline) {
+                                    let lastMod_a = a.dateModified;
+                                    let lastMod_b = b.dateModified;
+                                    if (lastMod_a == null) lastMod_a = a.dateCreated;
+                                    if (lastMod_b == null) lastMod_b = b.dateCreated;
+                                    if (lastMod_a == lastMod_b) {
+                                        if (a.status == b.status) {
+                                            if (a.name == b.name) {
+                                                if (a.form == b.form) return 1;
+                                                else {
+                                                    if (a.form < b.form) return -1;
+                                                    else return 1;
+                                                }
+                                            } else {
+                                                if (a.name < b.name) return -1;
+                                                else return 1;
+                                            }
+                                        } else {
+                                            let statusWeight = {
+                                                "Draft": 3,
+                                                "Submitted": 6,
+                                                "Evaluation Approved": 7,
+                                                "Evaluation Rejected": 4,
+                                                "Form Rejected": 5,
+                                                "Form Approved": 2,
+                                                "Archived": 1
+                                            }
+                                            return statusWeight[a.status] - statusWeight[b.status];
+                                        }
+                                    } else {
+                                        let d1 = new Date(lastMod_a);
+                                        let d2 = new Date(lastMod_b);
+                                        return d1.getTime() - d2.getTime();
+                                    }
+                                } else {
+                                    let d1 = new Date(a.deadline);
+                                    let d2 = new Date(b.deadline);
+                                    return d1.getTime() - d2.getTime();
+                                }
+							})
+						
+						} else if (this.sortMode == "company") {
+							// Sort by company first
+							this.workflows.sort(function(a, b) {
+								if (a.name == b.name) {
+                                    if (a.status == b.status) {
+                                        if (a.deadline == b.deadline) {
+                                            let lastMod_a = a.dateModified;
+                                            let lastMod_b = b.dateModified;
+                                            if (lastMod_a == null) lastMod_a = a.dateCreated;
+                                            if (lastMod_b == null) lastMod_b = b.dateCreated;
+                                            if (lastMod_a == lastMod_b) {
+                                                if (a.form == b.form) return 1;
+                                                else {
+                                                    if (a.form < b.form) return -1;
+                                                    else return 1;
+                                                }
+                                            } else {
+                                                let d1 = new Date(lastMod_a);
+                                                let d2 = new Date(lastMod_b);
+                                                return d1.getTime() - d2.getTime();
+                                            }
+                                        } else {
+                                            let d1 = new Date(a.deadline);
+                                            let d2 = new Date(b.deadline);
+                                            return d1.getTime() - d2.getTime();
+                                        }
+                                    } else {
+                                        let statusWeight = {
+                                            "Draft": 3,
+                                            "Submitted": 6,
+                                            "Evaluation Approved": 7,
+                                            "Evaluation Rejected": 4,
+                                            "Form Rejected": 5,
+                                            "Form Approved": 2,
+                                            "Archived": 1
+                                        }
+                                        return statusWeight[a.status] - statusWeight[b.status];
+                                    }
+                                } else {
+                                    if (a.name < b.name) return -1;
+                                    else return 1;
+                                }							
+							})
+						
+						} else if (this.sortMode == "type") {
+							// Sort by Form Type first
+							this.workflows.sort(function(a, b) {
+								if (a.form == b.form) {
+                                    if (a.status == b.status) {
+                                        if (a.deadline == b.deadline) {
+                                            let lastMod_a = a.dateModified;
+                                            let lastMod_b = b.dateModified;
+                                            if (lastMod_a == null) lastMod_a = a.dateCreated;
+                                            if (lastMod_b == null) lastMod_b = b.dateCreated;
+                                            if (lastMod_a == lastMod_b) {
+                                                if (a.name == b.name) return 1;
+                                                else {
+                                                    if (a.name < b.name) return -1;
+                                                    else return 1;
+                                                }
+                                            } else {
+                                                let d1 = new Date(lastMod_a);
+                                                let d2 = new Date(lastMod_b);
+                                                return d1.getTime() - d2.getTime();
+                                            }
+                                        } else {
+                                            let d1 = new Date(a.deadline);
+                                            let d2 = new Date(b.deadline);
+                                            return d1.getTime() - d2.getTime();
+                                        }
+                                    } else {
+                                        let statusWeight = {
+                                            "Draft": 3,
+                                            "Submitted": 6,
+                                            "Evaluation Approved": 7,
+                                            "Evaluation Rejected": 4,
+                                            "Form Rejected": 5,
+                                            "Form Approved": 2,
+                                            "Archived": 1
+                                        }
+                                        return statusWeight[a.status] - statusWeight[b.status];
+                                    }
+                                } else {
+                                    if (a.form < b.form) return -1;
+                                    else return 1;
+                                }							
+							})
+						
+						} else {
+							this.workflows.sort(function(a, b) {
+								// Default Sort: Status > Date > Company > Form Type
+								if (a.status == b.status) {
+                                    if (a.deadline == b.deadline) {
+                                        let lastMod_a = a.dateModified;
+                                        let lastMod_b = b.dateModified;
+                                        if (lastMod_a == null) lastMod_a = a.dateCreated;
+                                        if (lastMod_b == null) lastMod_b = b.dateCreated;
+                                        if (lastMod_a == lastMod_b) {
+                                            if (a.name == b.name) {
+                                                if (a.form == b.form) return 1;
+                                                else {
+                                                    if (a.form < b.form) return -1;
+                                                    else return 1;
+                                                }
+                                            } else {
+                                                if (a.name < b.name) return -1;
+                                                else return 1;
+                                            }
+                                        } else {
+                                            let d1 = new Date(lastMod_a);
+                                            let d2 = new Date(lastMod_b);
+                                            return d1.getTime() - d2.getTime();
+                                        }
+                                    } else {
+                                        let d1 = new Date(a.deadline);
+                                        let d2 = new Date(b.deadline);
+                                        return d1.getTime() - d2.getTime();
+                                    }
+                                } else {
+                                    let statusWeight = {
+                                        "Draft": 3,
+                                        "Submitted": 6,
+                                        "Evaluation Approved": 7,
+                                        "Evaluation Rejected": 4,
+                                        "Form Rejected": 5,
+                                        "Form Approved": 2,
+                                        "Archived": 1
+                                    }
+                                    return statusWeight[a.status] - statusWeight[b.status];
+                                }
+							})
+						
+						}
                     })
                     .catch(error => {
                         console.log(error);
@@ -428,8 +916,8 @@
                     })
                     .then(response => {
                         var result = response.data;
-                        alert("(ID: " + result.id + ")" + this.handleForm(this.form) + " successfully created for " + this.name + "(" + userEmail + ")!")
-                        this.getAllForms()
+                        alert("(ID: " + result.id + ")" + this.handleForm(this.form) + " successfully created for " + this.name + "(" + userEmail + ")!");
+                        this.$router.go();
                     })
                     .catch(error => {
                         console.log(error);
@@ -441,6 +929,35 @@
         
                 this.$nextTick(() => {
                     this.$bvModal.hide('modal-wfcreate')
+                })
+            },
+
+            // -------
+            // Functions for Workflow Sort / Filter
+            // -------
+            resetModalSortFilter() {
+                this.sortMode = ''
+                this.filterMode = ''
+            },
+            handleOkSortFilter(bvModalEvent) {
+                // Prevent modal from closing
+                bvModalEvent.preventDefault()
+                // Trigger submit handler
+                this.handleSubmitSortFilter()
+            },
+            handleSubmitSortFilter() {
+
+                let sortfilter = "";
+                if (this.sortMode == "deadline" || this.sortMode == "company" || this.sortMode == "type") sortfilter = "?sort=" + this.sortMode;
+                if (this.filterMode == "approved" || this.filterMode == "archived" || this.filterMode == "sub" || this.filterMode == "review" || this.filterMode == "form-1" || this.filterMode == "form-2" || this.filterMode == "form-3") {
+                    if (sortfilter == "") sortfilter = "?filter=" + this.filterMode;
+                    else sortfilter = sortfilter + "&filter=" + this.filterMode;
+                }
+                this.$router.push('/workflow' + sortfilter);
+                this.$router.go();
+        
+                this.$nextTick(() => {
+                    this.$bvModal.hide('modal-sortfilter')
                 })
             },
 
@@ -474,29 +991,73 @@
 
                 alert(this.modal.emailRecipient + this.emailBody + this.emailSubject);
 
-                // TEMPORARILY DISABLED AS THIS SENDS EMAILS
-                // axios({
-                //     url: 'admin/sendEmail',
-                //     method: 'post',
-                //     baseURL: API_URL,
-                //     headers: authHeader(),
-                //     data: {
-                //         recipient: this.modal.emailRecipient,
-                //         msgBody: this.emailBody,
-                //         subject: this.emailSubject
-                //     },
-                //     withCredentials: false
-                // })
-                // .then(response => {
-                //     alert("Email successfully sent to" + this.emailRecipient + "!")
-                // })
-                // .catch(error => {
-                //     console.log(error);
-                // })
+                axios({
+                    url: 'admin/sendEmail',
+                    method: 'post',
+                    baseURL: API_URL,
+                    headers: authHeader(),
+                    data: {
+                        recipient: this.modal.emailRecipient,
+                        msgBody: this.emailBody,
+                        subject: this.emailSubject
+                    },
+                    withCredentials: false
+                })
+                .then(response => {
+                    alert("Email successfully sent to" + this.emailRecipient + "!")
+                })
+                .catch(error => {
+                    console.log(error);
+                })
         
                 this.$nextTick(() => {
                 this.$bvModal.hide('modal-sendEmail')
                 })
+            },
+
+            // -------
+            // Functions for Workflow Restoration
+            // -------
+            restoreRow(index, workflow) {
+                if (workflow.form == "form-1" || workflow.form == "form-2" || workflow.form == "form-3") {
+
+                    let formLinkConversion = {
+                        "form-1": "vendor/updateVendorAssessmentForm",
+                        "form-2": "vendor/updatePreEvaluationForm",
+                        "form-3": "vendor/updatePerformanceEvaluationForm"
+                    }
+                    let updateData = {
+                        id: workflow.id
+                    }
+
+                    if (workflow.form == "form-1") {
+                        updateData.vendorAssessmentResults = "Draft"
+                    } else if (workflow.form == "form-2") {
+                        updateData.preEvaluationResults = "Draft"
+                    } else {
+                        updateData.performanceEvaluationResults = "Draft"
+                    }
+
+                    axios({
+                        url: formLinkConversion[workflow.form],
+                        method: 'put',
+                        baseURL: API_URL,
+                        headers: authHeader(),
+                        data: updateData,
+                        withCredentials: false
+                    })
+                    .then(response => {
+                        var result = response.data;
+                        alert("(ID: " + result.id + ")" + this.handleForm(workflow.form) + " successfully restored.");
+                        this.$router.go();
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+
+                } else {
+                    alert("Invalid form type!")
+                }
             },
 
             // -------
@@ -532,8 +1093,8 @@
                     })
                     .then(response => {
                         var result = response.data;
-                        alert("(ID: " + result.id + ")" + this.handleForm(workflow.form) + " successfully deleted.")
-                        // this.getAllForms()
+                        alert("(ID: " + result.id + ")" + this.handleForm(workflow.form) + " successfully deleted.");
+                        this.$router.go();
                     })
                     .catch(error => {
                         console.log(error);
@@ -568,7 +1129,7 @@
                 return statusConversion[status];
             },
             handleActions(status) {
-                if (status == "Form Approved") return "done";
+                if (status == "Form Approved") return "viewOnly";
                 else {
                     let role = this.role;
                     if (role == "USER"){
