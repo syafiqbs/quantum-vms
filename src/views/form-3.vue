@@ -6,7 +6,7 @@
           <span class="form3-text"><span>Quantum VMS</span></span>
           <div class="form3-frame11">
             <div class="form3-frame10">
-              <router-link to="/workflow" class="form1-text002 ParagraphNormalRegular form3-link">
+              <router-link to="/workflow" class="form3-text002 ParagraphNormalRegular form3-link">
                 <span>Home</span>
               </router-link>
             </div>
@@ -2534,6 +2534,7 @@ export default {
   margin-right: 64px;
   margin-bottom: 0;
   text-decoration: none;
+  color:black;
 }
 .form3-text004 {
   height: auto;
@@ -2559,7 +2560,7 @@ export default {
   align-items: flex-start;
 }
 .form3-text006 {
-  top: 0px;
+  top: -20px;
   left: 0px;
   height: auto;
   position: absolute;
@@ -6355,6 +6356,18 @@ export default {
   }
 }
 @media(max-width: 479px) {
+  .form3-text078 {
+    top:-40px;
+  }
+  .form3-frame113 {
+    left:-20px;
+  }
+  .form3-frame112 {
+    left:-10px;
+  }
+  .form3-frame104 {
+    right:-10px;
+  }
   .form3-form3admin {
     height: 5600px;
   }

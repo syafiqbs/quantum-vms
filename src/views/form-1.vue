@@ -3651,7 +3651,7 @@ export default {
     height: 227px;
   }
   .form1-header-form-name {
-    top: 0px;
+    top: -10px;
     left: 0px;
     color: var(--dl-color-neutral-1);
     font-size: 36px;
@@ -3660,6 +3660,7 @@ export default {
     font-weight: 700;
     line-height: 48px;
     text-decoration: none;
+    
   }
   .form1-text006 {
     left: 0px;
@@ -3874,14 +3875,14 @@ export default {
   }
   .form1-container10 {
     top: 180px;
-    left: -179px;
+    left: -156px;
     width: auto;
     bottom: -225px;
     height: auto;
   }
   .form1-textinput04 {
     top: 240px;
-    left: -179px;
+    left: -156px;
     bottom: -288px;
   }
   .form1-container-business-nature {
@@ -3907,14 +3908,14 @@ export default {
   }
   .form1-container13 {
     top: 120px;
-    left: -62px;
+    left: -55px;
     width: auto;
     height: auto;
     position: absolute;
   }
   .form1-container15 {
     top: 170px;
-    left: -116px;
+    left: -100px;
     width: auto;
     height: auto;
     position: absolute;
@@ -3922,14 +3923,15 @@ export default {
   .form1-container17 {
     width: auto;
     height: auto;
+    left: 10px;
   }
   .form1-container19 {
-    left: -108px;
+    left: -90px;
     bottom: -214px;
   }
   .form1-textinput05 {
     top: 220px;
-    left: -110px;
+    left: -90px;
     bottom: -271px;
     margin: 0px;
   }

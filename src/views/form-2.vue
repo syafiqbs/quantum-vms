@@ -6,7 +6,7 @@
           <span class="form2-text">Quantum VMS</span>
           <div class="form2-frame11" >
             <div class="form2-frame10" >
-              <router-link to="/workflow" class="form1-text001 ParagraphNormalRegular form2-link">
+              <router-link to="/workflow" class="form2-text001 ParagraphNormalRegular form2-link">
                 <span>Home</span>
               </router-link>
               <!-- <span class="form2-text003"><span>Logout</span></span> -->
@@ -1009,7 +1009,7 @@ export default {
   justify-content: flex-start;
 }
 .form2-text005 {
-  top: 0px;
+  top: -20px;
   left: 0px;
   color: var(--dl-color-neutral-1);
   height: auto;
@@ -3385,6 +3385,7 @@ export default {
   .form2-container01 {
     margin-left: -200px;
     margin-right: -200px;
+    width:75%;
   }
   .form2-text005 {
     color: var(--dl-color-neutral-1);
@@ -3393,6 +3394,7 @@ export default {
     font-weight: 700;
     line-height: 48px;
     text-decoration: none;
+    top: -60px;
   }
   .form2-container-steps {
     left: 300px;
