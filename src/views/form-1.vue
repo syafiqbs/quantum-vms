@@ -685,7 +685,7 @@
               name="form1-radio-evalResult"
               value="Approved"
               class="form1-radiobutton18"
-              :disabled="!(isAdminOrApprover && !evaluatedCheck) || !(isApprover && evaluatedCheck)"
+              :disabled="!isAdminOrApprover && !isApprover"
               v-model="evaluation"
             />
             <label class="form1-text114">Approved</label>
@@ -696,7 +696,7 @@
               name="form1-radio-evalResult"
               value="Not Approved"
               class="form1-radiobutton19"
-              :disabled="!(isAdminOrApprover && !evaluatedCheck) || !(isApprover && evaluatedCheck)"
+              :disabled="!isAdminOrApprover && !isApprover"
               v-model="evaluation"
             />
             <label class="form1-text115">Not Approved</label>
@@ -782,12 +782,12 @@
           <!-- <span class="form1-text135 ParagraphNormalRegular">Submit</span>
         </button> -->
         <button id="form1-btn-rejectEval" class="form1-button2" 
-        v-if="!isVendor && (vendorAssessmentResults == 'Submitted' || vendorAssessmentResults == 'Evaluation Rejected' || vendorAssessmentResults == 'Form Rejected')" 
+        v-if="!isVendor && (isAdminOrApprover || isApprover) && (vendorAssessmentResults == 'Submitted' || vendorAssessmentResults == 'Evaluation Rejected' || vendorAssessmentResults == 'Form Rejected')" 
         @click.prevent="handleRejectEvaluation">
           <span class="form1-text136 ParagraphNormalRegular">Reject Evaluation</span>
         </button>
         <button id="form1-btn-approveEval" type="button" class="form1-button3" 
-        v-if="!isVendor && (vendorAssessmentResults == 'Submitted' || vendorAssessmentResults == 'Evaluation Rejected' || vendorAssessmentResults == 'Form Rejected')" 
+        v-if="!isVendor && (isAdminOrApprover || isApprover) && (vendorAssessmentResults == 'Submitted' || vendorAssessmentResults == 'Evaluation Rejected' || vendorAssessmentResults == 'Form Rejected')" 
         @click.prevent="handleApproveEvaluation">
           <span class="form1-text137 ParagraphNormalRegular">Approve Evaluation</span>
         </button>
@@ -917,6 +917,7 @@ export default {
   async mounted() {
     // fetch id from url
     this.id = this.$route.query.formid;
+    
 
     // fetch form and update data
     await axios({
@@ -1014,6 +1015,7 @@ export default {
         this.vendorAssessmentResults == "Evaluation Rejected" || 
         this.vendorAssessmentResults == "Form Rejected")
     {
+      if (this.vendorAssessmentResults == "Evaluation Rejected" || this.vendorAssessmentResults == "Form Rejected") this.evaluatedCheck = true;
       if (role == "USER"){
         this.isVendor = true;
         this.isAdminOrApprover = false;
@@ -1026,6 +1028,7 @@ export default {
       }
     }
     else if (this.vendorAssessmentResults == "Submitted") {
+      if (this.vendorAssessmentResults == "Submitted") this.evaluatedCheck = true;
       if (role == "USER"){
         this.isVendor = false;
         this.isAdminOrApprover = false;
@@ -1043,6 +1046,7 @@ export default {
       }
     }
     else if (this.vendorAssessmentResults == "Evaluation Approved") {
+      if (this.vendorAssessmentResults == "Evaluation Approved") this.evaluatedCheck = true;
       if (role == "USER" || role == "ADMIN"){
         this.isVendor = false;
         this.isAdminOrApprover = false;
@@ -1106,6 +1110,7 @@ export default {
       evalOthersCheckboxEle.checked ? this.evalOthersInput = false : this.evalOthersCheckboxEle = true;
     },
     async handleSave(){
+      console.log(this.isVendor);
       this.evaluatedCheck = false;
       if (this.businessType == "Others") this.businessType = this.businessTypeOthers;
       if (this.businessNature == "Others") this.businessNature = this.businessNatureOthers;
@@ -1201,12 +1206,14 @@ export default {
 
     },
     async handleRejectEvaluation(){
+      console.log(this.evaluatedCheck);
       if (this.evaluation != "Not Approved") {
         alert("Please reject evaluation first");
-        return
+        return;
       }
       if (!this.evaluatedBy || !this.evaluatorSignature) {
         alert("Invalid evaluator");
+        return;
       }
       this.evaluatedCheck = true;
       this.vendorAssessmentResults = "Evaluation Rejected";

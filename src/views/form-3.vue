@@ -1942,12 +1942,12 @@
           <!-- <span class="form3-text241 ParagraphNormalRegular">Submit</span>
         </button> -->
         <button id="form3-btn-rejectEvaluation" class="form3-button09" 
-        v-if="!isVendor && (performanceEvaluationResults == 'Submitted' || performanceEvaluationResults == 'Evaluation Rejected' || performanceEvaluationResults == 'Form Rejected')" 
+        v-if="!isVendor && (isAdminOrApprover || isApprover) && (performanceEvaluationResults == 'Submitted' || performanceEvaluationResults == 'Evaluation Rejected' || performanceEvaluationResults == 'Form Rejected')" 
         @click.prevent="handleRejectEvaluation">
           <span class="form3-text242 ParagraphNormalRegular">Reject Evaluation</span>
         </button>
         <button id="form3-btn-approveEvaluation" type="button" class="form3-button10" 
-        v-if="!isVendor && (performanceEvaluationResults == 'Submitted' || performanceEvaluationResults == 'Evaluation Rejected' || performanceEvaluationResults == 'Form Rejected')" 
+        v-if="!isVendor && (isAdminOrApprover || isApprover) && (performanceEvaluationResults == 'Submitted' || performanceEvaluationResults == 'Evaluation Rejected' || performanceEvaluationResults == 'Form Rejected')" 
         @click.prevent="handleApproveEvaluation">
           <span class="form3-text243 ParagraphNormalRegular">Approve Evaluation</span>
         </button>

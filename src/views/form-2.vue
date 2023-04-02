@@ -932,7 +932,7 @@ export default {
     },
     async handleSubmit(){
       this.handleSave();
-      this.preEvaluationResults = "Submitted";
+      this.preEvaluationResults = "Form Approved";
       await axios({
         url: 'updatePreEvaluationForm',
         method: 'put',
@@ -945,7 +945,7 @@ export default {
         withCredentials: false
       })
       .then(response => { 
-        alert("Form submitted"); 
+        alert("Form Approved"); 
       })
       .catch(error => { console.log(error); })
 
