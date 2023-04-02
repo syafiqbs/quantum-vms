@@ -857,7 +857,7 @@ export default {
               scale: scale,
           },
           callback: function () {
-              pdf.save('example.pdf');
+              pdf.save('Health-Pre-Evaluation-Form.pdf');
           }
       });
     },
