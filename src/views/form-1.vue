@@ -774,8 +774,8 @@
       <div class="form1-container25">
         <button id="form1-btn-save" type="button" class="form1-button" 
         @click.prevent="handleSave"
-        v-if="vendorAssessmentResults != 'Form Approved' && vendorAssessmentResults != 'Form Approved'
-        ">
+        v-if="vendorAssessmentResults != 'Form Approved' && vendorAssessmentResults != 'Archived'"
+        >
           <span class="form1-text134 ParagraphNormalRegular">Save</span>
         </button>
         <input id="form1-btn-submit" type="submit" class="form1-button1" v-if="isVendor" value="Submit">
@@ -816,11 +816,10 @@ import authHeader from '../services/auth-header';
 import jsPDF from '../../node_modules/jspdf';
 import html2canvas from '../html2canvas';
 
-var pdf = new jsPDF('p', 'pt', 'a4');
-
-
 const API_URL = "http://localhost:8080/api/v1/vendor/";
+
 var hasSetFirstDeadline = false;
+var pdf = new jsPDF('p', 'pt', 'a4');
 
 export default {
   name: 'Form1',
@@ -1064,22 +1063,6 @@ export default {
   },
   methods: {
     handlePrint(){
-      console.log('test')
-      // window.html2canvas = html2canvas
-
-      // pdf.html(document.getElementById("content"), {
-      //   callback: function (pdf) {
-      //     pdf.save('example.pdf');
-      //   },
-      // x: 10,
-      // y: 10,
-      // width: pdf.internal.pageSize.width,
-      // height: pdf.internal.pageSize.height
-      // });
-
-
-
-
       let pWidth = pdf.internal.pageSize.width; // 595.28 is the width of a4
       let srcWidth = document.getElementById('content').scrollWidth;
       let margin = 18; // narrow margin - 1.27 cm (36);

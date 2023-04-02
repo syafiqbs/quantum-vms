@@ -1,15 +1,17 @@
 <template>
   <div class="form2-container">
-    <div class="form2-form2admin">
+    <div class="form2-form2admin" id="content">
       <div class="form2-header-horizontal">
         <div class="form2-frame12">
           <span class="form2-text">Quantum VMS</span>
           <div class="form2-frame11" >
             <div class="form2-frame10" >
-              <router-link to="/workflow" class="form2-text001 ParagraphNormalRegular form2-link">
+              <router-link to="/workflow" class="form2-text001 ParagraphNormalRegular">
                 <span>Home</span>
               </router-link>
-              <!-- <span class="form2-text003"><span>Logout</span></span> -->
+              <span class="form2-text003" @click.prevent="handlePrint" id="print">
+                <span>Print</span>
+              </span>
             </div>
           </div>
         </div>
@@ -625,7 +627,7 @@
           <span class="form2-text181"><span>Acknowledgment</span></span>
         </div>
         <div class="form2-container20">
-          <button id="form2-btn-save" type="button" class="form2-button" @click.prevent="handleSave">
+          <button id="form2-btn-save" type="button" class="form2-button" @click.prevent="handleSave" v-if="preEvaluationResults !='Submitted'">
             <span class="form2-text183 ParagraphNormalRegular">Save</span>
           </button>
           <input id="form2-btn-submit" type="submit" class="form2-button1" v-if="isVendor"/>
@@ -653,11 +655,17 @@
   </div>
 </template>
 
+<script type="text/javascript" src="html2canvas.js"></script>
 <script>
 import axios from 'axios';
 import authHeader from '../services/auth-header';
+import jsPDF from '../../node_modules/jspdf';
 
 const API_URL = "http://localhost:8080/api/v1/vendor/";
+
+var hasSetFirstDeadline = false;
+var pdf = new jsPDF('p', 'pt', 'a4');
+
 
 export default {
   name: 'Form2',
@@ -720,7 +728,12 @@ export default {
       acknowledgementSignature: '',
       acknowledgementDate: '',
 
-      preEvaluationResults: ""
+      preEvaluationResults: "",
+
+      evaluationComments: '',
+      dateCreated: '',
+      dateModified: '',
+      deadline: '',
     }
 
 
@@ -788,6 +801,11 @@ export default {
       this.acknowledgementSignature= result.acknowledgementSignature;
 
       this.preEvaluationResults= result.preEvaluationResults;
+
+      this.evaluationComments= result.evaluationComments;
+      this.dateCreated= result.dateCreated;
+      this.dateModified= result.dateModified;
+      this.deadline= result.deadline;
       
     })
     .catch(error => {
@@ -825,12 +843,39 @@ export default {
 
   },
   methods: {
-    handleHome(){
-      alert("Redirecting to home page");
-      this.$router.push('/workflow');
+    handlePrint(){
+      let pWidth = pdf.internal.pageSize.width; // 595.28 is the width of a4
+      let srcWidth = document.getElementById('content').scrollWidth;
+      let margin = 18; // narrow margin - 1.27 cm (36);
+      let scale = (pWidth - margin * 2) / srcWidth;
+      console.log(scale);
+      // let pdf = new jsPDF('p', 'pt', 'a4');
+      pdf.html(document.getElementById('content'), {
+          x: margin,
+          y: margin,
+          html2canvas: {
+              scale: scale,
+          },
+          callback: function () {
+              pdf.save('example.pdf');
+          }
+      });
     },
     async handleSave(){
       if (sessionStorage.getItem('role') == "USER") this.preEvaluationResults = "Draft";
+
+      const now = new Date();
+      const dateIsoFormat = now.toISOString();
+      this.dateModified = dateIsoFormat;
+
+      if (hasSetFirstDeadline == false) {
+        const dateInAWeek = new Date();
+        dateInAWeek.setDate(dateInAWeek.getDate() + 7);
+        const dateInAWeekISO = dateInAWeek.toISOString();
+        this.deadline = dateInAWeekISO;
+        hasSetFirstDeadline = true;
+      }
+
       await axios({
         url: 'updatePreEvaluationForm',
         method: 'put',
@@ -873,7 +918,12 @@ export default {
           acknowledgementDate: this.acknowledgementDate,
           acknowledgementSignature: this.acknowledgementSignature,
 
-          preEvaluationResults: this.preEvaluationResults
+          preEvaluationResults: this.preEvaluationResults,
+
+          evaluationComments: this.evaluationComments,
+          dateCreated: this.dateCreated,
+          dateModified: this.dateModified,
+          deadline: this.deadline,
         },
         withCredentials: false
       })
@@ -987,7 +1037,7 @@ export default {
   font-stretch: normal;
   margin-right: 64px;
   margin-bottom: 0;
-  text-decoration: none;
+  text-decoration: underline;
 }
 .form2-text003 {
   color: var(--dl-color-neutral-1);
@@ -1002,7 +1052,7 @@ export default {
   font-stretch: normal;
   margin-right: 0;
   margin-bottom: 0;
-  text-decoration: none;
+  text-decoration: underline;
 }
 .form2-container01 {
   align-items: flex-start;

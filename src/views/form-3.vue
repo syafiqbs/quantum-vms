@@ -1,14 +1,17 @@
 <template>
   <div class="form3-container">
-    <div class="form3-form3admin">
+    <div class="form3-form3admin" id='content'>
       <div class="form3-header-horizontal">
         <div class="form3-frame12">
           <span class="form3-text"><span>Quantum VMS</span></span>
           <div class="form3-frame11">
             <div class="form3-frame10">
-              <router-link to="/workflow" class="form3-text002 ParagraphNormalRegular form3-link">
+              <router-link to="/workflow" class="form3-text002 ParagraphNormalRegular">
                 <span>Home</span>
               </router-link>
+              <span class="form3-text004 ParagraphNormalRegular" @click.prevent="handlePrint" id="print">
+                <span>Print</span>
+              </span>
             </div>
           </div>
         </div>
@@ -1870,7 +1873,7 @@
           />
         </div>
         <div class="form3-container06">
-          <span class="form3-text231"><span>Signature</span></span>
+          <span class="form3-text231"><span>Evaluator Signature</span></span>
           <input
             type="text"
             id="form3-input-evaluatedBySig"
@@ -1906,7 +1909,7 @@
           />
         </div>
         <div class="form3-container09">
-          <span class="form3-text236"><span>Signature</span></span>
+          <span class="form3-text236"><span>Approver Signature</span></span>
           <input
             type="text"
             id="form3-input-approvedBySig"
@@ -1929,16 +1932,23 @@
         </div>
       </div>
       <div class="form3-container11">
-        <button id="form3-btn-save" type="button" class="form3-button07" @click.prevent="handleSave">
+        <button id="form3-btn-save" type="button" class="form3-button07" 
+        @click.prevent="handleSave"
+        v-if="performanceEvaluationResults != 'Form Approved' && performanceEvaluationResults != 'Archived'"
+        >
           <span class="form3-text240 ParagraphNormalRegular">Save</span>
         </button>
         <input id="form3-btn-submit" type="submit" class="form3-button08" v-if="isVendor">
           <!-- <span class="form3-text241 ParagraphNormalRegular">Submit</span>
         </button> -->
-        <button id="form3-btn-rejectEvaluation" class="form3-button09" v-if="(isAdminOrApprover && !evaluatedCheck) || (isApprover && evaluatedCheck)" @click.prevent="handleRejectEvaluation">
+        <button id="form3-btn-rejectEvaluation" class="form3-button09" 
+        v-if="!isVendor && (performanceEvaluationResults == 'Submitted' || performanceEvaluationResults == 'Evaluation Rejected' || performanceEvaluationResults == 'Form Rejected')" 
+        @click.prevent="handleRejectEvaluation">
           <span class="form3-text242 ParagraphNormalRegular">Reject Evaluation</span>
         </button>
-        <button id="form3-btn-approveEvaluation" type="button" class="form3-button10" v-if="(isAdminOrApprover && !evaluatedCheck) || (isApprover && evaluatedCheck)" @click.prevent="handleApproveEvaluation">
+        <button id="form3-btn-approveEvaluation" type="button" class="form3-button10" 
+        v-if="!isVendor && (performanceEvaluationResults == 'Submitted' || performanceEvaluationResults == 'Evaluation Rejected' || performanceEvaluationResults == 'Form Rejected')" 
+        @click.prevent="handleApproveEvaluation">
           <span class="form3-text243 ParagraphNormalRegular">Approve Evaluation</span>
         </button>
         <button
@@ -1969,11 +1979,17 @@
   </div>
 </template>
 
+<script type="text/javascript" src="html2canvas.js"></script>
 <script>
 import axios from 'axios';
 import authHeader from '../services/auth-header';
+import jsPDF from '../../node_modules/jspdf';
+
 
 const API_URL = "http://localhost:8080/api/v1/vendor/";
+
+var hasSetFirstDeadline = false;
+var pdf = new jsPDF('p', 'pt', 'a4');
 
 export default {
   name: 'Form3',
@@ -2040,10 +2056,10 @@ export default {
       approverSignature: '',
       dateApproved: '',
 
-      evaluationComments: null,
-      dateCreated: null,
-      dateModified: null,
-      deadline: null,
+      evaluationComments: '',
+      dateCreated: '',
+      dateModified: '',
+      deadline: '',
 
       evaluatedCheck: false,
     }
@@ -2230,9 +2246,40 @@ export default {
     }
   },
   methods: {
+    handlePrint(){
+      let pWidth = pdf.internal.pageSize.width; // 595.28 is the width of a4
+      let srcWidth = document.getElementById('content').scrollWidth;
+      let margin = 18; // narrow margin - 1.27 cm (36);
+      let scale = (pWidth - margin * 2) / srcWidth;
+      console.log(scale);
+      // let pdf = new jsPDF('p', 'pt', 'a4');
+      pdf.html(document.getElementById('content'), {
+          x: margin,
+          y: margin,
+          html2canvas: {
+              scale: scale,
+          },
+          callback: function () {
+              pdf.save('example.pdf');
+          }
+      });
+    },
     async handleSave(){
       this.evaluatedCheck = false;
       if (sessionStorage.getItem('role') == "USER") this.performanceEvaluationResults = "Draft";
+
+      const now = new Date();
+      const dateIsoFormat = now.toISOString();
+      this.dateModified = dateIsoFormat;
+
+      if (hasSetFirstDeadline == false) {
+        const dateInAWeek = new Date();
+        dateInAWeek.setDate(dateInAWeek.getDate() + 7);
+        const dateInAWeekISO = dateInAWeek.toISOString();
+        this.deadline = dateInAWeekISO;
+        hasSetFirstDeadline = true;
+      }
+
       await axios({
         url: 'updatePerformanceEvaluationForm',
         method: 'put',
@@ -2328,6 +2375,16 @@ export default {
       }
       this.performanceEvaluationResults = "Evaluation Rejected";
       this.evaluatedCheck = true;
+
+      const now = new Date();
+      const dateIsoFormat = now.toISOString();
+      this.dateModified = dateIsoFormat;
+
+      const dateInAWeek = new Date();
+      dateInAWeek.setDate(dateInAWeek.getDate() + 7);
+      const dateInAWeekISO = dateInAWeek.toISOString();
+      this.deadline = dateInAWeekISO;
+
       await axios({
         url: 'updatePerformanceEvaluationForm',
         method: 'put',
@@ -2357,6 +2414,9 @@ export default {
       }
       this.performanceEvaluationResults = "Evaluation Approved";
       this.evaluatedCheck = true;
+      const now = new Date();
+      const dateIsoFormat = now.toISOString();
+      this.dateModified = dateIsoFormat;
       await axios({
         url: 'updatePerformanceEvaluationForm',
         method: 'put',
@@ -2367,7 +2427,8 @@ export default {
           evaluatedBy: this.evaluatedBy,
           evaluatorSignature: this.evaluatorSignature,
           dateEvaluated: this.dateEvaluated,
-          performanceEvaluationResults: this.performanceEvaluationResults
+          performanceEvaluationResults: this.performanceEvaluationResults,
+          dateModified: this.dateModified,
         },
         withCredentials: false
       })
@@ -2377,18 +2438,19 @@ export default {
       .catch(error => { console.log(error); })
     },
     async handleRejectForm(){
-      if (!this.approvedBy  || 
-          !this.approverSignature  ||
-          !this.dateApproved ) 
-      {
-        console.log(this.approvedBy)
-        console.log(this.approverSignature)
-        console.log(this.dateApproved)
-        alert("Please fill in the approver part.");
-        return
-      }
-
+      this.approvedBy = 'Form Rejected';
+      this.approverSignature = 'Form Rejected';
       this.performanceEvaluationResults = "Form Rejected";
+
+      const now = new Date();
+      const dateIsoFormat = now.toISOString();
+      this.dateModified = dateIsoFormat;
+
+      const dateInAWeek = new Date();
+      dateInAWeek.setDate(dateInAWeek.getDate() + 7);
+      const dateInAWeekISO = dateInAWeek.toISOString();
+      this.deadline = dateInAWeekISO;
+
 
       await axios({
         url: 'updatePerformanceEvaluationForm',
@@ -2400,7 +2462,12 @@ export default {
           approvedBy: this.approvedBy,
           approverSignature: this.approverSignature,
           evaluatedDate: this.evaluatedDate,
-          performanceEvaluationResults: this.performanceEvaluationResults
+          performanceEvaluationResults: this.performanceEvaluationResults,
+          approvedBy: this.approvedBy,
+          approverSignature: this.approverSignature,
+          dateModified: this.dateModified,
+          deadline: this.deadline
+
         },
         withCredentials: false
       })
@@ -2419,6 +2486,10 @@ export default {
       }
 
       this.performanceEvaluationResults = "Form Approved";
+      const now = new Date();
+      const dateIsoFormat = now.toISOString();
+      this.dateModified = dateIsoFormat;
+      this.deadline = '';
 
       await axios({
         url: 'updatePerformanceEvaluationForm',
@@ -2430,7 +2501,7 @@ export default {
           approvedBy: this.approvedBy,
           approverSignature: this.approverSignature,
           evaluatedDate: this.evaluatedDate,
-          performanceEvaluationResults: this.performanceEvaluationResults
+          performanceEvaluationResults: this.performanceEvaluationResults,
         },
         withCredentials: false
       })
@@ -2533,7 +2604,7 @@ export default {
   font-stretch: normal;
   margin-right: 64px;
   margin-bottom: 0;
-  text-decoration: none;
+  text-decoration: underline;
   color:black;
 }
 .form3-text004 {
@@ -2548,7 +2619,7 @@ export default {
   font-stretch: normal;
   margin-right: 0;
   margin-bottom: 0;
-  text-decoration: none;
+  text-decoration: underline;
 }
 .form3-container-form-info {
   top: 182.65626525878906px;
