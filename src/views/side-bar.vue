@@ -44,6 +44,7 @@
             >
               <b-form-input
                 id="CurrentPassword"
+                type = "password"
                 v-model="oldPassword"
                 placeholder="Enter your Current Password"
                 required
@@ -57,6 +58,7 @@
             >
               <b-form-input
                 id="password"
+                type = "password"
                 v-model="newPassword"
                 placeholder="Enter your new password"
                 required
@@ -76,11 +78,11 @@
 export default {
 name: 'SideBarVendor',
 metaInfo: {
-    title: 'Side Bar Vendor - Quantum VMS',
+    title: 'Quantum VMS',
     meta: [
     {
         property: 'og:title',
-        content: 'Side Bar Vendor - Quantum VMS',
+        content: 'Quantum VMS',
     },
     ],
 },

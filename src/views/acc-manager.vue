@@ -39,9 +39,9 @@
                             name="radio-sub-component"
                             required
                           >
-                            <b-form-radio value="vendor">Vendor</b-form-radio>
-                            <b-form-radio value="admin">Admin</b-form-radio>
-                            <b-form-radio value="approval">Approval</b-form-radio>
+                            <b-form-radio value="VENDOR">Vendor</b-form-radio>
+                            <b-form-radio value="ADMIN">Admin</b-form-radio>
+                            <b-form-radio value="APPROVAL">Approval</b-form-radio>
                             <b-form-invalid-feedback :state="state">Please select one</b-form-invalid-feedback>
                             <b-form-valid-feedback :state="state">Creating {{selected }} account</b-form-valid-feedback>
                           </b-form-radio-group>
@@ -106,6 +106,7 @@
                             <b-form-input
                               id="input-6"
                               v-model="password"
+                              type = "password"
                               :state = "validation"
                               placeholder="Enter your password"
                               required
@@ -338,6 +339,16 @@
                   "natureOfBusiness": this.natureOfBusiness,
                   "password" : this.password,
               };
+              const userWithRole = {
+                  "role": this.selected,
+                  "name" : this.name,
+                  "email" : this.email,
+                  "contactNumber" : this.contactNumber,
+                  "companyName" : this.companyName,
+                  "gstRegistrationNumber": this.gstRegistrationNumber,
+                  "natureOfBusiness": this.natureOfBusiness,
+                  "password" : this.password,
+              };
 
           const adminOrApproval = {
             "name" : this.name,
@@ -345,40 +356,48 @@
             "contactNumber" : this.contactNumber,
             "password" : this.password,
           }
+
+          const adminOrApprovalWithRole = {
+            "role": this.selected,
+            "name" : this.name,
+            "email" : this.email,
+            "contactNumber" : this.contactNumber,
+            "password" : this.password,
+          }
           //console.log(this.token);
           //console.log(user)
-          if (this.selected == 'vendor') {
+          if (this.selected == 'VENDOR') {
             axios.post("http://localhost:8080/api/v1/auth/admin/register", user, {headers: {
                           Authorization : `Bearer ` + this.token
                         }})
             .then(response => {
               console.log("creating user")
-              this.vendors.push(user)
+              this.vendors.push(userWithRole)
 
             })
             .catch ((error) => {
               console.log(error)
             })
-          } else if (this.selected == 'admin') {
+          } else if (this.selected == 'ADMIN') {
             axios.post("http://localhost:8080/api/v1/auth/admin/registerAdmin", adminOrApproval, {headers: {
                           Authorization : `Bearer ` + this.token
                         }})
             .then(response => {
               console.log("creating admin account")
-              this.vendors.push(user)
+              this.vendors.push(adminOrApprovalWithRole)
 
             })
             .catch ((error) => {
               console.log(error)
             })
             
-          } else if (this.selected == 'approval') {
+          } else if (this.selected == 'APPROVAL') {
             axios.post("http://localhost:8080/api/v1/auth/admin/registerApprover", adminOrApproval, {headers: {
                           Authorization : `Bearer ` + this.token
                         }})
             .then(response => {
               console.log("creating approval account")
-              this.vendors.push(user)
+              this.vendors.push(adminOrApprovalWithRole)
 
             })
             .catch ((error) => {
