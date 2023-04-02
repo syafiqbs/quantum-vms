@@ -38,7 +38,7 @@
             </b-form-group>
 
             <b-form-group
-              label="CurrentPassword"
+              label="Current Password"
               label-for="CurrentPassword"
               invalid-feedback="Current Password Invalid"
             >
@@ -51,7 +51,7 @@
             </b-form-group>
 
             <b-form-group
-              label="NewPassword"
+              label="New Password"
               label-for="password"
               invalid-feedback="Password is required"
             >
@@ -85,7 +85,8 @@ metaInfo: {
     ],
 },
 created() {
-  this.token = sessionStorage.getItem('user').slice(10,154)
+  const userToken = sessionStorage.getItem('user')
+  this.token = userToken.slice(10,userToken.length-2)
   
   this.userEmail = sessionStorage.getItem('email')
   console.log("from sidebar"+this.token)

@@ -14,7 +14,7 @@
                         <h1>Account Manager</h1>
                     </div>
                     <div class="row">
-                        <p class="col">Overview of vendor accounts</p> 
+                        <p class="col">Overview of accounts</p> 
                         <div class="col">
                             <b-button type="button" class="btn btn-dark float-end" v-b-modal.modal-create-vendor>Create</b-button>
                         </div>
@@ -23,15 +23,31 @@
                     <b-modal
                       id="modal-create-vendor"
                       ref="modal"
-                      :scrollable = true
-                      title="Create new vendor"
+                      title="Create new account"
                       @show="resetModal"
                       @hidden="resetModal"
                       hide-footer
                     >
                       <b-form @submit="onSubmit" @reset="onReset" v-if="show">
                         
-                        <b-form-group id="input-group-1" label="Company Name:" label-for="input-1">
+                        <b-form-group label="Choose role account to create" v-slot="{ ariaDescribedby }">
+                          <b-form-radio-group
+                            id="radio-group-2"
+                            v-model="selected"
+                            :aria-describedby="ariaDescribedby"
+                            :state = "state"
+                            name="radio-sub-component"
+                            required
+                          >
+                            <b-form-radio value="vendor">Vendor</b-form-radio>
+                            <b-form-radio value="admin">Admin</b-form-radio>
+                            <b-form-radio value="approval">Approval</b-form-radio>
+                            <b-form-invalid-feedback :state="state">Please select one</b-form-invalid-feedback>
+                            <b-form-valid-feedback :state="state">Creating {{selected }} account</b-form-valid-feedback>
+                          </b-form-radio-group>
+                        </b-form-group>
+
+                        <b-form-group v-if="selected == 'vendor'" id="input-group-1" label="Company Name:" label-for="input-1">
                           <b-form-input
                             id="input-1"
                             v-model="companyName"
@@ -54,7 +70,7 @@
                             <b-form-input
                               id="input-3"
                               v-model="name"
-                              placeholder="Enter Company name"
+                              placeholder="Enter contact name"
                               required
                             ></b-form-input>
                           </b-form-group>
@@ -63,12 +79,12 @@
                             <b-form-input
                               id="input-4"
                               v-model="contactNumber"
-                              placeholder="Enter Company number"
+                              placeholder="Enter Contact number"
                               required
                             ></b-form-input>
                           </b-form-group>
 
-                          <b-form-group id="input-group-5" label="Registration Number:" label-for="input-5">
+                          <b-form-group v-if="selected == 'vendor'" id="input-group-5" label="Registration Number:" label-for="input-5">
                             <b-form-input
                               id="input-5"
                               v-model="gstRegistrationNumber"
@@ -77,7 +93,7 @@
                             ></b-form-input>
                           </b-form-group>
 
-                          <b-form-group id="input-group-6" label="Nature of Business:" label-for="input-6">
+                          <b-form-group v-if="selected == 'vendor'" id="input-group-6" label="Nature of Business:" label-for="input-6">
                             <b-form-input
                               id="input-6"
                               v-model="natureOfBusiness"
@@ -108,110 +124,6 @@
 
                     </b-modal>
                     
-                    <!-- Modal Create-->
-                    <!-- <b-modal
-                      id="modal-create-vendor"
-                      ref="modal"
-                      title="Create new vendor"
-                      @show="resetModal"
-                      @hidden="resetModal"
-                      @ok="handleOk"
-                    >
-                      <b-form ref="form" @submit.stop.prevent="handleSubmit" v-if="valid">
-                        <b-form-group
-                          label="Name"
-                          label-for="name-input"
-                          invalid-feedback="Name is required"
-                        >
-                          <b-form-input
-                            id="name-input"
-                            v-model="companyName"
-                            placeholder="Enter Company name"
-                            required
-                          ></b-form-input>
-                        </b-form-group>
-    
-                        <b-form-group
-                          label="Email"
-                          label-for="email-input"
-                          invalid-feedback="Email is required"
-                        >
-                          <b-form-input
-                            id="name-input"
-                            v-model="email"
-                            type="email"
-                            placeholder="Enter email"
-                            required
-                          ></b-form-input>
-                        </b-form-group>
-    
-                        <b-form-group
-                          label="ContactNo"
-                          label-for="contact-input"
-                          invalid-feedback="Contact Number is required"
-                        >
-                          <b-form-input
-                            id="contact-input"
-                            v-model="contactNumber"
-                            placeholder="Enter your Contact Number"
-                            required
-                          ></b-form-input>
-                        </b-form-group>
-
-                        <b-form-group
-                          label="ContactName"
-                          label-for="contact-name-input"
-                          invalid-feedback="Contact Name is required"
-                        >
-                          <b-form-input
-                            id="contact-input"
-                            v-model="name"
-                            placeholder="Enter your Contact's name"
-                            required
-                          ></b-form-input>
-                        </b-form-group>
-
-                        <b-form-group
-                          label="gstRegistrationNumber"
-                          label-for="gstRegistrationNumber"
-                          invalid-feedback="Gst registration number is required"
-                        >
-                          <b-form-input
-                            id="contact-input"
-                            v-model="gstRegistrationNumber"
-                            placeholder="Enter your GST registration number"
-                            required
-                          ></b-form-input>
-                        </b-form-group>
-
-                        <b-form-group
-                          label="natureOfBusiness"
-                          label-for="natureOfBusiness"
-                          invalid-feedback="Nature of Business is required"
-                        >
-                          <b-form-input
-                            id="natureOfBusiness"
-                            v-model="natureOfBusiness"
-                            placeholder="Enter the nature of your business"
-                            required
-                          ></b-form-input>
-                        </b-form-group>
-
-                        <b-form-group
-                          label="Password"
-                          label-for="password"
-                          invalid-feedback="Password is required"
-                        >
-                          <b-form-input
-                            id="password"
-                            v-model="password"
-                            placeholder="Enter your password"
-                            required
-                          ></b-form-input>
-                        </b-form-group>
-
-                      </b-form>
-                    </b-modal> -->
     
                     <!-- Modal Edit-->
                     <b-modal
@@ -267,6 +179,7 @@
                           label="GST Registration Number"
                           label-for="gst Registration Number"
                           invalid-feedback="Gst registration number is required"
+                          
                         >
                           <b-form-input
                             id="gst-registration-number"
@@ -293,41 +206,38 @@
     
                 </div>
             
-    
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                          <th scope="col">ID</th>
-                          <th scope="col">Company Name</th>
-                          <th scope="col">Email</th>
-                          <th scope="col">Contact Name</th>
-                          <th scope="col">Contact Number</th>
-                          <th scope="col">Registration Number</th>
-                          <th scope="col">Nature of Business</th>
-                          <th scope="col">Date Created</th>
-                          <th scope="col">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(vendor, k) in vendors" :key="k">
-
-                            <th scope="row" v-if="vendor.role == 'USER'">{{vendor.id}}</th>
-                            <td v-if="vendor.role == 'USER'">{{vendor.companyName}}</td>
-                            <td v-if="vendor.role == 'USER'">{{vendor.email}}</td>
-                            <td v-if="vendor.role == 'USER'">{{vendor.name}}</td>
-                            <td v-if="vendor.role == 'USER'">{{vendor.contactNumber}}</td>
-                            <td v-if="vendor.role == 'USER'">{{vendor.gstRegistrationNumber}}</td>
-                            <td v-if="vendor.role == 'USER'">{{vendor.natureOfBusiness}}</td>
-                            <td v-if="vendor.role == 'USER'">{{vendor.dateCreated}}</td>
-                            <td v-if="vendor.role == 'USER'">
-                              <b-button type="button" class="btn btn-dark mx-1" @click="editRow(k, vendor, $event.target)" ref="btnShow">Edit</b-button>
-                              <b-button type="button" class="btn btn-dark mx-1" @click="deleteRow(k, vendor)">Delete</b-button>
-                            </td>
-
-
-                        </tr>
-                    </tbody>
-                </table>
+                <div class ="table-responsive-xl mt-4">
+                  <table class="table table-hover table-bordered " >
+                      <thead>
+                          <tr>
+                            <th scope="col">Role</th>
+                            <th scope="col">Company Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Contact Name</th>
+                            <th scope="col">Contact Number</th>
+                            <th scope="col">Registration Number</th>
+                            <th scope="col">Nature of Business</th>
+                            <th scope="col">Actions</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr v-for="(vendor, k) in vendors" :key="k">
+                            <!-- v-if="vendor.role == 'USER'" -->
+                              <td>{{vendor.role}}</td>
+                              <td >{{vendor.companyName}}</td>
+                              <td >{{vendor.email}}</td>
+                              <td >{{vendor.name}}</td>
+                              <td >{{vendor.contactNumber}}</td>
+                              <td >{{vendor.gstRegistrationNumber}}</td>
+                              <td >{{vendor.natureOfBusiness}}</td>
+                              <td >
+                                <b-button type="button" class="btn btn-dark mx-1" @click="editRow(k, vendor, $event.target)" ref="btnShow">Edit</b-button>
+                                <b-button type="button" class="btn btn-dark mx-1" @click="deleteRow(k, vendor)">Delete</b-button>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
             </div>
             
         </div>
@@ -371,6 +281,7 @@
             token: '',
             vendorToken: '',
             show: true, // test
+            selected: '',
             modal: {
               id: 'modal-edit-vendor',
               name: '',
@@ -385,43 +296,19 @@
           }
       },
       created() {
-        // Simple POST request with a JSON body using axios
-        const user = {
-            "email" : "admin@admin.com",
-            "password" : "123"
-        };
-        this.token = sessionStorage.getItem('user').slice(10,154)
-        console.log("from acc-manager"+this.token)
-        // axios.post("http://localhost:8080/api/v1/auth/user/authenticate", user)
-        //   .then(response => {
-        //     this.token = response.data.token
-        //     console.log("from acc-manager"+this.token)
-        //     this.userEmail = sessionStorage.getItem('email')
-        //     if (sessionStorage.getItem('role') == 'ADMIN') {
-        //       axios.post("http://localhost:8080/api/v1/admin/getAdmin", {
-        //       "email": this.userEmail}, {headers: {
-        //         Authorization : `Bearer `+ this.token
-        //       }})
-        //       .then(response => this.userName = response.data.name)
-        //     } else {
-        //       axios.post("http://localhost:8080/api/v1/vendor/getUser", {
-        //       "email": this.userEmail}, {headers: {
-        //         Authorization : `Bearer `+ this.token
-        //       }})
-        //       .then(response => this.userName = response.data.name)
-        //     }
-            
-            
+        const userToken = sessionStorage.getItem('user')
+        this.token = userToken.slice(10,userToken.length-2)
+        // console.log("from acc-manager"+this.token)
         axios.get('http://localhost:8080/api/v1/admin/getAllUsers', {headers: {
           Authorization : `Bearer `+ this.token
         }})
-        .then(response => this.vendors = response.data)
+        .then(response => {
+        this.vendors = response.data
+        })
         .catch ((error) => {
-          console.log(this.vendors)
+          //console.log(this.vendors)
           console.log(error)
         })
-          // }); 
-
       },
       computed: {
         currentUser() {
@@ -429,6 +316,9 @@
         },
         validation() {
         return this.password.length > 4 && this.password.length < 13
+        },
+        state() {
+          return Boolean(this.selected)
         }
       },
       mounted() {
@@ -436,47 +326,84 @@
           this.$router.push('/login');
         }
       },
-      
       methods: {
         onSubmit(event) {
-        event.preventDefault()
-        const user = {
-                "name" : this.name,
-                "email" : this.email,
-                "contactNumber" : this.contactNumber,
-                "companyName" : this.companyName,
-                "gstRegistrationNumber": this.gstRegistrationNumber,
-                "natureOfBusiness": this.natureOfBusiness,
-                "password" : this.password,
-            };
-            console.log(this.token);
-            console.log(user)
+          event.preventDefault()
+          const user = {
+                  "name" : this.name,
+                  "email" : this.email,
+                  "contactNumber" : this.contactNumber,
+                  "companyName" : this.companyName,
+                  "gstRegistrationNumber": this.gstRegistrationNumber,
+                  "natureOfBusiness": this.natureOfBusiness,
+                  "password" : this.password,
+              };
+
+          const adminOrApproval = {
+            "name" : this.name,
+            "email" : this.email,
+            "contactNumber" : this.contactNumber,
+            "password" : this.password,
+          }
+          //console.log(this.token);
+          //console.log(user)
+          if (this.selected == 'vendor') {
             axios.post("http://localhost:8080/api/v1/auth/admin/register", user, {headers: {
-              Authorization : `Bearer ` + this.token
-            }})
+                          Authorization : `Bearer ` + this.token
+                        }})
             .then(response => {
-                this.vendors.push(user)
-                axios.get('http://localhost:8080/api/v1/admin/getAllUsers', {headers: {
-                Authorization : `Bearer `+ this.token
-              }})
-              .then(response => this.vendors = response.data)
-              .catch ((error) => {
-                console.log(this.vendors)
-                console.log(error)
-              })
+              console.log("creating user")
+              this.vendors.push(user)
+
+            })
+            .catch ((error) => {
+              console.log(error)
+            })
+          } else if (this.selected == 'admin') {
+            axios.post("http://localhost:8080/api/v1/auth/admin/registerAdmin", adminOrApproval, {headers: {
+                          Authorization : `Bearer ` + this.token
+                        }})
+            .then(response => {
+              console.log("creating admin account")
+              this.vendors.push(user)
+
             })
             .catch ((error) => {
               console.log(error)
             })
             
-    
-            this.$nextTick(() => {
-              this.$bvModal.hide('modal-create-vendor')
+          } else if (this.selected == 'approval') {
+            axios.post("http://localhost:8080/api/v1/auth/admin/registerApprover", adminOrApproval, {headers: {
+                          Authorization : `Bearer ` + this.token
+                        }})
+            .then(response => {
+              console.log("creating approval account")
+              this.vendors.push(user)
+
             })
+            .catch ((error) => {
+              console.log(error)
+            })
+            
+          }
+
+          axios.get('http://localhost:8080/api/v1/admin/getAllUsers', {headers: {
+              Authorization : `Bearer `+ this.token
+            }})
+            .then(response => this.vendors = response.data)
+            .catch ((error) => {
+              console.log(this.vendors)
+              console.log(error)
+            })
+          
+          this.$nextTick(() => {
+            this.$bvModal.hide('modal-create-vendor')
+          })
       },
       onReset(event) {
         event.preventDefault()
         // Reset our form values
+        this.selected = ''
         this.name = ''
         this.email = ''
         this.contactNumber = ''
@@ -490,158 +417,178 @@
           this.show = true
         })
       }, // test
-          checkRole() {
-                return sessionStorage.getItem('role');
-            },
-          checkUser() {
-                return sessionStorage.getItem('user');
-            },
-          getUsers() {
-            axios.get('http://localhost:8080/api/v1/admin/getAllUsers', {headers: {
-              Authorization : `Bearer `+ this.token
-            }})
-            .then(response => this.vendors = response.data)
-            console.log(this.vendors)
-            .catch ((error) => {
-              console.log(vendors)
-              console.log(error)
-            })
-          },
-          deleteRow(index, vendor) {
-            console.log(vendor.email)
-            axios.delete('http://localhost:8080/api/v1/admin/deleteUser',{
-              headers: {
-                Authorization : `Bearer `+ this.token
-              }, 
-              data: {
-                "email": vendor.email
-              }
-            })
-            .then(response => {
-                 console.log(response);
-             })
-            .catch ((error) => {
-              console.log(error.response.data)
-            })
-            if (index > -1) {
-                  this.vendors.splice(index, 1);
-              }
-          },
-          checkFormValidity() {
-            
-
-            this.nameState = valid
-            return valid
-          },
-          resetModal() {
-            this.name = ''
-            this.email = ''
-            this.contactNumber = ''
-            this.password = '',
-            this.companyName ='',
-            this.gstRegistrationNumber ='',
-            this.natureOfBusiness = ''
-          },
-          handleOk(bvModalEvent) {
-            // Prevent modal from closing
-            bvModalEvent.preventDefault()
-            // Trigger submit handler
-            this.handleSubmit()
-          },
-          handleSubmit() {
-            // Push the name to submitted names
-            const user = {
-                "name" : this.name,
-                "email" : this.email,
-                "contactNumber" : this.contactNumber,
-                "companyName" : this.companyName,
-                "gstRegistrationNumber": this.gstRegistrationNumber,
-                "natureOfBusiness": this.natureOfBusiness,
-                "password" : this.password,
-            };
-            console.log(this.token);
-            console.log(user)
-            axios.post("http://localhost:8080/api/v1/auth/admin/register", user, {headers: {
-              Authorization : `Bearer ` + this.token
-            }})
-            .then(response => {
-                this.vendors.push(user)
-                axios.get('http://localhost:8080/api/v1/admin/getAllUsers', {headers: {
-                Authorization : `Bearer `+ this.token
-              }})
-              .then(response => this.vendors = response.data)
-              .catch ((error) => {
-                console.log(this.vendors)
-                console.log(error)
-              })
-            })
-            .catch ((error) => {
-              console.log(error)
-            })
-            
-    
-            this.$nextTick(() => {
-              this.$bvModal.hide('modal-create-vendor')
-            })
-          },
-          editRow(index, vendor, button) {
-            this.modal.name = vendor.name
-            this.modal.contactNumber = vendor.contactNumber
-            this.modal.email = vendor.email
-            this.modal.companyName = vendor.companyName
-            this.modal.gstRegistrationNumber = vendor.gstRegistrationNumber
-            this.modal.natureOfBusiness = vendor.natureOfBusiness
-            this.modal.index = index
-            console.log("opening modal: what is this.modal.name?" +this.modal.name)
-            this.$root.$emit('bv::show::modal', this.modal.id, 'btnShow')
-            
-          },   
-          handleOk2(bvModalEvent) {
-            // Prevent modal from closing
-            bvModalEvent.preventDefault()
-            // Trigger edit handler
-            console.log("what does this do?")
-            this.handleSubmit2()
-          },
-          handleSubmit2() {
-            // Push the name to submitted names
-            // this.vendors[this.modal.index] = {
-            //   name : this.name,
-            //   email : this.email,
-            //   contactNumber : this.contactNumber
-            // }
-            console.log("press ok than got this function")
-            console.log("les check what is this.name"+ this.modal.email)
-            console.log("check if token is correct"+ this.token)
-            const user = {
-              "name" : this.name,
-              "email" : this.modal.email,
-              "contactNumber" : this.contactNumber,
-              "companyName" : this.companyName,
-              "gstRegistrationNumber": this.gstRegistrationNumber,
-              "natureOfBusiness": this.natureOfBusiness
-            }
-            console.log("show what is user" +user.name + user.email + user.companyName+user.gstRegistrationNumber)
-            axios.put("http://localhost:8080/api/v1/admin/updateUser", user, {headers: {
-              Authorization : `Bearer ` + this.token
-            }})
-            .then(response => {
-                axios.get('http://localhost:8080/api/v1/admin/getAllUsers', {headers: {
-                Authorization : `Bearer `+ this.token
-              }})
-              .then(response => this.vendors = response.data)
-              .catch ((error) => {
-                console.log(this.vendors)
-                console.log(error)
-              })
-            })
-            .catch ((error) => {
-              console.log(error)
-            })
-            this.$nextTick(() => {
-              this.$bvModal.hide('modal-prevent-closing2')
-            })
+      deleteRow(index, vendor) {
+        console.log(vendor.email)
+        axios.delete('http://localhost:8080/api/v1/admin/deleteUser',{
+          headers: {
+            Authorization : `Bearer `+ this.token
+          }, 
+          data: {
+            "email": vendor.email
           }
+        })
+        .then(response => {
+              console.log(response);
+          })
+        .catch ((error) => {
+          console.log(error.response.data)
+        })
+        if (index > -1) {
+              this.vendors.splice(index, 1);
+          }
+      },
+      checkFormValidity() {
+        
+
+        this.nameState = valid
+        return valid
+      },
+      resetModal() {
+        this.selected =''
+        this.name = ''
+        this.email = ''
+        this.contactNumber = ''
+        this.password = '',
+        this.companyName ='',
+        this.gstRegistrationNumber ='',
+        this.natureOfBusiness = ''
+      },
+      // handleOk(bvModalEvent) {
+      //   // Prevent modal from closing
+      //   bvModalEvent.preventDefault()
+      //   // Trigger submit handler
+      //   this.handleSubmit()
+      // },
+      // handleSubmit() {
+      //   // Push the name to submitted names
+      //   const user = {
+      //       "name" : this.name,
+      //       "email" : this.email,
+      //       "contactNumber" : this.contactNumber,
+      //       "companyName" : this.companyName,
+      //       "gstRegistrationNumber": this.gstRegistrationNumber,
+      //       "natureOfBusiness": this.natureOfBusiness,
+      //       "password" : this.password,
+      //   };
+
+      //   const adminOrApproval = {
+      //     "name" : this.name,
+      //     "email" : this.email,
+      //     "contactNumber" : this.contactNumber,
+      //     "password" : this.password,
+      //   }
+      //   console.log(this.token);
+      //   console.log(user)
+      //   if (selected == 'vendor') {
+      //     axios.post("http://localhost:8080/api/v1/auth/admin/register", user, {headers: {
+      //                   Authorization : `Bearer ` + this.token
+      //                 }})
+      //     .then(response => {
+      //       console.log("creating user")
+      //       this.vendors.push(user)
+
+      //     })
+      //     .catch ((error) => {
+      //       console.log(error)
+      //     })
+      //   } else if (selected == 'admin') {
+      //     axios.post("http://localhost:8080/api/v1/auth/admin/registerAdmin", adminOrApproval, {headers: {
+      //                   Authorization : `Bearer ` + this.token
+      //                 }})
+      //     .then(response => {
+      //       console.log("creating admin account")
+      //       this.vendors.push(user)
+
+      //     })
+      //     .catch ((error) => {
+      //       console.log(error)
+      //     })
+          
+      //   } else if (selected == 'approval') {
+      //     axios.post("http://localhost:8080/api/v1/auth/admin/registerApprover", adminOrApproval, {headers: {
+      //                   Authorization : `Bearer ` + this.token
+      //                 }})
+      //     .then(response => {
+      //       this.vendors.push(user)
+
+      //     })
+      //     .catch ((error) => {
+      //       console.log(error)
+      //     })
+          
+      //   }
+
+      //   axios.get('http://localhost:8080/api/v1/admin/getAllUsers', {headers: {
+      //       Authorization : `Bearer `+ this.token
+      //     }})
+      //     .then(response => this.vendors = response.data)
+      //     .catch ((error) => {
+      //       console.log(this.vendors)
+      //       console.log(error)
+      //     })
+        
+      //   this.$nextTick(() => {
+      //     this.$bvModal.hide('modal-create-vendor')
+      //   })
+      // },
+      editRow(index, vendor, button) {
+        this.modal.name = vendor.name
+        this.modal.contactNumber = vendor.contactNumber
+        this.modal.email = vendor.email
+        this.modal.companyName = vendor.companyName
+        this.modal.gstRegistrationNumber = vendor.gstRegistrationNumber
+        this.modal.natureOfBusiness = vendor.natureOfBusiness
+        this.modal.index = index
+        console.log("opening modal: what is this.modal.name?" +this.modal.name)
+        this.$root.$emit('bv::show::modal', this.modal.id, 'btnShow')
+        
+      },   
+      handleOk2(bvModalEvent) {
+        // Prevent modal from closing
+        bvModalEvent.preventDefault()
+        // Trigger edit handler
+        console.log("what does this do?")
+        this.handleSubmit2()
+      },
+      handleSubmit2() {
+        // Push the name to submitted names
+        // this.vendors[this.modal.index] = {
+        //   name : this.name,
+        //   email : this.email,
+        //   contactNumber : this.contactNumber
+        // }
+        console.log("press ok than got this function")
+        console.log("les check what is this.name"+ this.modal.email)
+        console.log("check if token is correct"+ this.token)
+        const user = {
+          "name" : this.name,
+          "email" : this.modal.email,
+          "contactNumber" : this.contactNumber,
+          "companyName" : this.companyName,
+          "gstRegistrationNumber": this.gstRegistrationNumber,
+          "natureOfBusiness": this.natureOfBusiness
+        }
+        console.log("show what is user" +user.name + user.email + user.companyName+user.gstRegistrationNumber)
+        axios.put("http://localhost:8080/api/v1/admin/updateUser", user, {headers: {
+          Authorization : `Bearer ` + this.token
+        }})
+        .then(response => {
+            axios.get('http://localhost:8080/api/v1/admin/getAllUsers', {headers: {
+            Authorization : `Bearer `+ this.token
+          }})
+          .then(response => this.vendors = response.data)
+          .catch ((error) => {
+            console.log(this.vendors)
+            console.log(error)
+          })
+        })
+        .catch ((error) => {
+          console.log(error)
+        })
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-edit-vendor')
+        })
+      }
       }
     }
     </script>
