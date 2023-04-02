@@ -130,7 +130,7 @@
                     <b-modal
                       id="modal-edit-vendor"
                       ref="modal"
-                      title="Edit Vendor"
+                      title="Edit Account Information"
                       @show="resetModal"
                       @hidden="resetModal"
                       @ok="handleOk2"
