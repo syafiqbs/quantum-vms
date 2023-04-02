@@ -407,9 +407,9 @@
 
                         // Sorting Workflows
                         if (this.sortMode == "deadline") {
-							// Sort by "Deadline" > "Date Modified" / "Date Created" first
-							this.workflows.sort(function(a, b) {
-								if (a.deadline == b.deadline) {
+                            // Sort by "Deadline" > "Date Modified" / "Date Created" first
+                            this.workflows.sort(function(a, b) {
+                                if (a.deadline == b.deadline) {
                                     let lastMod_a = a.dateModified;
                                     let lastMod_b = b.dateModified;
                                     if (lastMod_a == null) lastMod_a = a.dateCreated;
@@ -417,7 +417,7 @@
                                     if (lastMod_a == lastMod_b) {
                                         if (a.status == b.status) {
                                             if (a.name == b.name) {
-                                                if (a.form == b.form) return 1;
+                                                if (a.form == b.form) return 0;
                                                 else {
                                                     if (a.form < b.form) return -1;
                                                     else return 1;
@@ -428,32 +428,32 @@
                                             }
                                         } else {
                                             let statusWeight = {
-                                                "Draft": 3,
-                                                "Submitted": 6,
-                                                "Evaluation Approved": 7,
+                                                "Draft": 5,
+                                                "Submitted": 2,
+                                                "Evaluation Approved": 1,
                                                 "Evaluation Rejected": 4,
-                                                "Form Rejected": 5,
-                                                "Form Approved": 2,
-                                                "Archived": 1
+                                                "Form Rejected": 3,
+                                                "Form Approved": 6,
+                                                "Archived": 7
                                             }
                                             return statusWeight[a.status] - statusWeight[b.status];
                                         }
                                     } else {
                                         let d1 = new Date(lastMod_a);
                                         let d2 = new Date(lastMod_b);
-                                        return d1.getTime() - d2.getTime();
+                                        return d2.getTime() - d1.getTime();
                                     }
                                 } else {
                                     let d1 = new Date(a.deadline);
                                     let d2 = new Date(b.deadline);
                                     return d1.getTime() - d2.getTime();
                                 }
-							})
-						
-						} else if (this.sortMode == "company") {
-							// Sort by company first
-							this.workflows.sort(function(a, b) {
-								if (a.name == b.name) {
+                            })
+                        
+                        } else if (this.sortMode == "company") {
+                            // Sort by company first
+                            this.workflows.sort(function(a, b) {
+                                if (a.name == b.name) {
                                     if (a.status == b.status) {
                                         if (a.deadline == b.deadline) {
                                             let lastMod_a = a.dateModified;
@@ -461,7 +461,7 @@
                                             if (lastMod_a == null) lastMod_a = a.dateCreated;
                                             if (lastMod_b == null) lastMod_b = b.dateCreated;
                                             if (lastMod_a == lastMod_b) {
-                                                if (a.form == b.form) return 1;
+                                                if (a.form == b.form) return 0;
                                                 else {
                                                     if (a.form < b.form) return -1;
                                                     else return 1;
@@ -469,7 +469,7 @@
                                             } else {
                                                 let d1 = new Date(lastMod_a);
                                                 let d2 = new Date(lastMod_b);
-                                                return d1.getTime() - d2.getTime();
+                                                return d2.getTime() - d1.getTime();
                                             }
                                         } else {
                                             let d1 = new Date(a.deadline);
@@ -478,26 +478,26 @@
                                         }
                                     } else {
                                         let statusWeight = {
-                                            "Draft": 3,
-                                            "Submitted": 6,
-                                            "Evaluation Approved": 7,
-                                            "Evaluation Rejected": 4,
-                                            "Form Rejected": 5,
-                                            "Form Approved": 2,
-                                            "Archived": 1
-                                        }
+											"Draft": 5,
+											"Submitted": 2,
+											"Evaluation Approved": 1,
+											"Evaluation Rejected": 4,
+											"Form Rejected": 3,
+											"Form Approved": 6,
+											"Archived": 7
+										}
                                         return statusWeight[a.status] - statusWeight[b.status];
                                     }
                                 } else {
                                     if (a.name < b.name) return -1;
                                     else return 1;
                                 }							
-							})
-						
-						} else if (this.sortMode == "type") {
-							// Sort by Form Type first
-							this.workflows.sort(function(a, b) {
-								if (a.form == b.form) {
+                            })
+                        
+                        } else if (this.sortMode == "type") {
+                            // Sort by Form Type first
+                            this.workflows.sort(function(a, b) {
+                                if (a.form == b.form) {
                                     if (a.status == b.status) {
                                         if (a.deadline == b.deadline) {
                                             let lastMod_a = a.dateModified;
@@ -505,7 +505,7 @@
                                             if (lastMod_a == null) lastMod_a = a.dateCreated;
                                             if (lastMod_b == null) lastMod_b = b.dateCreated;
                                             if (lastMod_a == lastMod_b) {
-                                                if (a.name == b.name) return 1;
+                                                if (a.name == b.name) return 0;
                                                 else {
                                                     if (a.name < b.name) return -1;
                                                     else return 1;
@@ -513,7 +513,7 @@
                                             } else {
                                                 let d1 = new Date(lastMod_a);
                                                 let d2 = new Date(lastMod_b);
-                                                return d1.getTime() - d2.getTime();
+                                                return d2.getTime() - d1.getTime();
                                             }
                                         } else {
                                             let d1 = new Date(a.deadline);
@@ -522,26 +522,26 @@
                                         }
                                     } else {
                                         let statusWeight = {
-                                            "Draft": 3,
-                                            "Submitted": 6,
-                                            "Evaluation Approved": 7,
-                                            "Evaluation Rejected": 4,
-                                            "Form Rejected": 5,
-                                            "Form Approved": 2,
-                                            "Archived": 1
-                                        }
+											"Draft": 5,
+											"Submitted": 2,
+											"Evaluation Approved": 1,
+											"Evaluation Rejected": 4,
+											"Form Rejected": 3,
+											"Form Approved": 6,
+											"Archived": 7
+										}
                                         return statusWeight[a.status] - statusWeight[b.status];
                                     }
                                 } else {
                                     if (a.form < b.form) return -1;
                                     else return 1;
                                 }							
-							})
-						
-						} else {
-							this.workflows.sort(function(a, b) {
-								// Default Sort: Status > Date > Company > Form Type
-								if (a.status == b.status) {
+                            })
+                        
+                        } else {
+                            this.workflows.sort(function(a, b) {
+                                // Default Sort: Status > Date > Company > Form Type
+                                if (a.status == b.status) {
                                     if (a.deadline == b.deadline) {
                                         let lastMod_a = a.dateModified;
                                         let lastMod_b = b.dateModified;
@@ -549,7 +549,7 @@
                                         if (lastMod_b == null) lastMod_b = b.dateCreated;
                                         if (lastMod_a == lastMod_b) {
                                             if (a.name == b.name) {
-                                                if (a.form == b.form) return 1;
+                                                if (a.form == b.form) return 0;
                                                 else {
                                                     if (a.form < b.form) return -1;
                                                     else return 1;
@@ -561,7 +561,7 @@
                                         } else {
                                             let d1 = new Date(lastMod_a);
                                             let d2 = new Date(lastMod_b);
-                                            return d1.getTime() - d2.getTime();
+                                            return d2.getTime() - d1.getTime();
                                         }
                                     } else {
                                         let d1 = new Date(a.deadline);
@@ -570,19 +570,19 @@
                                     }
                                 } else {
                                     let statusWeight = {
-                                        "Draft": 3,
-                                        "Submitted": 6,
-                                        "Evaluation Approved": 7,
-                                        "Evaluation Rejected": 4,
-                                        "Form Rejected": 5,
-                                        "Form Approved": 2,
-                                        "Archived": 1
-                                    }
+										"Draft": 5,
+										"Submitted": 2,
+										"Evaluation Approved": 1,
+										"Evaluation Rejected": 4,
+										"Form Rejected": 3,
+										"Form Approved": 6,
+										"Archived": 7
+									}
                                     return statusWeight[a.status] - statusWeight[b.status];
                                 }
-							})
-						
-						}
+                            })
+                        
+                        }
                     })
                     .catch(error => {
                         console.log(error);
@@ -683,9 +683,9 @@
 
                         // Sorting Workflows
                         if (this.sortMode == "deadline") {
-							// Sort by "Deadline" > "Date Modified" / "Date Created" first
-							this.workflows.sort(function(a, b) {
-								if (a.deadline == b.deadline) {
+                            // Sort by "Deadline" > "Date Modified" / "Date Created" first
+                            this.workflows.sort(function(a, b) {
+                                if (a.deadline == b.deadline) {
                                     let lastMod_a = a.dateModified;
                                     let lastMod_b = b.dateModified;
                                     if (lastMod_a == null) lastMod_a = a.dateCreated;
@@ -693,7 +693,7 @@
                                     if (lastMod_a == lastMod_b) {
                                         if (a.status == b.status) {
                                             if (a.name == b.name) {
-                                                if (a.form == b.form) return 1;
+                                                if (a.form == b.form) return 0;
                                                 else {
                                                     if (a.form < b.form) return -1;
                                                     else return 1;
@@ -704,32 +704,32 @@
                                             }
                                         } else {
                                             let statusWeight = {
-                                                "Draft": 3,
-                                                "Submitted": 6,
-                                                "Evaluation Approved": 7,
+                                                "Draft": 5,
+                                                "Submitted": 2,
+                                                "Evaluation Approved": 1,
                                                 "Evaluation Rejected": 4,
-                                                "Form Rejected": 5,
-                                                "Form Approved": 2,
-                                                "Archived": 1
+                                                "Form Rejected": 3,
+                                                "Form Approved": 6,
+                                                "Archived": 7
                                             }
                                             return statusWeight[a.status] - statusWeight[b.status];
                                         }
                                     } else {
                                         let d1 = new Date(lastMod_a);
                                         let d2 = new Date(lastMod_b);
-                                        return d1.getTime() - d2.getTime();
+                                        return d2.getTime() - d1.getTime();
                                     }
                                 } else {
                                     let d1 = new Date(a.deadline);
                                     let d2 = new Date(b.deadline);
                                     return d1.getTime() - d2.getTime();
                                 }
-							})
-						
-						} else if (this.sortMode == "company") {
-							// Sort by company first
-							this.workflows.sort(function(a, b) {
-								if (a.name == b.name) {
+                            })
+                        
+                        } else if (this.sortMode == "company") {
+                            // Sort by company first
+                            this.workflows.sort(function(a, b) {
+                                if (a.name == b.name) {
                                     if (a.status == b.status) {
                                         if (a.deadline == b.deadline) {
                                             let lastMod_a = a.dateModified;
@@ -737,7 +737,7 @@
                                             if (lastMod_a == null) lastMod_a = a.dateCreated;
                                             if (lastMod_b == null) lastMod_b = b.dateCreated;
                                             if (lastMod_a == lastMod_b) {
-                                                if (a.form == b.form) return 1;
+                                                if (a.form == b.form) return 0;
                                                 else {
                                                     if (a.form < b.form) return -1;
                                                     else return 1;
@@ -745,7 +745,7 @@
                                             } else {
                                                 let d1 = new Date(lastMod_a);
                                                 let d2 = new Date(lastMod_b);
-                                                return d1.getTime() - d2.getTime();
+                                                return d2.getTime() - d1.getTime();
                                             }
                                         } else {
                                             let d1 = new Date(a.deadline);
@@ -754,26 +754,26 @@
                                         }
                                     } else {
                                         let statusWeight = {
-                                            "Draft": 3,
-                                            "Submitted": 6,
-                                            "Evaluation Approved": 7,
-                                            "Evaluation Rejected": 4,
-                                            "Form Rejected": 5,
-                                            "Form Approved": 2,
-                                            "Archived": 1
-                                        }
+											"Draft": 5,
+											"Submitted": 2,
+											"Evaluation Approved": 1,
+											"Evaluation Rejected": 4,
+											"Form Rejected": 3,
+											"Form Approved": 6,
+											"Archived": 7
+										}
                                         return statusWeight[a.status] - statusWeight[b.status];
                                     }
                                 } else {
                                     if (a.name < b.name) return -1;
                                     else return 1;
                                 }							
-							})
-						
-						} else if (this.sortMode == "type") {
-							// Sort by Form Type first
-							this.workflows.sort(function(a, b) {
-								if (a.form == b.form) {
+                            })
+                        
+                        } else if (this.sortMode == "type") {
+                            // Sort by Form Type first
+                            this.workflows.sort(function(a, b) {
+                                if (a.form == b.form) {
                                     if (a.status == b.status) {
                                         if (a.deadline == b.deadline) {
                                             let lastMod_a = a.dateModified;
@@ -781,7 +781,7 @@
                                             if (lastMod_a == null) lastMod_a = a.dateCreated;
                                             if (lastMod_b == null) lastMod_b = b.dateCreated;
                                             if (lastMod_a == lastMod_b) {
-                                                if (a.name == b.name) return 1;
+                                                if (a.name == b.name) return 0;
                                                 else {
                                                     if (a.name < b.name) return -1;
                                                     else return 1;
@@ -789,7 +789,7 @@
                                             } else {
                                                 let d1 = new Date(lastMod_a);
                                                 let d2 = new Date(lastMod_b);
-                                                return d1.getTime() - d2.getTime();
+                                                return d2.getTime() - d1.getTime();
                                             }
                                         } else {
                                             let d1 = new Date(a.deadline);
@@ -798,26 +798,26 @@
                                         }
                                     } else {
                                         let statusWeight = {
-                                            "Draft": 3,
-                                            "Submitted": 6,
-                                            "Evaluation Approved": 7,
-                                            "Evaluation Rejected": 4,
-                                            "Form Rejected": 5,
-                                            "Form Approved": 2,
-                                            "Archived": 1
-                                        }
+											"Draft": 5,
+											"Submitted": 2,
+											"Evaluation Approved": 1,
+											"Evaluation Rejected": 4,
+											"Form Rejected": 3,
+											"Form Approved": 6,
+											"Archived": 7
+										}
                                         return statusWeight[a.status] - statusWeight[b.status];
                                     }
                                 } else {
                                     if (a.form < b.form) return -1;
                                     else return 1;
                                 }							
-							})
-						
-						} else {
-							this.workflows.sort(function(a, b) {
-								// Default Sort: Status > Date > Company > Form Type
-								if (a.status == b.status) {
+                            })
+                        
+                        } else {
+                            this.workflows.sort(function(a, b) {
+                                // Default Sort: Status > Date > Company > Form Type
+                                if (a.status == b.status) {
                                     if (a.deadline == b.deadline) {
                                         let lastMod_a = a.dateModified;
                                         let lastMod_b = b.dateModified;
@@ -825,7 +825,7 @@
                                         if (lastMod_b == null) lastMod_b = b.dateCreated;
                                         if (lastMod_a == lastMod_b) {
                                             if (a.name == b.name) {
-                                                if (a.form == b.form) return 1;
+                                                if (a.form == b.form) return 0;
                                                 else {
                                                     if (a.form < b.form) return -1;
                                                     else return 1;
@@ -837,7 +837,7 @@
                                         } else {
                                             let d1 = new Date(lastMod_a);
                                             let d2 = new Date(lastMod_b);
-                                            return d1.getTime() - d2.getTime();
+                                            return d2.getTime() - d1.getTime();
                                         }
                                     } else {
                                         let d1 = new Date(a.deadline);
@@ -846,19 +846,19 @@
                                     }
                                 } else {
                                     let statusWeight = {
-                                        "Draft": 3,
-                                        "Submitted": 6,
-                                        "Evaluation Approved": 7,
-                                        "Evaluation Rejected": 4,
-                                        "Form Rejected": 5,
-                                        "Form Approved": 2,
-                                        "Archived": 1
-                                    }
+										"Draft": 5,
+										"Submitted": 2,
+										"Evaluation Approved": 1,
+										"Evaluation Rejected": 4,
+										"Form Rejected": 3,
+										"Form Approved": 6,
+										"Archived": 7
+									}
                                     return statusWeight[a.status] - statusWeight[b.status];
                                 }
-							})
-						
-						}
+                            })
+                        
+                        }
                     })
                     .catch(error => {
                         console.log(error);
@@ -1021,13 +1021,19 @@
             restoreRow(index, workflow) {
                 if (workflow.form == "form-1" || workflow.form == "form-2" || workflow.form == "form-3") {
 
+                    let now = new Date();
+                    let new_deadline = new Date();
+                    new_deadline.setDate(new_deadline.getDate() + 7);
+
                     let formLinkConversion = {
                         "form-1": "vendor/updateVendorAssessmentForm",
                         "form-2": "vendor/updatePreEvaluationForm",
                         "form-3": "vendor/updatePerformanceEvaluationForm"
                     }
                     let updateData = {
-                        id: workflow.id
+                        id: workflow.id,
+                        dateModified: now.toISOString(),
+                        deadline: new_deadline.toISOString()
                     }
 
                     if (workflow.form == "form-1") {
@@ -1066,13 +1072,16 @@
             deleteRow(index, workflow) {
                 if (workflow.form == "form-1" || workflow.form == "form-2" || workflow.form == "form-3") {
 
+                    let now = new Date();
+
                     let formLinkConversion = {
                         "form-1": "vendor/updateVendorAssessmentForm",
                         "form-2": "vendor/updatePreEvaluationForm",
                         "form-3": "vendor/updatePerformanceEvaluationForm"
                     }
                     let updateData = {
-                        id: workflow.id
+                        id: workflow.id,
+                        dateModified: now.toISOString()
                     }
 
                     if (workflow.form == "form-1") {
