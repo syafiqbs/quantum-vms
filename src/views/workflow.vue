@@ -169,53 +169,55 @@
                     </b-modal>
                 </div>
     
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">Vendor Name</th>
-                            <th scope="col">Form</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Actions</th>
-                            <th scope="col">Date Created</th>
-                            <th scope="col">Date Modified</th>
-                            <th scope="col">Deadline</th>
-                            <th scope="col">Additional Remarks</th>
-                            <th scope="col" v-if="role == 'ADMIN' || role == 'APPROVER'">Admin Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(workflow, k) in workflows" :key="k">
-                            <th scope="row">{{workflow.name}}</th>
-                            <td>{{handleForm(workflow.form)}}</td>
-                            <td>{{handleStatus(workflow.status)}}</td>
-                            <td v-if="handleActions(workflow.status) == 'viewOnly'">
-                                <b-button type="button" class="btn btn-secondary mx-1" @click="GoToForm(workflow.form, workflow.id)">View</b-button>
-                            </td>
-                            <td v-else-if="handleActions(workflow.status) == 'edit'">
-                                <b-button type="button" class="btn btn-dark mx-1" @click="GoToForm(workflow.form, workflow.id)">Edit</b-button>
-                            </td>
-                            <td v-else-if="handleActions(workflow.status) == 'review'">
-                                <b-button type="button" class="btn btn-info mx-1" @click="GoToForm(workflow.form, workflow.id)">Review</b-button>
-                            </td>
-                            <td v-else-if="handleActions(workflow.status) == 'approve'">
-                                <b-button type="button" class="btn btn-warning mx-1" @click="GoToForm(workflow.form, workflow.id)">Approve</b-button>
-                            </td>
-                            <td v-else-if="handleActions(workflow.status) == 'restore'">
-                                <b-button type="button" class="btn btn-danger mx-1" @click="restoreRow(k, workflow)">Restore</b-button>
-                            </td>
-                            <td v-else>Invalid data, please inform Admin!</td>
-                            <td>{{handleDate(workflow.dateCreated)}}</td>
-                            <td>{{handleDate(workflow.dateModified)}}</td>
-                            <td>{{handleDeadline(workflow.deadline, workflow.status)}}</td>
-                            <td>{{workflow.remarks}}</td>
-                            <td v-if="role == 'ADMIN' || role == 'APPROVER'">
-                                <b-button v-if="workflow.status == 'Draft' || workflow.status == 'Evaluation Rejected' || workflow.status == 'Form Rejected'" type="button" class="btn btn-info mx-1" @click="sendEmail(k, workflow, $event.target)" ref="btnEmail">Send Email</b-button>
-                                <!-- <b-button v-if="workflow.status == 'Draft' || workflow.status == 'Evaluation Rejected' || workflow.status == 'Form Rejected'" type="button" class="btn btn-warning mx-1" v-b-modal.modal-wfcreate>Edit Deadline</b-button> -->
-                                <b-button v-if="workflow.status == 'Draft' || workflow.status == 'Submitted' || workflow.status == 'Evaluation Rejected' || workflow.status == 'Form Rejected'" type="button" class="btn btn-danger mx-1" @click="deleteRow(k, workflow)">Delete</b-button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive-x1 mt-4">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Vendor Name</th>
+                                <th scope="col">Form</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Actions</th>
+                                <th scope="col">Date Created</th>
+                                <th scope="col">Date Modified</th>
+                                <th scope="col">Deadline</th>
+                                <th scope="col">Additional Remarks</th>
+                                <th scope="col" v-if="role == 'ADMIN' || role == 'APPROVER'">Admin Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(workflow, k) in workflows" :key="k">
+                                <th scope="row">{{workflow.name}}</th>
+                                <td>{{handleForm(workflow.form)}}</td>
+                                <td>{{handleStatus(workflow.status)}}</td>
+                                <td v-if="handleActions(workflow.status) == 'viewOnly'">
+                                    <b-button type="button" class="btn btn-secondary mx-1" @click="GoToForm(workflow.form, workflow.id)">View</b-button>
+                                </td>
+                                <td v-else-if="handleActions(workflow.status) == 'edit'">
+                                    <b-button type="button" class="btn btn-dark mx-1" @click="GoToForm(workflow.form, workflow.id)">Edit</b-button>
+                                </td>
+                                <td v-else-if="handleActions(workflow.status) == 'review'">
+                                    <b-button type="button" class="btn btn-info mx-1" @click="GoToForm(workflow.form, workflow.id)">Review</b-button>
+                                </td>
+                                <td v-else-if="handleActions(workflow.status) == 'approve'">
+                                    <b-button type="button" class="btn btn-warning mx-1" @click="GoToForm(workflow.form, workflow.id)">Approve</b-button>
+                                </td>
+                                <td v-else-if="handleActions(workflow.status) == 'restore'">
+                                    <b-button type="button" class="btn btn-danger mx-1" @click="restoreRow(k, workflow)">Restore</b-button>
+                                </td>
+                                <td v-else>Invalid data, please inform Admin!</td>
+                                <td>{{handleDate(workflow.dateCreated)}}</td>
+                                <!-- <td>{{handleDate(workflow.dateModified)}}</td> -->
+                                <td>{{handleDeadline(workflow.deadline, workflow.status)}}</td>
+                                <td>{{workflow.remarks}}</td>
+                                <td v-if="role == 'ADMIN' || role == 'APPROVER'">
+                                    <b-button v-if="workflow.status == 'Draft' || workflow.status == 'Evaluation Rejected' || workflow.status == 'Form Rejected'" type="button" class="btn btn-info mx-1" @click="sendEmail(k, workflow, $event.target)" ref="btnEmail">Send Email</b-button>
+                                    <!-- <b-button v-if="workflow.status == 'Draft' || workflow.status == 'Evaluation Rejected' || workflow.status == 'Form Rejected'" type="button" class="btn btn-warning mx-1" v-b-modal.modal-wfcreate>Edit Deadline</b-button> -->
+                                    <b-button v-if="workflow.status == 'Draft' || workflow.status == 'Submitted' || workflow.status == 'Evaluation Rejected' || workflow.status == 'Form Rejected'" type="button" class="btn btn-danger mx-1" @click="deleteRow(k, workflow)">Delete</b-button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
