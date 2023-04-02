@@ -178,7 +178,6 @@
                                 <th scope="col">Status</th>
                                 <th scope="col">Actions</th>
                                 <th scope="col">Date Created</th>
-                                <th scope="col">Date Modified</th>
                                 <th scope="col">Deadline</th>
                                 <th scope="col">Additional Remarks</th>
                                 <th scope="col" v-if="role == 'ADMIN' || role == 'APPROVER'">Admin Actions</th>
@@ -206,7 +205,6 @@
                                 </td>
                                 <td v-else>Invalid data, please inform Admin!</td>
                                 <td>{{handleDate(workflow.dateCreated)}}</td>
-                                <!-- <td>{{handleDate(workflow.dateModified)}}</td> -->
                                 <td>{{handleDeadline(workflow.deadline, workflow.status)}}</td>
                                 <td>{{workflow.remarks}}</td>
                                 <td v-if="role == 'ADMIN' || role == 'APPROVER'">
