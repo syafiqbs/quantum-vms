@@ -1076,7 +1076,7 @@ export default {
               scale: scale,
           },
           callback: function () {
-              pdf.save('example.pdf');
+              pdf.save('Vendor-Assessment-Form.pdf');
           }
       });
       
