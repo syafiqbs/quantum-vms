@@ -989,8 +989,6 @@
             },
             handleSubmitEmail() {
 
-                alert(this.modal.emailRecipient + this.emailBody + this.emailSubject);
-
                 axios({
                     url: 'admin/sendEmail',
                     method: 'post',
