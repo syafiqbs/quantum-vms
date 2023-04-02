@@ -1,6 +1,6 @@
 <template>
-  <div class="form1-container">
-    <div class="form1-form1admin">
+  <div class="form1-container" >
+    <div class="form1-form1admin" id="content">
       <div class="form1-header-horizontal">
         <div class="form1-frame12">
           <span class="form1-text HeadingH2Regular">
@@ -8,12 +8,12 @@
           </span>
           <div class="form1-frame11">
             <div class="form1-frame10">
-              <router-link to="/workflow" class="form1-text002 ParagraphNormalRegular form1-link">
+              <router-link to="/workflow" class="form1-text002 ParagraphNormalRegular">
                 <span>Home</span>
               </router-link>
-              <!-- <span class="form1-text004 ParagraphNormalRegular">
-                <span>Logout</span>
-              </span> -->
+              <span class="form1-text004 ParagraphNormalRegular" @click.prevent="handlePrint" id="print">
+                <span>Print</span>
+              </span>
             </div>
           </div>
         </div>
@@ -58,11 +58,6 @@
               </div>
             </a>
           </div>
-          <img
-            alt="Line26I748"
-            src="/playground_assets/line26i748-vlim.svg"
-            class="form1-line26"
-          />
         </div>
         <div class="form1-tab1">
           <div class="form1-frame112">
@@ -690,7 +685,7 @@
               name="form1-radio-evalResult"
               value="Approved"
               class="form1-radiobutton18"
-              :disabled="!isAdminOrApprover && !isApprover"
+              :disabled="!(isAdminOrApprover && !evaluatedCheck) || !(isApprover && evaluatedCheck)"
               v-model="evaluation"
             />
             <label class="form1-text114">Approved</label>
@@ -701,7 +696,7 @@
               name="form1-radio-evalResult"
               value="Not Approved"
               class="form1-radiobutton19"
-              :disabled="!isAdminOrApprover && !isApprover"
+              :disabled="!(isAdminOrApprover && !evaluatedCheck) || !(isApprover && evaluatedCheck)"
               v-model="evaluation"
             />
             <label class="form1-text115">Not Approved</label>
@@ -749,7 +744,7 @@
         </div>
         <div class="form1-inputtext14">
           <span class="form1-text126">
-            <span class="form1-text127">Signature</span>
+            <span class="form1-text127">Evaluator Signature</span>
             <br />
             <br />
           </span>
@@ -763,7 +758,7 @@
         </div>
         <div class="form1-inputtext15">
           <span class="form1-text130">
-            <span class="form1-text131">Signature</span>
+            <span class="form1-text131">Approver Signature</span>
             <br />
             <br />
           </span>
@@ -777,16 +772,23 @@
         </div>
       </div>
       <div class="form1-container25">
-        <button id="form1-btn-save" type="button" class="form1-button" @click.prevent="handleSave">
+        <button id="form1-btn-save" type="button" class="form1-button" 
+        @click.prevent="handleSave"
+        v-if="vendorAssessmentResults != 'Form Approved' && vendorAssessmentResults != 'Form Approved'
+        ">
           <span class="form1-text134 ParagraphNormalRegular">Save</span>
         </button>
         <input id="form1-btn-submit" type="submit" class="form1-button1" v-if="isVendor" value="Submit">
           <!-- <span class="form1-text135 ParagraphNormalRegular">Submit</span>
         </button> -->
-        <button id="form1-btn-rejectEval" class="form1-button2" v-if="(isAdminOrApprover || isApprover) && !evaluatedCheck" @click.prevent="handleRejectEvaluation">
+        <button id="form1-btn-rejectEval" class="form1-button2" 
+        v-if="!isVendor && (vendorAssessmentResults == 'Submitted' || vendorAssessmentResults == 'Evaluation Rejected' || vendorAssessmentResults == 'Form Rejected')" 
+        @click.prevent="handleRejectEvaluation">
           <span class="form1-text136 ParagraphNormalRegular">Reject Evaluation</span>
         </button>
-        <button id="form1-btn-approveEval" type="button" class="form1-button3" v-if="(isAdminOrApprover || isApprover) && !evaluatedCheck" @click.prevent="handleApproveEvaluation">
+        <button id="form1-btn-approveEval" type="button" class="form1-button3" 
+        v-if="!isVendor && (vendorAssessmentResults == 'Submitted' || vendorAssessmentResults == 'Evaluation Rejected' || vendorAssessmentResults == 'Form Rejected')" 
+        @click.prevent="handleApproveEvaluation">
           <span class="form1-text137 ParagraphNormalRegular">Approve Evaluation</span>
         </button>
         <button id="form1-disapproveForm" type="button" class="form1-button4" v-if="isApprover" @click.prevent="handleRejectForm">
@@ -805,11 +807,20 @@
   </div>
 </template>
 
+<script type="text/javascript" src="html2canvas.js"></script>
+
+
 <script>
 import axios from 'axios';
 import authHeader from '../services/auth-header';
+import jsPDF from '../../node_modules/jspdf';
+import html2canvas from '../html2canvas';
+
+var pdf = new jsPDF('p', 'pt', 'a4');
+
 
 const API_URL = "http://localhost:8080/api/v1/vendor/";
+var hasSetFirstDeadline = false;
 
 export default {
   name: 'Form1',
@@ -886,6 +897,13 @@ export default {
       effectiveDate: '',
 
       vendorAssessmentResults: "",  
+
+      evaluationComments: '',
+      dateCreated: '',
+      dateModified: '',
+      deadline: '',
+
+      
     }
   },
   metaInfo: {
@@ -979,6 +997,11 @@ export default {
 
         this.vendorAssessmentResults = result.vendorAssessmentResults;
 
+        this.evaluationComments= result.evaluationComments;
+        this.dateCreated= result.dateCreated;
+        this.dateModified= result.dateModified;
+        this.deadline= result.deadline;
+
       })
       .catch(error => {
         console.log(error);
@@ -1040,7 +1063,41 @@ export default {
       
   },
   methods: {
-    
+    handlePrint(){
+      console.log('test')
+      // window.html2canvas = html2canvas
+
+      // pdf.html(document.getElementById("content"), {
+      //   callback: function (pdf) {
+      //     pdf.save('example.pdf');
+      //   },
+      // x: 10,
+      // y: 10,
+      // width: pdf.internal.pageSize.width,
+      // height: pdf.internal.pageSize.height
+      // });
+
+
+
+
+      let pWidth = pdf.internal.pageSize.width; // 595.28 is the width of a4
+      let srcWidth = document.getElementById('content').scrollWidth;
+      let margin = 18; // narrow margin - 1.27 cm (36);
+      let scale = (pWidth - margin * 2) / srcWidth;
+      console.log(scale);
+      // let pdf = new jsPDF('p', 'pt', 'a4');
+      pdf.html(document.getElementById('content'), {
+          x: margin,
+          y: margin,
+          html2canvas: {
+              scale: scale,
+          },
+          callback: function () {
+              pdf.save('example.pdf');
+          }
+      });
+      
+    },
     checkBizTypeState(event){
       var radioElementBizType = event.target;
       radioElementBizType.id ? this.bizTypeInput = false : this.bizTypeInput = false
@@ -1074,6 +1131,20 @@ export default {
       if (this.projectCertification) this.projectCertification = this.projCertInputField;
       if (this.others) this.others = this.evaluationOthersInputField;
       if (sessionStorage.getItem('role') == "USER") this.vendorAssessmentResults = "Draft";
+      
+      const now = new Date();
+      const dateIsoFormat = now.toISOString();
+      this.dateModified = dateIsoFormat;
+
+      if (hasSetFirstDeadline == false) {
+        const dateInAWeek = new Date();
+        dateInAWeek.setDate(dateInAWeek.getDate() + 7);
+        const dateInAWeekISO = dateInAWeek.toISOString();
+        this.deadline = dateInAWeekISO;
+        hasSetFirstDeadline = true;
+      }
+      
+
       await axios({
             url: 'updateVendorAssessmentForm',
             method: 'put',
@@ -1112,7 +1183,12 @@ export default {
                 approverSignature: this.approverSignature,
                 effectiveDate: this.effectiveDate,
 
-                vendorAssessmentResults: this.vendorAssessmentResults
+                vendorAssessmentResults: this.vendorAssessmentResults,
+
+                evaluationComments: this.evaluationComments,
+                dateCreated: this.dateCreated,
+                dateModified: this.dateModified,
+                deadline: this.deadline,
             },
             withCredentials: false
         })
@@ -1146,8 +1222,21 @@ export default {
         alert("Please reject evaluation first");
         return
       }
+      if (!this.evaluatedBy || !this.evaluatorSignature) {
+        alert("Invalid evaluator");
+      }
       this.evaluatedCheck = true;
       this.vendorAssessmentResults = "Evaluation Rejected";
+
+      const now = new Date();
+      const dateIsoFormat = now.toISOString();
+      this.dateModified = dateIsoFormat;
+
+      const dateInAWeek = new Date();
+      dateInAWeek.setDate(dateInAWeek.getDate() + 7);
+      const dateInAWeekISO = dateInAWeek.toISOString();
+      this.deadline = dateInAWeekISO;
+
       await axios({
         url: 'updateVendorAssessmentForm',
         method: 'put',
@@ -1158,7 +1247,9 @@ export default {
           evaluation: this.evaluation,
           evaluatedBy: this.evaluatedBy,
           evaluatorSignature: this.evaluatorSignature,
-          vendorAssessmentResults: this.vendorAssessmentResults
+          vendorAssessmentResults: this.vendorAssessmentResults,
+          dateModified: this.dateModified,
+          deadline: this.deadline
         },
         withCredentials: false
       })
@@ -1174,8 +1265,13 @@ export default {
         alert("Invalid evaluator");
         return
       }
+
       this.evaluatedCheck = true
       this.vendorAssessmentResults = "Evaluation Approved";
+      const now = new Date();
+      const dateIsoFormat = now.toISOString();
+      this.dateModified = dateIsoFormat;
+
       await axios({
         url: 'updateVendorAssessmentForm',
         method: 'put',
@@ -1186,7 +1282,8 @@ export default {
           evaluation: this.evaluation,
           evaluatedBy: this.evaluatedBy,
           evaluatorSignature: this.evaluatorSignature,
-          vendorAssessmentResults: this.vendorAssessmentResults
+          vendorAssessmentResults: this.vendorAssessmentResults,
+          dateModified: this.dateModified
         },
         withCredentials: false
       })
@@ -1194,7 +1291,24 @@ export default {
       .catch(error => { console.log(error); })
     },
     async handleRejectForm(){
+      if (this.evaluation != "Not Approved") {
+        alert("Please reject evaluation first");
+        return
+      }
+      
+      this.approvedBy = 'Form Rejected';
+      this.approverSignature = 'Form Rejected';
       this.vendorAssessmentResults = "Form Rejected";
+
+      const now = new Date();
+      const dateIsoFormat = now.toISOString();
+      this.dateModified = dateIsoFormat;
+
+      const dateInAWeek = new Date();
+      dateInAWeek.setDate(dateInAWeek.getDate() + 7);
+      const dateInAWeekISO = dateInAWeek.toISOString();
+      this.deadline = dateInAWeekISO;
+
       await axios({
         url: 'updateVendorAssessmentForm',
         method: 'put',
@@ -1204,7 +1318,9 @@ export default {
           id: this.id,
           approvedBy: this.approvedBy,
           approverSignature: this.approverSignature,
-          vendorAssessmentResults: this.vendorAssessmentResults
+          vendorAssessmentResults: this.vendorAssessmentResults,
+          dateModified: this.dateModified,
+          deadline: this.deadline
         },
         withCredentials: false
       })
@@ -1216,15 +1332,15 @@ export default {
         alert("Please approve evaluation first");
         return
       }
-      if (!this.approvedBy || !this.approverSignature){
-        alert("Invalid approver");
+      if (!this.approvedBy || !this.approverSignature || !this.effectiveDate){
+        alert("Please fill in approver rows");
         return
       }
-      if (!this.effectiveDate) {
-        alert("Invalid date");
-        return
-      }
-      this.vendorAssessmentResults = "Form Approved"
+      this.vendorAssessmentResults = "Form Approved";
+      const now = new Date();
+      const dateIsoFormat = now.toISOString();
+      this.dateModified = dateIsoFormat;
+      this.deadline = '';
       await axios({
         url: 'updateVendorAssessmentForm',
         method: 'put',
@@ -1236,7 +1352,9 @@ export default {
           approvedBy: this.approvedBy,
           approverSignature: this.approverSignature,
           effectiveDate: this.effectiveDate,
-          vendorAssessmentResults: this.vendorAssessmentResults
+          vendorAssessmentResults: this.vendorAssessmentResults,
+          dateModified: this.dateModified,
+          dateline: this.dateline
         },
         withCredentials: false
       })
@@ -1319,7 +1437,7 @@ export default {
   align-self: auto;
   text-align: center;
   line-height: 24px;
-  margin-right: 0;
+  margin-right: 63.999996185302734px;
   margin-bottom: 0;
 }
 .form1-text004 {
@@ -1330,6 +1448,7 @@ export default {
   line-height: 24px;
   margin-right: 0;
   margin-bottom: 0;
+  text-decoration: underline;
 }
 .form1-container-form-info {
   top: 311.9965515136719px;
