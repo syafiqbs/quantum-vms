@@ -47,7 +47,7 @@
                           </b-form-radio-group>
                         </b-form-group>
 
-                        <b-form-group v-if="selected == 'vendor'" id="input-group-1" label="Company Name:" label-for="input-1">
+                        <b-form-group v-if="selected == 'VENDOR'" id="input-group-1" label="Company Name:" label-for="input-1">
                           <b-form-input
                             id="input-1"
                             v-model="companyName"
@@ -84,7 +84,7 @@
                             ></b-form-input>
                           </b-form-group>
 
-                          <b-form-group v-if="selected == 'vendor'" id="input-group-5" label="Registration Number:" label-for="input-5">
+                          <b-form-group v-if="selected == 'VENDOR'" id="input-group-5" label="Registration Number:" label-for="input-5">
                             <b-form-input
                               id="input-5"
                               v-model="gstRegistrationNumber"
@@ -93,7 +93,7 @@
                             ></b-form-input>
                           </b-form-group>
 
-                          <b-form-group v-if="selected == 'vendor'" id="input-group-6" label="Nature of Business:" label-for="input-6">
+                          <b-form-group v-if="selected == 'VENDOR'" id="input-group-6" label="Nature of Business:" label-for="input-6">
                             <b-form-input
                               id="input-6"
                               v-model="natureOfBusiness"

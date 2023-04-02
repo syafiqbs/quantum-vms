@@ -23,7 +23,7 @@
           @ok="handleOk"
         >
           <form ref="form" @submit.stop.prevent="handleSubmit">
-            <b-form-group
+            <!-- <b-form-group
               label="Email"
               label-for="email-input"
               invalid-feedback="Email is required"
@@ -35,7 +35,8 @@
                 placeholder="Enter email"
                 required
               ></b-form-input>
-            </b-form-group>
+            </b-form-group> -->
+            <p>Email: {{userEmail }}</p>
 
             <b-form-group
               label="Current Password"
@@ -138,7 +139,7 @@ methods: {
   handleSubmit() {
     // Push the name to submitted names
     const account = {
-        "email" : this.inputEmail,
+        "email" : this.userEmail,
         "oldPassword" : this.oldPassword,
         "newPassword" : this.newPassword
     };
