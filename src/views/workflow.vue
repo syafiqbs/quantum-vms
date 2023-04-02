@@ -1002,7 +1002,7 @@
                     withCredentials: false
                 })
                 .then(response => {
-                    alert("Email successfully sent to" + this.emailRecipient + "!")
+                    alert("Email successfully sent to" + this.modal.emailRecipient + "!")
                 })
                 .catch(error => {
                     console.log(error);
